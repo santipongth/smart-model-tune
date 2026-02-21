@@ -16,6 +16,7 @@ import NewProject from "./pages/NewProject";
 import TrainingMonitor from "./pages/TrainingMonitor";
 import Playground from "./pages/Playground";
 import ModelDetail from "./pages/ModelDetail";
+import Settings from "./pages/Settings";
 
 const queryClient = new QueryClient();
 
@@ -38,6 +39,8 @@ const App = () => (
             <Route path="/models" element={<Models />} />
             <Route path="/models/:id" element={<ModelDetail />} />
             <Route path="/playground" element={<Playground />} />
+            <Route path="/settings" element={<Settings />} />
+            <Route path="/api-keys" element={<Settings />} />
           </Route>
           <Route path="*" element={<NotFound />} />
         </Routes>
