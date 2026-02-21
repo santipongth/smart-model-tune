@@ -12,6 +12,7 @@ import Dashboard from "./pages/Dashboard";
 import Projects from "./pages/Projects";
 import ProjectDetail from "./pages/ProjectDetail";
 import Models from "./pages/Models";
+import NewProject from "./pages/NewProject";
 
 const queryClient = new QueryClient();
 
@@ -28,6 +29,7 @@ const App = () => (
           <Route element={<DashboardLayout />}>
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/projects" element={<Projects />} />
+            <Route path="/projects/new" element={<NewProject />} />
             <Route path="/projects/:id" element={<ProjectDetail />} />
             <Route path="/models" element={<Models />} />
           </Route>
