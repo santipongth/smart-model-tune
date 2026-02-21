@@ -18,6 +18,10 @@ import TrainingMonitor from "./pages/TrainingMonitor";
 import Playground from "./pages/Playground";
 import ModelDetail from "./pages/ModelDetail";
 import Settings from "./pages/Settings";
+import Analytics from "./pages/Analytics";
+import DatasetExplorer from "./pages/DatasetExplorer";
+import CostCalculator from "./pages/CostCalculator";
+import ModelComparison from "./pages/ModelComparison";
 
 const queryClient = new QueryClient();
 
@@ -40,7 +44,11 @@ const App = () => (
               <Route path="/projects/:id/training" element={<TrainingMonitor />} />
               <Route path="/models" element={<Models />} />
               <Route path="/models/:id" element={<ModelDetail />} />
+              <Route path="/models/compare" element={<ModelComparison />} />
               <Route path="/playground" element={<Playground />} />
+              <Route path="/analytics" element={<Analytics />} />
+              <Route path="/datasets" element={<DatasetExplorer />} />
+              <Route path="/calculator" element={<CostCalculator />} />
               <Route path="/settings" element={<Settings />} />
               <Route path="/api-keys" element={<Settings />} />
             </Route>

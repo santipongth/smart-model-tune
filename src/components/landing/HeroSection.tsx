@@ -31,7 +31,7 @@ const HeroSection = () => {
             Prompt-driven fine-tuning for SLMs
           </motion.div>
 
-          <motion.h1 variants={fadeUp} className="mb-6 text-5xl font-extrabold tracking-tight leading-[1.1] md:text-6xl">
+          <motion.h1 variants={fadeUp} className="mb-6 text-3xl sm:text-5xl font-extrabold tracking-tight leading-[1.1] md:text-6xl">
             Fine-tune small models
             <br />
             <span className="text-gradient">with a single prompt</span>
@@ -42,7 +42,7 @@ const HeroSection = () => {
             fine-tunes a compact SLM, and evaluates it — all without writing a single line of code.
           </motion.p>
 
-          <motion.div variants={fadeUp} className="flex items-center justify-center gap-4">
+          <motion.div variants={fadeUp} className="flex flex-col sm:flex-row items-center justify-center gap-4">
             <Button size="lg" className="h-12 px-8 text-base" asChild>
               <Link to="/signup">
                 Start Fine-tuning

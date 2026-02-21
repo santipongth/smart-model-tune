@@ -6,6 +6,9 @@ import {
   Key,
   Settings,
   Zap,
+  BarChart3,
+  Database,
+  Calculator,
 } from "lucide-react";
 import { NavLink } from "@/components/NavLink";
 import {
@@ -26,6 +29,9 @@ const navItems = [
   { title: "Projects", url: "/projects", icon: FolderKanban },
   { title: "Models", url: "/models", icon: Box },
   { title: "Playground", url: "/playground", icon: MessageSquare },
+  { title: "Analytics", url: "/analytics", icon: BarChart3 },
+  { title: "Datasets", url: "/datasets", icon: Database },
+  { title: "Cost Calculator", url: "/calculator", icon: Calculator },
   { title: "API Keys", url: "/api-keys", icon: Key },
   { title: "Settings", url: "/settings", icon: Settings },
 ];

@@ -11,6 +11,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import {
   Key, Copy, Eye, EyeOff, Plus, Trash2, Bell, User, CreditCard,
   Check, Shield, Clock, Code, ChevronRight, Zap, AlertTriangle, Users, Mail, MoreHorizontal, Crown, UserCheck, EyeIcon,
+  Webhook, Send, Pause, Play,
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { PageTransition, FadeIn } from "@/components/motion";
@@ -715,6 +716,145 @@ function TeamTab() {
   );
 }
 
+// --- Webhooks Tab ---
+interface WebhookConfig {
+  id: string;
+  url: string;
+  events: string[];
+  status: "active" | "paused";
+  lastTriggered: string;
+}
+
+const webhookEvents = ["training.complete", "training.failed", "model.deployed", "credit.low"];
+
+function WebhooksTab() {
+  const [webhooks, setWebhooks] = useState<WebhookConfig[]>([
+    { id: "1", url: "https://api.example.com/webhooks/slm", events: ["training.complete", "training.failed"], status: "active", lastTriggered: "2 hours ago" },
+    { id: "2", url: "https://hooks.slack.com/services/T00/B00/xxx", events: ["training.complete", "model.deployed"], status: "active", lastTriggered: "1 day ago" },
+  ]);
+  const [newUrl, setNewUrl] = useState("");
+  const [newEvents, setNewEvents] = useState<string[]>([]);
+  const { toast } = useToast();
+
+  const signingKey = "whsec_k8f3m2x9p1q7...a4b6";
+
+  const handleAdd = () => {
+    if (!newUrl.trim() || newEvents.length === 0) return;
+    setWebhooks([...webhooks, {
+      id: Date.now().toString(),
+      url: newUrl,
+      events: newEvents,
+      status: "active",
+      lastTriggered: "Never",
+    }]);
+    setNewUrl("");
+    setNewEvents([]);
+    toast({ title: "Webhook added" });
+  };
+
+  const toggleEvent = (ev: string) => {
+    setNewEvents(newEvents.includes(ev) ? newEvents.filter((e) => e !== ev) : [...newEvents, ev]);
+  };
+
+  const handleTest = (wh: WebhookConfig) => {
+    toast({ title: "Webhook tested", description: `POST sent to ${wh.url}` });
+  };
+
+  const handleToggle = (id: string) => {
+    setWebhooks(webhooks.map((w) => w.id === id ? { ...w, status: w.status === "active" ? "paused" as const : "active" as const } : w));
+  };
+
+  const handleDelete = (id: string) => {
+    setWebhooks(webhooks.filter((w) => w.id !== id));
+    toast({ title: "Webhook deleted", variant: "destructive" });
+  };
+
+  return (
+    <div className="space-y-6">
+      <Card>
+        <CardHeader>
+          <CardTitle className="text-lg flex items-center gap-2">
+            <Plus className="h-5 w-5 text-primary" /> Add Webhook
+          </CardTitle>
+          <CardDescription>Receive HTTP POST notifications for training events</CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div className="space-y-2">
+            <Label>Endpoint URL</Label>
+            <Input placeholder="https://your-api.com/webhooks" value={newUrl} onChange={(e) => setNewUrl(e.target.value)} />
+          </div>
+          <div className="space-y-2">
+            <Label>Events</Label>
+            <div className="flex flex-wrap gap-2">
+              {webhookEvents.map((ev) => (
+                <Button key={ev} variant={newEvents.includes(ev) ? "default" : "outline"} size="sm" onClick={() => toggleEvent(ev)} className="text-xs">
+                  {ev}
+                </Button>
+              ))}
+            </div>
+          </div>
+          <Button onClick={handleAdd} disabled={!newUrl.trim() || newEvents.length === 0}>Add Webhook</Button>
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <CardTitle className="text-lg">Active Webhooks</CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-3">
+          {webhooks.map((wh) => (
+            <div key={wh.id} className="p-3 rounded-lg border border-border space-y-2">
+              <div className="flex items-center justify-between">
+                <code className="text-xs font-mono text-foreground truncate max-w-[60%]">{wh.url}</code>
+                <div className="flex items-center gap-1">
+                  <Badge variant={wh.status === "active" ? "default" : "secondary"} className="text-[10px]">{wh.status}</Badge>
+                </div>
+              </div>
+              <div className="flex flex-wrap gap-1">
+                {wh.events.map((ev) => (
+                  <Badge key={ev} variant="outline" className="text-[10px]">{ev}</Badge>
+                ))}
+              </div>
+              <div className="flex items-center justify-between">
+                <span className="text-[11px] text-muted-foreground">Last triggered: {wh.lastTriggered}</span>
+                <div className="flex gap-1">
+                  <Button variant="ghost" size="icon" className="h-7 w-7" onClick={() => handleTest(wh)} title="Test">
+                    <Send className="h-3.5 w-3.5" />
+                  </Button>
+                  <Button variant="ghost" size="icon" className="h-7 w-7" onClick={() => handleToggle(wh.id)} title={wh.status === "active" ? "Pause" : "Resume"}>
+                    {wh.status === "active" ? <Pause className="h-3.5 w-3.5" /> : <Play className="h-3.5 w-3.5" />}
+                  </Button>
+                  <Button variant="ghost" size="icon" className="h-7 w-7 text-destructive" onClick={() => handleDelete(wh.id)} title="Delete">
+                    <Trash2 className="h-3.5 w-3.5" />
+                  </Button>
+                </div>
+              </div>
+            </div>
+          ))}
+          {webhooks.length === 0 && <p className="text-sm text-muted-foreground text-center py-4">No webhooks configured</p>}
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <CardTitle className="text-lg flex items-center gap-2">
+            <Shield className="h-5 w-5 text-primary" /> Signing Secret
+          </CardTitle>
+          <CardDescription>Use this secret to verify webhook payloads</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="flex items-center gap-2">
+            <code className="text-xs font-mono bg-muted p-2 rounded flex-1">{signingKey}</code>
+            <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => { navigator.clipboard.writeText(signingKey); toast({ title: "Copied" }); }}>
+              <Copy className="h-3.5 w-3.5" />
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
+    </div>
+  );
+}
+
 // --- Main Settings Page ---
 export default function Settings() {
   return (
@@ -729,7 +869,7 @@ export default function Settings() {
 
         <FadeIn delay={0.1}>
           <Tabs defaultValue="api-keys" className="space-y-6">
-            <TabsList className="grid grid-cols-5 w-full max-w-2xl">
+            <TabsList className="flex w-full max-w-3xl overflow-x-auto">
               <TabsTrigger value="api-keys" className="text-xs">
                 <Key className="h-3.5 w-3.5 mr-1.5" /> API Keys
               </TabsTrigger>
@@ -738,6 +878,9 @@ export default function Settings() {
               </TabsTrigger>
               <TabsTrigger value="notifications" className="text-xs">
                 <Bell className="h-3.5 w-3.5 mr-1.5" /> Notifications
+              </TabsTrigger>
+              <TabsTrigger value="webhooks" className="text-xs">
+                <Webhook className="h-3.5 w-3.5 mr-1.5" /> Webhooks
               </TabsTrigger>
               <TabsTrigger value="account" className="text-xs">
                 <User className="h-3.5 w-3.5 mr-1.5" /> Account
@@ -750,6 +893,7 @@ export default function Settings() {
             <TabsContent value="api-keys"><ApiKeysTab /></TabsContent>
             <TabsContent value="team"><TeamTab /></TabsContent>
             <TabsContent value="notifications"><NotificationsTab /></TabsContent>
+            <TabsContent value="webhooks"><WebhooksTab /></TabsContent>
             <TabsContent value="account"><AccountTab /></TabsContent>
             <TabsContent value="billing"><BillingTab /></TabsContent>
           </Tabs>
