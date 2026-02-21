@@ -10,7 +10,7 @@ import { Separator } from "@/components/ui/separator";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import {
   Key, Copy, Eye, EyeOff, Plus, Trash2, Bell, User, CreditCard,
-  Check, Shield, Clock, Code, ChevronRight, Zap, AlertTriangle,
+  Check, Shield, Clock, Code, ChevronRight, Zap, AlertTriangle, Users, Mail, MoreHorizontal, Crown, UserCheck, EyeIcon,
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { PageTransition, FadeIn } from "@/components/motion";
@@ -473,6 +473,248 @@ function BillingTab() {
   );
 }
 
+// --- Team Tab ---
+type TeamRole = "admin" | "member" | "viewer";
+
+interface TeamMember {
+  id: string;
+  name: string;
+  email: string;
+  role: TeamRole;
+  avatar: string;
+  joinedAt: string;
+  lastActive: string;
+  status: "active" | "pending";
+}
+
+const mockTeam: TeamMember[] = [
+  { id: "1", name: "Somchai Dev", email: "somchai@example.com", role: "admin", avatar: "SD", joinedAt: "2023-06-01", lastActive: "Just now", status: "active" },
+  { id: "2", name: "Ploy Analyst", email: "ploy@example.com", role: "member", avatar: "PA", joinedAt: "2023-09-15", lastActive: "2 hours ago", status: "active" },
+  { id: "3", name: "Krit Engineer", email: "krit@example.com", role: "member", avatar: "KE", joinedAt: "2024-01-10", lastActive: "Yesterday", status: "active" },
+  { id: "4", name: "Nong Intern", email: "nong@example.com", role: "viewer", avatar: "NI", joinedAt: "2024-02-01", lastActive: "3 days ago", status: "active" },
+  { id: "5", name: "New Invite", email: "new@example.com", role: "member", avatar: "NI", joinedAt: "2024-02-18", lastActive: "—", status: "pending" },
+];
+
+const roleConfig: Record<TeamRole, { label: string; icon: typeof Crown; color: string; description: string }> = {
+  admin: { label: "Admin", icon: Crown, color: "text-warning", description: "Full access · Manage team, billing, and all projects" },
+  member: { label: "Member", icon: UserCheck, color: "text-primary", description: "Create & edit projects · Train & deploy models" },
+  viewer: { label: "Viewer", icon: EyeIcon, color: "text-muted-foreground", description: "View-only access · Cannot modify projects or models" },
+};
+
+function TeamTab() {
+  const [members, setMembers] = useState(mockTeam);
+  const [inviteEmail, setInviteEmail] = useState("");
+  const [inviteRole, setInviteRole] = useState<TeamRole>("member");
+  const { toast } = useToast();
+
+  const handleInvite = () => {
+    if (!inviteEmail.trim() || !inviteEmail.includes("@")) return;
+    const newMember: TeamMember = {
+      id: Date.now().toString(),
+      name: inviteEmail.split("@")[0],
+      email: inviteEmail,
+      role: inviteRole,
+      avatar: inviteEmail.slice(0, 2).toUpperCase(),
+      joinedAt: new Date().toISOString().split("T")[0],
+      lastActive: "—",
+      status: "pending",
+    };
+    setMembers([...members, newMember]);
+    setInviteEmail("");
+    toast({ title: "Invitation sent", description: `Invited ${inviteEmail} as ${roleConfig[inviteRole].label}` });
+  };
+
+  const handleRoleChange = (id: string, newRole: TeamRole) => {
+    setMembers(members.map((m) => (m.id === id ? { ...m, role: newRole } : m)));
+    toast({ title: "Role updated" });
+  };
+
+  const handleRemove = (id: string) => {
+    setMembers(members.filter((m) => m.id !== id));
+    toast({ title: "Member removed", variant: "destructive" });
+  };
+
+  const roleCounts = members.reduce(
+    (acc, m) => ({ ...acc, [m.role]: (acc[m.role] || 0) + 1 }),
+    { admin: 0, member: 0, viewer: 0 } as Record<TeamRole, number>
+  );
+
+  return (
+    <div className="space-y-6">
+      {/* Invite */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="text-lg flex items-center gap-2">
+            <Mail className="h-5 w-5 text-primary" /> Invite Team Member
+          </CardTitle>
+          <CardDescription>Send an invitation to join your workspace</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="flex flex-col sm:flex-row gap-3">
+            <Input
+              placeholder="email@example.com"
+              type="email"
+              value={inviteEmail}
+              onChange={(e) => setInviteEmail(e.target.value)}
+              onKeyDown={(e) => e.key === "Enter" && handleInvite()}
+              className="flex-1"
+            />
+            <Select value={inviteRole} onValueChange={(v) => setInviteRole(v as TeamRole)}>
+              <SelectTrigger className="w-full sm:w-36"><SelectValue /></SelectTrigger>
+              <SelectContent>
+                {(Object.entries(roleConfig) as [TeamRole, typeof roleConfig.admin][]).map(([key, cfg]) => (
+                  <SelectItem key={key} value={key}>
+                    <div className="flex items-center gap-2">
+                      <cfg.icon className={`h-3.5 w-3.5 ${cfg.color}`} />
+                      <span>{cfg.label}</span>
+                    </div>
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            <Button onClick={handleInvite} disabled={!inviteEmail.trim()}>
+              <Plus className="h-4 w-4 mr-1.5" /> Invite
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Role Summary */}
+      <div className="grid grid-cols-3 gap-3">
+        {(Object.entries(roleConfig) as [TeamRole, typeof roleConfig.admin][]).map(([key, cfg]) => (
+          <Card key={key}>
+            <CardContent className="p-4 flex items-center gap-3">
+              <div className={`p-2 rounded-lg bg-accent ${cfg.color}`}>
+                <cfg.icon className="h-4 w-4" />
+              </div>
+              <div>
+                <p className="text-lg font-bold text-foreground">{roleCounts[key]}</p>
+                <p className="text-[10px] text-muted-foreground">{cfg.label}s</p>
+              </div>
+            </CardContent>
+          </Card>
+        ))}
+      </div>
+
+      {/* Members List */}
+      <Card>
+        <CardHeader>
+          <div className="flex items-center justify-between">
+            <CardTitle className="text-lg">Team Members</CardTitle>
+            <Badge variant="outline" className="text-xs">{members.length} members</Badge>
+          </div>
+        </CardHeader>
+        <CardContent className="space-y-2">
+          {members.map((member) => {
+            const cfg = roleConfig[member.role];
+            return (
+              <div key={member.id} className="flex items-center justify-between p-3 rounded-lg border border-border hover:bg-muted/30 transition-colors">
+                <div className="flex items-center gap-3 min-w-0">
+                  <div className="h-9 w-9 rounded-full bg-accent flex items-center justify-center text-xs font-bold text-accent-foreground shrink-0">
+                    {member.avatar}
+                  </div>
+                  <div className="min-w-0">
+                    <div className="flex items-center gap-2">
+                      <span className="text-sm font-medium truncate">{member.name}</span>
+                      {member.status === "pending" && (
+                        <Badge variant="secondary" className="text-[10px]">Pending</Badge>
+                      )}
+                    </div>
+                    <p className="text-xs text-muted-foreground truncate">{member.email}</p>
+                    <p className="text-[10px] text-muted-foreground">Active: {member.lastActive}</p>
+                  </div>
+                </div>
+                <div className="flex items-center gap-2 shrink-0">
+                  <Select value={member.role} onValueChange={(v) => handleRoleChange(member.id, v as TeamRole)} disabled={member.role === "admin" && roleCounts.admin <= 1}>
+                    <SelectTrigger className="w-28 h-8 text-xs">
+                      <div className="flex items-center gap-1.5">
+                        <cfg.icon className={`h-3 w-3 ${cfg.color}`} />
+                        <SelectValue />
+                      </div>
+                    </SelectTrigger>
+                    <SelectContent>
+                      {(Object.entries(roleConfig) as [TeamRole, typeof roleConfig.admin][]).map(([key, c]) => (
+                        <SelectItem key={key} value={key}>
+                          <div className="flex items-center gap-2">
+                            <c.icon className={`h-3.5 w-3.5 ${c.color}`} />
+                            <span>{c.label}</span>
+                          </div>
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="h-8 w-8 text-destructive hover:text-destructive"
+                    onClick={() => handleRemove(member.id)}
+                    disabled={member.role === "admin" && roleCounts.admin <= 1}
+                  >
+                    <Trash2 className="h-3.5 w-3.5" />
+                  </Button>
+                </div>
+              </div>
+            );
+          })}
+        </CardContent>
+      </Card>
+
+      {/* Permissions Reference */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="text-lg flex items-center gap-2">
+            <Shield className="h-5 w-5 text-primary" /> Role Permissions
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="overflow-x-auto">
+            <table className="w-full text-xs">
+              <thead>
+                <tr className="border-b border-border">
+                  <th className="text-left py-2 pr-4 text-muted-foreground font-medium">Permission</th>
+                  {(Object.entries(roleConfig) as [TeamRole, typeof roleConfig.admin][]).map(([key, cfg]) => (
+                    <th key={key} className="text-center py-2 px-3 text-muted-foreground font-medium">
+                      <div className="flex items-center justify-center gap-1">
+                        <cfg.icon className={`h-3 w-3 ${cfg.color}`} />
+                        {cfg.label}
+                      </div>
+                    </th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {[
+                  { perm: "View projects & models", admin: true, member: true, viewer: true },
+                  { perm: "Create & edit projects", admin: true, member: true, viewer: false },
+                  { perm: "Train & deploy models", admin: true, member: true, viewer: false },
+                  { perm: "Use Playground", admin: true, member: true, viewer: true },
+                  { perm: "Manage API keys", admin: true, member: false, viewer: false },
+                  { perm: "Invite & remove members", admin: true, member: false, viewer: false },
+                  { perm: "Manage billing", admin: true, member: false, viewer: false },
+                  { perm: "Delete workspace", admin: true, member: false, viewer: false },
+                ].map((row) => (
+                  <tr key={row.perm} className="border-b border-border/50">
+                    <td className="py-2.5 pr-4 text-foreground">{row.perm}</td>
+                    {(["admin", "member", "viewer"] as TeamRole[]).map((role) => (
+                      <td key={role} className="text-center py-2.5">
+                        {row[role] ? (
+                          <Check className="h-3.5 w-3.5 text-primary mx-auto" />
+                        ) : (
+                          <span className="text-muted-foreground">—</span>
+                        )}
+                      </td>
+                    ))}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </CardContent>
+      </Card>
+    </div>
+  );
+}
+
 // --- Main Settings Page ---
 export default function Settings() {
   return (
@@ -487,9 +729,12 @@ export default function Settings() {
 
         <FadeIn delay={0.1}>
           <Tabs defaultValue="api-keys" className="space-y-6">
-            <TabsList className="grid grid-cols-4 w-full max-w-lg">
+            <TabsList className="grid grid-cols-5 w-full max-w-2xl">
               <TabsTrigger value="api-keys" className="text-xs">
                 <Key className="h-3.5 w-3.5 mr-1.5" /> API Keys
+              </TabsTrigger>
+              <TabsTrigger value="team" className="text-xs">
+                <Users className="h-3.5 w-3.5 mr-1.5" /> Team
               </TabsTrigger>
               <TabsTrigger value="notifications" className="text-xs">
                 <Bell className="h-3.5 w-3.5 mr-1.5" /> Notifications
@@ -503,6 +748,7 @@ export default function Settings() {
             </TabsList>
 
             <TabsContent value="api-keys"><ApiKeysTab /></TabsContent>
+            <TabsContent value="team"><TeamTab /></TabsContent>
             <TabsContent value="notifications"><NotificationsTab /></TabsContent>
             <TabsContent value="account"><AccountTab /></TabsContent>
             <TabsContent value="billing"><BillingTab /></TabsContent>
