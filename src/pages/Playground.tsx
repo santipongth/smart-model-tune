@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { PageTransition, FadeIn } from "@/components/motion";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -24,8 +25,8 @@ export default function Playground() {
   const getModelName = (id: string) => mockModels.find((m) => m.id === id)?.name || id;
 
   return (
+    <PageTransition>
     <div className="space-y-5 max-w-7xl">
-      {/* Header */}
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold text-foreground">Playground</h1>
@@ -142,5 +143,6 @@ export default function Playground() {
         </Card>
       )}
     </div>
+    </PageTransition>
   );
 }

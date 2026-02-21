@@ -1,4 +1,5 @@
 import { useParams, Link } from "react-router-dom";
+import { PageTransition, FadeIn } from "@/components/motion";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -92,8 +93,8 @@ export default function ModelDetail() {
   };
 
   return (
+    <PageTransition>
     <div className="space-y-6 max-w-5xl">
-      {/* Header */}
       <div className="flex items-center gap-3">
         <Button variant="ghost" size="icon" asChild>
           <Link to="/models"><ArrowLeft className="h-4 w-4" /></Link>
@@ -298,5 +299,6 @@ export default function ModelDetail() {
         </TabsContent>
       </Tabs>
     </div>
+    </PageTransition>
   );
 }

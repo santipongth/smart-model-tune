@@ -13,6 +13,7 @@ import {
   Check, Shield, Clock, Code, ChevronRight, Zap, AlertTriangle,
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { PageTransition, FadeIn } from "@/components/motion";
 
 // --- API Keys Tab ---
 interface ApiKey {
@@ -475,33 +476,39 @@ function BillingTab() {
 // --- Main Settings Page ---
 export default function Settings() {
   return (
-    <div className="space-y-6">
-      <div>
-        <h1 className="text-2xl font-bold">Settings</h1>
-        <p className="text-muted-foreground text-sm">Manage your account, API keys, and billing</p>
+    <PageTransition>
+      <div className="space-y-6">
+        <FadeIn>
+          <div>
+            <h1 className="text-2xl font-bold">Settings</h1>
+            <p className="text-muted-foreground text-sm">Manage your account, API keys, and billing</p>
+          </div>
+        </FadeIn>
+
+        <FadeIn delay={0.1}>
+          <Tabs defaultValue="api-keys" className="space-y-6">
+            <TabsList className="grid grid-cols-4 w-full max-w-lg">
+              <TabsTrigger value="api-keys" className="text-xs">
+                <Key className="h-3.5 w-3.5 mr-1.5" /> API Keys
+              </TabsTrigger>
+              <TabsTrigger value="notifications" className="text-xs">
+                <Bell className="h-3.5 w-3.5 mr-1.5" /> Notifications
+              </TabsTrigger>
+              <TabsTrigger value="account" className="text-xs">
+                <User className="h-3.5 w-3.5 mr-1.5" /> Account
+              </TabsTrigger>
+              <TabsTrigger value="billing" className="text-xs">
+                <CreditCard className="h-3.5 w-3.5 mr-1.5" /> Billing
+              </TabsTrigger>
+            </TabsList>
+
+            <TabsContent value="api-keys"><ApiKeysTab /></TabsContent>
+            <TabsContent value="notifications"><NotificationsTab /></TabsContent>
+            <TabsContent value="account"><AccountTab /></TabsContent>
+            <TabsContent value="billing"><BillingTab /></TabsContent>
+          </Tabs>
+        </FadeIn>
       </div>
-
-      <Tabs defaultValue="api-keys" className="space-y-6">
-        <TabsList className="grid grid-cols-4 w-full max-w-lg">
-          <TabsTrigger value="api-keys" className="text-xs">
-            <Key className="h-3.5 w-3.5 mr-1.5" /> API Keys
-          </TabsTrigger>
-          <TabsTrigger value="notifications" className="text-xs">
-            <Bell className="h-3.5 w-3.5 mr-1.5" /> Notifications
-          </TabsTrigger>
-          <TabsTrigger value="account" className="text-xs">
-            <User className="h-3.5 w-3.5 mr-1.5" /> Account
-          </TabsTrigger>
-          <TabsTrigger value="billing" className="text-xs">
-            <CreditCard className="h-3.5 w-3.5 mr-1.5" /> Billing
-          </TabsTrigger>
-        </TabsList>
-
-        <TabsContent value="api-keys"><ApiKeysTab /></TabsContent>
-        <TabsContent value="notifications"><NotificationsTab /></TabsContent>
-        <TabsContent value="account"><AccountTab /></TabsContent>
-        <TabsContent value="billing"><BillingTab /></TabsContent>
-      </Tabs>
-    </div>
+    </PageTransition>
   );
 }

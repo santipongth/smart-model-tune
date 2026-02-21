@@ -1,4 +1,5 @@
 import { useParams, Link } from "react-router-dom";
+import { PageTransition, FadeIn, StaggerContainer, StaggerItem } from "@/components/motion";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -28,8 +29,8 @@ export default function TrainingMonitor() {
   const isTraining = project.status === "training";
 
   return (
+    <PageTransition>
     <div className="space-y-6 max-w-6xl">
-      {/* Header */}
       <div className="flex items-center gap-3">
         <Button variant="ghost" size="icon" asChild>
           <Link to={`/projects/${id}`}><ArrowLeft className="h-4 w-4" /></Link>
@@ -46,26 +47,28 @@ export default function TrainingMonitor() {
       </div>
 
       {/* Quick Stats */}
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+      <StaggerContainer className="grid grid-cols-2 sm:grid-cols-4 gap-3">
         {[
           { label: "Base Model", value: baseModelLabels[project.baseModel], icon: Cpu },
           { label: "Task Type", value: taskTypeLabels[project.taskType], icon: Database },
           { label: "Epoch Progress", value: isTraining ? "5 / 8" : `${project.epochs} / ${project.epochs}`, icon: Gauge },
           { label: "Elapsed Time", value: isTraining ? "56m 19s" : "4h 52m", icon: Clock },
         ].map((s) => (
-          <Card key={s.label}>
-            <CardContent className="p-3.5 flex items-center gap-3">
-              <div className="p-2 rounded-lg bg-accent">
-                <s.icon className="h-4 w-4 text-accent-foreground" />
-              </div>
-              <div>
-                <p className="text-sm font-bold text-foreground">{s.value}</p>
-                <p className="text-[10px] text-muted-foreground">{s.label}</p>
-              </div>
-            </CardContent>
-          </Card>
+          <StaggerItem key={s.label}>
+            <Card>
+              <CardContent className="p-3.5 flex items-center gap-3">
+                <div className="p-2 rounded-lg bg-accent">
+                  <s.icon className="h-4 w-4 text-accent-foreground" />
+                </div>
+                <div>
+                  <p className="text-sm font-bold text-foreground">{s.value}</p>
+                  <p className="text-[10px] text-muted-foreground">{s.label}</p>
+                </div>
+              </CardContent>
+            </Card>
+          </StaggerItem>
         ))}
-      </div>
+      </StaggerContainer>
 
       {/* Training Progress Bar */}
       {isTraining && (
@@ -137,5 +140,6 @@ export default function TrainingMonitor() {
         </TabsContent>
       </Tabs>
     </div>
+    </PageTransition>
   );
 }
