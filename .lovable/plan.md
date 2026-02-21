@@ -1,78 +1,110 @@
 
 
-## Phase 2: Dashboard & Project Management
+# Phase 7: Platform Enhancement - 5 Features
 
-### สิ่งที่จะสร้าง
-
-**1. Mock Data Layer** (`src/data/mockData.ts`)
-- ข้อมูลจำลองสำหรับ Projects, Models, Training Jobs, Usage Stats, Credit Balance
-- Types/Interfaces สำหรับทุก entity (`src/types/index.ts`)
-
-**2. Dashboard Layout with Sidebar** (`src/components/dashboard/DashboardLayout.tsx`)
-- ใช้ shadcn SidebarProvider + Sidebar component
-- Sidebar แสดงเมนู: Dashboard, Projects, Models, Playground, API Keys, Settings
-- แสดง Credit Balance และ Plan Tier (เช่น "Pro Plan - 850 credits") ที่ footer ของ sidebar
-- SidebarTrigger ที่ header เพื่อ collapse/expand
-- ใช้ NavLink สำหรับ active route highlighting
-
-**3. หน้า Dashboard หลัก** (`src/pages/Dashboard.tsx`)
-- **Stats Cards**: จำนวน Projects, Models trained, Training hours used, Credits remaining
-- **Recent Projects**: ตารางแสดง 5 โปรเจกต์ล่าสุด พร้อมสถานะ (Training, Completed, Failed)
-- **Training Activity Chart**: กราฟ Recharts แสดง training jobs ใน 7 วันที่ผ่านมา
-- **Quick Actions**: ปุ่ม "New Project", "Browse Models", "Open Playground"
-
-**4. หน้า Projects** (`src/pages/Projects.tsx`)
-- รายการโปรเจกต์ทั้งหมดแบบ card grid
-- แต่ละ card แสดง: ชื่อ, task type, base model, สถานะ, วันที่สร้าง
-- ปุ่ม "New Project" เปิด dialog/wizard
-- Filter/Search bar
-
-**5. หน้า Project Detail** (`src/pages/ProjectDetail.tsx`)
-- Overview tab: ข้อมูลโปรเจกต์, configuration, สถานะปัจจุบัน
-- Training tab: progress bar, loss curve placeholder
-- Evaluation tab: metrics placeholder
-
-**6. หน้า Models** (`src/pages/Models.tsx`)
-- รายการโมเดลที่ train เสร็จแล้ว
-- แสดง: ชื่อโมเดล, base model, task type, accuracy, ขนาดไฟล์, วันที่สร้าง
-- ปุ่ม Export, Deploy, Test in Playground
-
-**7. Routing Update** (`src/App.tsx`)
-- เพิ่ม routes: `/dashboard`, `/projects`, `/projects/:id`, `/models`
-- Dashboard routes ใช้ DashboardLayout wrapper
+## Overview
+เพิ่มฟีเจอร์ 5 รายการเพื่อยกระดับ SLM Fine-Tuning Platform ให้สมบูรณ์ยิ่งขึ้น ครอบคลุมทั้ง UX, productivity, และ visual polish
 
 ---
 
-### โครงสร้างไฟล์ใหม่
+## Feature 1: Dark Mode Toggle
 
-```text
-src/
-  types/
-    index.ts              -- TypeScript interfaces
-  data/
-    mockData.ts           -- Mock data สำหรับทุกหน้า
-  components/
-    dashboard/
-      DashboardLayout.tsx -- Layout with Sidebar
-      AppSidebar.tsx      -- Sidebar component
-      StatsCards.tsx       -- Dashboard stat cards
-      RecentProjects.tsx  -- Recent projects table
-      ActivityChart.tsx   -- Training activity chart
-      ProjectCard.tsx     -- Project card component
-      ModelCard.tsx       -- Model card component
-      NewProjectDialog.tsx -- Create project dialog
-  pages/
-    Dashboard.tsx
-    Projects.tsx
-    ProjectDetail.tsx
-    Models.tsx
-```
+**What**: เพิ่มปุ่มสลับ Dark/Light Mode ใน header ของ DashboardLayout และ landing Navbar พร้อมใช้ `next-themes` ที่ติดตั้งอยู่แล้ว
 
-### รายละเอียดทางเทคนิค
+**Changes**:
+- **`src/components/ThemeProvider.tsx`** (new): Wrapper component ใช้ `ThemeProvider` จาก `next-themes`
+- **`src/components/ThemeToggle.tsx`** (new): ปุ่ม Sun/Moon icon สลับ theme
+- **`src/App.tsx`**: ครอบ `ThemeProvider` รอบ app ทั้งหมด
+- **`index.html`**: เพิ่ม `class="dark"` support บน `<html>` tag (เปลี่ยนเป็น `suppressHydrationWarning`)
+- **`src/components/dashboard/DashboardLayout.tsx`**: เพิ่ม `ThemeToggle` ใน header bar
+- **`src/components/landing/Navbar.tsx`**: เพิ่ม `ThemeToggle` ข้าง login buttons
 
-- ใช้ `SidebarProvider` ครอบ `DashboardLayout` เป็น wrapper สำหรับทุกหน้า dashboard
-- Sidebar ใช้ `collapsible="icon"` เพื่อ collapse เหลือแค่ไอคอน
-- `SidebarTrigger` อยู่ที่ header bar ด้านบนเท่านั้น (ไม่ซ้ำในตัว sidebar)
-- ใช้ `NavLink` + `useLocation` สำหรับ active state
-- Recharts `AreaChart` สำหรับ training activity
-- Mock data ออกแบบให้ตรงกับ API response structure ที่จะใช้กับ FastAPI ในอนาคต
+Dark mode CSS variables ถูกกำหนดไว้ใน `index.css` แล้ว ไม่ต้องแก้ไข
+
+---
+
+## Feature 2: Global Search (Command Palette, Cmd+K)
+
+**What**: Command palette ที่เปิดด้วย Cmd+K (หรือ Ctrl+K) ค้นหา projects, models, settings pages ได้ทันที ใช้ `cmdk` library ที่ติดตั้งอยู่แล้ว
+
+**Changes**:
+- **`src/components/CommandPalette.tsx`** (new):
+  - ใช้ `CommandDialog` จาก `src/components/ui/command.tsx`
+  - Listen keyboard shortcut Cmd+K / Ctrl+K
+  - แบ่ง groups: Projects (6 items), Models (3 items), Pages (Dashboard/Settings/Playground), Quick Actions (New Project)
+  - เมื่อเลือก item จะ `navigate()` ไปหน้านั้นๆ
+- **`src/components/dashboard/DashboardLayout.tsx`**: เพิ่ม `CommandPalette` component และ search trigger button ใน header
+
+---
+
+## Feature 3: Loading Skeleton UI
+
+**What**: Skeleton loading states สำหรับ Dashboard stats, Project cards, Model cards, Training monitor
+
+**Changes**:
+- **`src/components/skeletons/DashboardSkeleton.tsx`** (new): Skeleton สำหรับ 4 stat cards + chart area + recent projects
+- **`src/components/skeletons/ProjectCardSkeleton.tsx`** (new): Skeleton card เลียนแบบ ProjectCard layout
+- **`src/components/skeletons/ModelCardSkeleton.tsx`** (new): Skeleton card เลียนแบบ ModelCard layout
+- **`src/components/skeletons/TrainingMonitorSkeleton.tsx`** (new): Skeleton สำหรับ pipeline + loss curve area
+
+แต่ละ skeleton ใช้ `Skeleton` component จาก `src/components/ui/skeleton.tsx` ที่มีอยู่แล้ว
+
+- **`src/pages/Dashboard.tsx`**: เพิ่ม simulated loading state (1.5s delay) แสดง `DashboardSkeleton` ก่อน render content จริง
+- **`src/pages/Projects.tsx`**: เพิ่ม loading state แสดง grid ของ `ProjectCardSkeleton`
+- **`src/pages/Models.tsx`**: เพิ่ม loading state แสดง grid ของ `ModelCardSkeleton`
+- **`src/pages/TrainingMonitor.tsx`**: เพิ่ม loading state แสดง `TrainingMonitorSkeleton`
+
+---
+
+## Feature 4: Notification Center (Bell Icon Dropdown)
+
+**What**: Bell icon ใน header ที่แสดง dropdown รายการ notifications แบบ real-time พร้อม unread badge และ mark as read
+
+**Changes**:
+- **`src/components/NotificationCenter.tsx`** (new):
+  - Bell icon พร้อม unread count badge (red dot)
+  - ใช้ `Popover` component แสดง dropdown
+  - Mock notifications: training complete, credit warning, model deployed, team invite
+  - แต่ละ notification มี icon, title, description, timestamp, read/unread state
+  - ปุ่ม "Mark all as read"
+  - คลิก notification เพื่อ mark as read
+- **`src/components/dashboard/DashboardLayout.tsx`**: เพิ่ม `NotificationCenter` ใน header ข้าง ThemeToggle
+
+---
+
+## Feature 5: Landing Page Scroll Animations
+
+**What**: เพิ่ม scroll-triggered animations สำหรับทุก section บน landing page ด้วย framer-motion `useInView` / `whileInView`
+
+**Changes**:
+- **`src/components/landing/HeroSection.tsx`**: เพิ่ม parallax-like effect ให้ terminal preview (translateY based on scroll), stagger delay ให้ badge > h1 > p > buttons
+- **`src/components/landing/FeaturesSection.tsx`**: Heading fade-up เมื่อ scroll เข้า view, cards stagger with scale-in effect
+- **`src/components/landing/UseCasesSection.tsx`**: Cards slide-up จากล่างพร้อม stagger delay, heading animate เข้ามาก่อน
+- **`src/components/landing/PricingSection.tsx`**: Cards slide-up with stagger, "Most Popular" card มี scale bounce เล็กน้อย
+- **`src/components/landing/DemoSection.tsx`**: Section fade-in เมื่อ scroll เข้า view, form area slide-up
+- **`src/components/landing/Footer.tsx`**: Simple fade-in animation
+
+ทุก animation ใช้ `viewport={{ once: true }}` เพื่อ animate ครั้งเดียว
+
+---
+
+## Implementation Order
+
+1. **Dark Mode** - ThemeProvider + ThemeToggle (foundation สำหรับทุกอย่าง)
+2. **Notification Center** - Bell icon ใน header
+3. **Global Search** - Command Palette
+4. **Loading Skeletons** - Skeleton components + loading states
+5. **Landing Scroll Animations** - Enhanced landing page
+
+---
+
+## Technical Notes
+
+- ใช้ libraries ที่ติดตั้งอยู่แล้วทั้งหมด: `next-themes`, `cmdk`, `framer-motion`, `lucide-react`
+- Skeleton component มีอยู่แล้วใน `src/components/ui/skeleton.tsx`
+- Command UI มีอยู่แล้วใน `src/components/ui/command.tsx`
+- Popover UI มีอยู่แล้วใน `src/components/ui/popover.tsx`
+- Dark mode CSS variables กำหนดไว้แล้วใน `index.css` ภายใต้ `.dark` class
+- ไม่ต้องติดตั้ง dependencies เพิ่มเติม
+- ไฟล์ใหม่ทั้งหมด ~8 files, แก้ไข ~12 files
+
