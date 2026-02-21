@@ -1,6 +1,26 @@
-import { Outlet } from "react-router-dom";
+import { useLocation, useOutlet } from "react-router-dom";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { AppSidebar } from "./AppSidebar";
+import { AnimatePresence, motion } from "framer-motion";
+
+function AnimatedOutlet() {
+  const location = useLocation();
+  const outlet = useOutlet();
+
+  return (
+    <AnimatePresence mode="wait">
+      <motion.div
+        key={location.pathname}
+        initial={{ opacity: 0, y: 8 }}
+        animate={{ opacity: 1, y: 0 }}
+        exit={{ opacity: 0, y: -8 }}
+        transition={{ duration: 0.25, ease: [0.25, 0.1, 0.25, 1] }}
+      >
+        {outlet}
+      </motion.div>
+    </AnimatePresence>
+  );
+}
 
 export default function DashboardLayout() {
   return (
@@ -13,7 +33,7 @@ export default function DashboardLayout() {
             <span className="text-sm font-medium text-muted-foreground">SLM Fine-Tuning Platform</span>
           </header>
           <main className="flex-1 p-6 overflow-auto">
-            <Outlet />
+            <AnimatedOutlet />
           </main>
         </div>
       </div>
