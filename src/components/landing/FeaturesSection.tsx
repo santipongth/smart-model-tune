@@ -38,20 +38,26 @@ const FeaturesSection = () => {
   return (
     <section id="features" className="py-24 bg-secondary/30">
       <div className="container">
-        <div className="text-center mb-16">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5 }}
+          className="text-center mb-16"
+        >
           <p className="text-sm font-medium text-primary mb-2">Capabilities</p>
           <h2 className="text-3xl font-bold tracking-tight md:text-4xl">Everything you need to fine-tune SLMs</h2>
           <p className="mt-4 text-muted-foreground max-w-lg mx-auto">
             From task description to production deployment — fully automated pipeline.
           </p>
-        </div>
+        </motion.div>
 
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 max-w-5xl mx-auto">
           {features.map((feature, i) => (
             <motion.div
               key={feature.title}
-              initial={{ opacity: 0, y: 16 }}
-              whileInView={{ opacity: 1, y: 0 }}
+              initial={{ opacity: 0, y: 24, scale: 0.95 }}
+              whileInView={{ opacity: 1, y: 0, scale: 1 }}
               viewport={{ once: true }}
               transition={{ duration: 0.4, delay: i * 0.08 }}
               className="rounded-xl border bg-card p-6 hover:shadow-md transition-shadow"

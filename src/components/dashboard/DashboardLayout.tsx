@@ -2,6 +2,9 @@ import { useLocation, useOutlet } from "react-router-dom";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { AppSidebar } from "./AppSidebar";
 import { AnimatePresence, motion } from "framer-motion";
+import { ThemeToggle } from "@/components/ThemeToggle";
+import { NotificationCenter } from "@/components/NotificationCenter";
+import { CommandPalette } from "@/components/CommandPalette";
 
 function AnimatedOutlet() {
   const location = useLocation();
@@ -31,6 +34,11 @@ export default function DashboardLayout() {
           <header className="h-14 flex items-center border-b border-border px-4 bg-background sticky top-0 z-10">
             <SidebarTrigger className="mr-4" />
             <span className="text-sm font-medium text-muted-foreground">SLM Fine-Tuning Platform</span>
+            <div className="ml-auto flex items-center gap-1">
+              <CommandPalette />
+              <NotificationCenter />
+              <ThemeToggle />
+            </div>
           </header>
           <main className="flex-1 p-6 overflow-auto">
             <AnimatedOutlet />

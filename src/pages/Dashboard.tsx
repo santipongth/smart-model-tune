@@ -1,3 +1,4 @@
+import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { StatsCards } from "@/components/dashboard/StatsCards";
@@ -6,8 +7,18 @@ import { ActivityChart } from "@/components/dashboard/ActivityChart";
 import { NewProjectDialog } from "@/components/dashboard/NewProjectDialog";
 import { FolderKanban, Box, MessageSquare } from "lucide-react";
 import { PageTransition, FadeIn, StaggerContainer, StaggerItem } from "@/components/motion";
+import { DashboardSkeleton } from "@/components/skeletons/DashboardSkeleton";
 
 export default function Dashboard() {
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setLoading(false), 1500);
+    return () => clearTimeout(timer);
+  }, []);
+
+  if (loading) return <DashboardSkeleton />;
+
   return (
     <PageTransition>
       <div className="space-y-6 max-w-7xl">

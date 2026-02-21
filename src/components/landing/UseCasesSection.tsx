@@ -44,22 +44,28 @@ const UseCasesSection = () => {
   return (
     <section id="use-cases" className="py-24">
       <div className="container">
-        <div className="text-center mb-16">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5 }}
+          className="text-center mb-16"
+        >
           <p className="text-sm font-medium text-primary mb-2">Use Cases</p>
           <h2 className="text-3xl font-bold tracking-tight md:text-4xl">Built for real-world NLP tasks</h2>
           <p className="mt-4 text-muted-foreground max-w-lg mx-auto">
             Fine-tune compact models for production workloads at a fraction of the cost.
           </p>
-        </div>
+        </motion.div>
 
         <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3 max-w-5xl mx-auto">
           {useCases.map((uc, i) => (
             <motion.div
               key={uc.title}
-              initial={{ opacity: 0, y: 16 }}
+              initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.4, delay: i * 0.06 }}
+              transition={{ duration: 0.4, delay: i * 0.08 }}
               className="group rounded-xl border bg-card p-6 hover:border-primary/30 transition-colors"
             >
               <div className="mb-3 flex h-9 w-9 items-center justify-center rounded-lg bg-accent">
