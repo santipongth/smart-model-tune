@@ -1,9 +1,13 @@
+import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Zap } from "lucide-react";
+import { Zap, Menu, X } from "lucide-react";
 import { ThemeToggle } from "@/components/ThemeToggle";
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 
 const Navbar = () => {
+  const [open, setOpen] = useState(false);
+
   return (
     <header className="fixed top-0 left-0 right-0 z-50 glass">
       <div className="container flex h-16 items-center justify-between">
@@ -20,7 +24,7 @@ const Navbar = () => {
           <a href="#pricing" className="hover:text-foreground transition-colors">Pricing</a>
         </nav>
 
-        <div className="flex items-center gap-3">
+        <div className="hidden md:flex items-center gap-3">
           <ThemeToggle />
           <Button variant="ghost" size="sm" asChild>
             <Link to="/login">Log in</Link>
@@ -28,6 +32,35 @@ const Navbar = () => {
           <Button size="sm" asChild>
             <Link to="/signup">Get Started</Link>
           </Button>
+        </div>
+
+        {/* Mobile menu */}
+        <div className="flex md:hidden items-center gap-2">
+          <ThemeToggle />
+          <Sheet open={open} onOpenChange={setOpen}>
+            <SheetTrigger asChild>
+              <Button variant="ghost" size="icon">
+                <Menu className="h-5 w-5" />
+              </Button>
+            </SheetTrigger>
+            <SheetContent side="right" className="w-72">
+              <div className="flex flex-col gap-6 mt-8">
+                <nav className="flex flex-col gap-4 text-sm">
+                  <a href="#features" onClick={() => setOpen(false)} className="hover:text-foreground transition-colors text-muted-foreground">Features</a>
+                  <a href="#use-cases" onClick={() => setOpen(false)} className="hover:text-foreground transition-colors text-muted-foreground">Use Cases</a>
+                  <a href="#pricing" onClick={() => setOpen(false)} className="hover:text-foreground transition-colors text-muted-foreground">Pricing</a>
+                </nav>
+                <div className="flex flex-col gap-2">
+                  <Button variant="ghost" asChild onClick={() => setOpen(false)}>
+                    <Link to="/login">Log in</Link>
+                  </Button>
+                  <Button asChild onClick={() => setOpen(false)}>
+                    <Link to="/signup">Get Started</Link>
+                  </Button>
+                </div>
+              </div>
+            </SheetContent>
+          </Sheet>
         </div>
       </div>
     </header>
