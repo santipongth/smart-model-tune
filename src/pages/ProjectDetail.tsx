@@ -1,4 +1,5 @@
 import { useParams, Link } from "react-router-dom";
+import { PageTransition, FadeIn } from "@/components/motion";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -39,6 +40,7 @@ export default function ProjectDetail() {
   const metrics = mockEvalMetrics[project.id];
 
   return (
+    <PageTransition>
     <div className="space-y-6 max-w-5xl">
       <div className="flex items-center gap-3">
         <Button variant="ghost" size="icon" asChild>
@@ -169,5 +171,6 @@ export default function ProjectDetail() {
         </TabsContent>
       </Tabs>
     </div>
+    </PageTransition>
   );
 }
