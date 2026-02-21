@@ -1,110 +1,143 @@
 
 
-# Phase 7: Platform Enhancement - 5 Features
+# Phase 8: Platform Feature Expansion
 
-## Overview
-เพิ่มฟีเจอร์ 5 รายการเพื่อยกระดับ SLM Fine-Tuning Platform ให้สมบูรณ์ยิ่งขึ้น ครอบคลุมทั้ง UX, productivity, และ visual polish
+## Status Check - Already Implemented
+The following features from the request are already in the codebase:
+- **Loading Skeletons**: DashboardSkeleton, ProjectCardSkeleton, ModelCardSkeleton, TrainingMonitorSkeleton all exist with simulated loading states
+- **Notification Center**: Bell icon with popover dropdown, unread badge, mark-as-read functionality already in DashboardLayout header
+- **Landing Scroll Animations**: HeroSection, FeaturesSection, PricingSection, DemoSection, UseCasesSection, Footer all have framer-motion whileInView animations
 
----
-
-## Feature 1: Dark Mode Toggle
-
-**What**: เพิ่มปุ่มสลับ Dark/Light Mode ใน header ของ DashboardLayout และ landing Navbar พร้อมใช้ `next-themes` ที่ติดตั้งอยู่แล้ว
-
-**Changes**:
-- **`src/components/ThemeProvider.tsx`** (new): Wrapper component ใช้ `ThemeProvider` จาก `next-themes`
-- **`src/components/ThemeToggle.tsx`** (new): ปุ่ม Sun/Moon icon สลับ theme
-- **`src/App.tsx`**: ครอบ `ThemeProvider` รอบ app ทั้งหมด
-- **`index.html`**: เพิ่ม `class="dark"` support บน `<html>` tag (เปลี่ยนเป็น `suppressHydrationWarning`)
-- **`src/components/dashboard/DashboardLayout.tsx`**: เพิ่ม `ThemeToggle` ใน header bar
-- **`src/components/landing/Navbar.tsx`**: เพิ่ม `ThemeToggle` ข้าง login buttons
-
-Dark mode CSS variables ถูกกำหนดไว้ใน `index.css` แล้ว ไม่ต้องแก้ไข
+## New Features to Implement (6 items)
 
 ---
 
-## Feature 2: Global Search (Command Palette, Cmd+K)
+### Feature 1: Responsive Mobile Layout
 
-**What**: Command palette ที่เปิดด้วย Cmd+K (หรือ Ctrl+K) ค้นหา projects, models, settings pages ได้ทันที ใช้ `cmdk` library ที่ติดตั้งอยู่แล้ว
+**What**: Adjust all dashboard pages, sidebar, header, and landing page for smooth mobile usage.
 
 **Changes**:
-- **`src/components/CommandPalette.tsx`** (new):
-  - ใช้ `CommandDialog` จาก `src/components/ui/command.tsx`
-  - Listen keyboard shortcut Cmd+K / Ctrl+K
-  - แบ่ง groups: Projects (6 items), Models (3 items), Pages (Dashboard/Settings/Playground), Quick Actions (New Project)
-  - เมื่อเลือก item จะ `navigate()` ไปหน้านั้นๆ
-- **`src/components/dashboard/DashboardLayout.tsx`**: เพิ่ม `CommandPalette` component และ search trigger button ใน header
+- **`src/components/landing/Navbar.tsx`**: Add mobile hamburger menu with Sheet/Drawer for nav links; hide desktop nav on small screens
+- **`src/components/dashboard/DashboardLayout.tsx`**: Reduce header padding on mobile; ensure sidebar collapses properly on small screens
+- **`src/pages/Dashboard.tsx`**: Stack quick action buttons vertically on mobile
+- **`src/pages/Settings.tsx`**: Change TabsList from `grid-cols-5` to scrollable horizontal tabs on mobile; stack form inputs vertically
+- **`src/pages/Playground.tsx`**: Force single-column chat layout on mobile regardless of A/B mode
+- **`src/pages/ProjectDetail.tsx`**: Stack config/status cards vertically on small screens (already uses `md:grid-cols-2`)
+- **`src/pages/TrainingMonitor.tsx`**: Adjust stat cards grid from `grid-cols-4` to `grid-cols-2` on mobile (already done)
+- **`src/components/landing/HeroSection.tsx`**: Reduce heading size, stack buttons vertically on mobile
+- **`src/components/landing/PricingSection.tsx`**: Single-column pricing cards on mobile
 
 ---
 
-## Feature 3: Loading Skeleton UI
+### Feature 2: Usage Analytics Dashboard
 
-**What**: Skeleton loading states สำหรับ Dashboard stats, Project cards, Model cards, Training monitor
+**What**: New page with charts showing API calls, latency, error rate over selectable time ranges.
 
 **Changes**:
-- **`src/components/skeletons/DashboardSkeleton.tsx`** (new): Skeleton สำหรับ 4 stat cards + chart area + recent projects
-- **`src/components/skeletons/ProjectCardSkeleton.tsx`** (new): Skeleton card เลียนแบบ ProjectCard layout
-- **`src/components/skeletons/ModelCardSkeleton.tsx`** (new): Skeleton card เลียนแบบ ModelCard layout
-- **`src/components/skeletons/TrainingMonitorSkeleton.tsx`** (new): Skeleton สำหรับ pipeline + loss curve area
-
-แต่ละ skeleton ใช้ `Skeleton` component จาก `src/components/ui/skeleton.tsx` ที่มีอยู่แล้ว
-
-- **`src/pages/Dashboard.tsx`**: เพิ่ม simulated loading state (1.5s delay) แสดง `DashboardSkeleton` ก่อน render content จริง
-- **`src/pages/Projects.tsx`**: เพิ่ม loading state แสดง grid ของ `ProjectCardSkeleton`
-- **`src/pages/Models.tsx`**: เพิ่ม loading state แสดง grid ของ `ModelCardSkeleton`
-- **`src/pages/TrainingMonitor.tsx`**: เพิ่ม loading state แสดง `TrainingMonitorSkeleton`
+- **`src/pages/Analytics.tsx`** (new): Full analytics page with:
+  - Time range selector (24h, 7d, 30d, 90d)
+  - Summary stat cards: Total API Calls, Avg Latency, Error Rate, Uptime
+  - Line chart: API calls over time (using recharts AreaChart)
+  - Line chart: Latency (p50, p95, p99) over time
+  - Bar chart: Error rate by endpoint
+  - Table: Top endpoints by usage
+  - All data is mock-generated based on selected time range
+- **`src/data/analyticsMockData.ts`** (new): Mock data generators for API calls, latency, errors
+- **`src/App.tsx`**: Add route `/analytics`
+- **`src/components/dashboard/AppSidebar.tsx`**: Add "Analytics" nav item with BarChart3 icon
 
 ---
 
-## Feature 4: Notification Center (Bell Icon Dropdown)
+### Feature 3: Dataset Explorer
 
-**What**: Bell icon ใน header ที่แสดง dropdown รายการ notifications แบบ real-time พร้อม unread badge และ mark as read
+**What**: New page to preview uploaded datasets with schema detection, sample rows, and column statistics.
 
 **Changes**:
-- **`src/components/NotificationCenter.tsx`** (new):
-  - Bell icon พร้อม unread count badge (red dot)
-  - ใช้ `Popover` component แสดง dropdown
-  - Mock notifications: training complete, credit warning, model deployed, team invite
-  - แต่ละ notification มี icon, title, description, timestamp, read/unread state
-  - ปุ่ม "Mark all as read"
-  - คลิก notification เพื่อ mark as read
-- **`src/components/dashboard/DashboardLayout.tsx`**: เพิ่ม `NotificationCenter` ใน header ข้าง ThemeToggle
+- **`src/pages/DatasetExplorer.tsx`** (new):
+  - Dataset selector dropdown (mock datasets from projects)
+  - Schema tab: column name, type, nullable, unique count
+  - Sample Data tab: first 10 rows displayed in a table
+  - Statistics tab: per-column stats (min, max, mean, distribution for numeric; top values for categorical; text length stats for text)
+  - Dataset overview card: row count, column count, file size, format
+- **`src/data/datasetMockData.ts`** (new): Mock schema, sample rows, and statistics data for 3 datasets
+- **`src/App.tsx`**: Add route `/datasets`
+- **`src/components/dashboard/AppSidebar.tsx`**: Add "Datasets" nav item with Database icon
 
 ---
 
-## Feature 5: Landing Page Scroll Animations
+### Feature 4: Cost Calculator
 
-**What**: เพิ่ม scroll-triggered animations สำหรับทุก section บน landing page ด้วย framer-motion `useInView` / `whileInView`
+**What**: Interactive calculator to estimate credits needed based on model size, dataset size, and training epochs.
 
 **Changes**:
-- **`src/components/landing/HeroSection.tsx`**: เพิ่ม parallax-like effect ให้ terminal preview (translateY based on scroll), stagger delay ให้ badge > h1 > p > buttons
-- **`src/components/landing/FeaturesSection.tsx`**: Heading fade-up เมื่อ scroll เข้า view, cards stagger with scale-in effect
-- **`src/components/landing/UseCasesSection.tsx`**: Cards slide-up จากล่างพร้อม stagger delay, heading animate เข้ามาก่อน
-- **`src/components/landing/PricingSection.tsx`**: Cards slide-up with stagger, "Most Popular" card มี scale bounce เล็กน้อย
-- **`src/components/landing/DemoSection.tsx`**: Section fade-in เมื่อ scroll เข้า view, form area slide-up
-- **`src/components/landing/Footer.tsx`**: Simple fade-in animation
+- **`src/pages/CostCalculator.tsx`** (new):
+  - Base model selector (with parameter counts)
+  - Dataset size input (slider: 100 to 50,000 samples)
+  - Epochs input (slider: 1 to 20)
+  - LoRA rank selector (8, 16, 32, 64)
+  - Real-time credit estimate display with breakdown:
+    - Data generation cost
+    - Training compute cost
+    - Evaluation cost
+    - Total credits and approximate USD
+  - Comparison card showing estimates for Free vs Pro vs Enterprise
+  - "Start Project with This Config" button linking to /projects/new
+- **`src/App.tsx`**: Add route `/calculator`
+- **`src/components/dashboard/AppSidebar.tsx`**: Add "Cost Calculator" nav item with Calculator icon
 
-ทุก animation ใช้ `viewport={{ once: true }}` เพื่อ animate ครั้งเดียว
+---
+
+### Feature 5: Model Comparison
+
+**What**: Side-by-side comparison page for 2-3 trained models showing metrics, speed, and quality scores.
+
+**Changes**:
+- **`src/pages/ModelComparison.tsx`** (new):
+  - Model selector: pick 2-3 models from dropdown
+  - Comparison table: base model, task type, accuracy, F1, precision, recall, latency, file size, format
+  - Radar chart (recharts RadarChart): overlay metrics for selected models
+  - Bar chart: latency comparison
+  - Winner badges per metric (highlight best value)
+  - "Deploy Best Model" action button
+- **`src/App.tsx`**: Add route `/models/compare`
+- **`src/components/dashboard/AppSidebar.tsx`**: No sidebar change (accessed from Models page via button)
+- **`src/pages/Models.tsx`**: Add "Compare Models" button linking to `/models/compare`
+
+---
+
+### Feature 6: Webhooks Management
+
+**What**: Settings tab to configure webhook URLs for training events (complete, failed, etc.)
+
+**Changes**:
+- **`src/pages/Settings.tsx`**: Add new "Webhooks" tab with:
+  - Add webhook form: URL input, event type multi-select (training.complete, training.failed, model.deployed, credit.low)
+  - Webhook list: URL, events subscribed, status (active/paused), last triggered timestamp
+  - Test webhook button (simulates POST with toast confirmation)
+  - Delete webhook button
+  - Secret signing key display (mock) for verification
+  - TabsList updated from `grid-cols-5` to `grid-cols-6`
 
 ---
 
 ## Implementation Order
 
-1. **Dark Mode** - ThemeProvider + ThemeToggle (foundation สำหรับทุกอย่าง)
-2. **Notification Center** - Bell icon ใน header
-3. **Global Search** - Command Palette
-4. **Loading Skeletons** - Skeleton components + loading states
-5. **Landing Scroll Animations** - Enhanced landing page
+1. **Responsive Mobile** -- foundation for all other pages
+2. **Usage Analytics** -- new page + mock data
+3. **Dataset Explorer** -- new page + mock data
+4. **Cost Calculator** -- new page (standalone logic)
+5. **Model Comparison** -- new page with charts
+6. **Webhooks** -- Settings tab addition
 
 ---
 
 ## Technical Notes
 
-- ใช้ libraries ที่ติดตั้งอยู่แล้วทั้งหมด: `next-themes`, `cmdk`, `framer-motion`, `lucide-react`
-- Skeleton component มีอยู่แล้วใน `src/components/ui/skeleton.tsx`
-- Command UI มีอยู่แล้วใน `src/components/ui/command.tsx`
-- Popover UI มีอยู่แล้วใน `src/components/ui/popover.tsx`
-- Dark mode CSS variables กำหนดไว้แล้วใน `index.css` ภายใต้ `.dark` class
-- ไม่ต้องติดตั้ง dependencies เพิ่มเติม
-- ไฟล์ใหม่ทั้งหมด ~8 files, แก้ไข ~12 files
+- All data is mock/client-side only (no backend required)
+- Uses existing libraries: `recharts`, `framer-motion`, `lucide-react`, Radix UI components
+- New files: ~7 new files (4 pages, 2 mock data files, 0 new components beyond pages)
+- Modified files: ~6 files (App.tsx, AppSidebar.tsx, Settings.tsx, Models.tsx, Navbar.tsx, various pages for responsive)
+- Charts use `recharts` (RadarChart, AreaChart, BarChart) already installed
+- Responsive approach: Tailwind breakpoint utilities (`sm:`, `md:`, `lg:`) -- no new CSS needed
+- Sheet component from `src/components/ui/sheet.tsx` used for mobile nav menu
 
