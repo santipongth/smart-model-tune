@@ -1,3 +1,4 @@
+import { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
 import { PageTransition, FadeIn, StaggerContainer, StaggerItem } from "@/components/motion";
 import { Button } from "@/components/ui/button";
@@ -12,10 +13,17 @@ import { LossCurveChart } from "@/components/training/LossCurveChart";
 import { EvaluationViewer } from "@/components/training/EvaluationViewer";
 import { mockPipelineSteps, mockTrainingLog, mockLossCurve, mockComparisonResults } from "@/data/trainingMockData";
 import { mockProjects, baseModelLabels, taskTypeLabels } from "@/data/mockData";
+import { TrainingMonitorSkeleton } from "@/components/skeletons/TrainingMonitorSkeleton";
 
 export default function TrainingMonitor() {
   const { id } = useParams<{ id: string }>();
   const project = mockProjects.find((p) => p.id === id);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setLoading(false), 1500);
+    return () => clearTimeout(timer);
+  }, []);
 
   if (!project) {
     return (
@@ -25,6 +33,8 @@ export default function TrainingMonitor() {
       </div>
     );
   }
+
+  if (loading) return <TrainingMonitorSkeleton />;
 
   const isTraining = project.status === "training";
 

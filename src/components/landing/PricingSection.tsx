@@ -37,20 +37,27 @@ const PricingSection = () => {
   return (
     <section id="pricing" className="py-24">
       <div className="container">
-        <div className="text-center mb-16">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5 }}
+          className="text-center mb-16"
+        >
           <p className="text-sm font-medium text-primary mb-2">Pricing</p>
           <h2 className="text-3xl font-bold tracking-tight md:text-4xl">Simple, transparent pricing</h2>
           <p className="mt-4 text-muted-foreground">Start free. Scale as you grow.</p>
-        </div>
+        </motion.div>
 
         <div className="grid gap-6 md:grid-cols-3 max-w-4xl mx-auto">
           {plans.map((plan, i) => (
             <motion.div
               key={plan.name}
-              initial={{ opacity: 0, y: 16 }}
+              initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.4, delay: i * 0.1 }}
+              transition={{ duration: 0.4, delay: i * 0.12 }}
+              whileHover={plan.highlighted ? { scale: 1.03 } : undefined}
               className={`rounded-xl border p-6 flex flex-col ${
                 plan.highlighted
                   ? "border-primary shadow-lg ring-1 ring-primary/20 relative"
@@ -58,9 +65,15 @@ const PricingSection = () => {
               }`}
             >
               {plan.highlighted && (
-                <div className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full bg-primary px-3 py-0.5 text-xs font-medium text-primary-foreground">
+                <motion.div
+                  initial={{ opacity: 0, scale: 0.8 }}
+                  whileInView={{ opacity: 1, scale: 1 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.3, delay: 0.4 }}
+                  className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full bg-primary px-3 py-0.5 text-xs font-medium text-primary-foreground"
+                >
                   Most Popular
-                </div>
+                </motion.div>
               )}
               <h3 className="font-semibold text-lg">{plan.name}</h3>
               <div className="mt-2 mb-1">

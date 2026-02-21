@@ -46,15 +46,27 @@ const DemoSection = () => {
   return (
     <section id="demo" className="py-24 bg-secondary/30">
       <div className="container max-w-3xl">
-        <div className="text-center mb-12">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5 }}
+          className="text-center mb-12"
+        >
           <p className="text-sm font-medium text-primary mb-2">Interactive Demo</p>
           <h2 className="text-3xl font-bold tracking-tight">Try it yourself</h2>
           <p className="mt-3 text-muted-foreground">
             Describe a task and see how TuneLab processes it.
           </p>
-        </div>
+        </motion.div>
 
-        <div className="rounded-xl border bg-card p-6 shadow-sm">
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5, delay: 0.15 }}
+          className="rounded-xl border bg-card p-6 shadow-sm"
+        >
           <Textarea
             value={prompt}
             onChange={(e) => { setPrompt(e.target.value); if (stage === "done") reset(); }}
@@ -99,7 +111,7 @@ const DemoSection = () => {
               ))}
             </div>
           )}
-        </div>
+        </motion.div>
       </div>
     </section>
   );

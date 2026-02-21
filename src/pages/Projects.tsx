@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { ProjectCard } from "@/components/dashboard/ProjectCard";
@@ -6,10 +6,17 @@ import { NewProjectDialog } from "@/components/dashboard/NewProjectDialog";
 import { mockProjects, taskTypeLabels } from "@/data/mockData";
 import { Search } from "lucide-react";
 import { PageTransition, FadeIn, StaggerContainer, MotionCard } from "@/components/motion";
+import { ProjectCardSkeleton } from "@/components/skeletons/ProjectCardSkeleton";
 
 export default function Projects() {
   const [search, setSearch] = useState("");
   const [filterTask, setFilterTask] = useState("all");
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setLoading(false), 1200);
+    return () => clearTimeout(timer);
+  }, []);
 
   const filtered = mockProjects.filter((p) => {
     const matchesSearch = p.name.toLowerCase().includes(search.toLowerCase());
@@ -48,15 +55,23 @@ export default function Projects() {
           </div>
         </FadeIn>
 
-        <StaggerContainer className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          {filtered.map((project) => (
-            <MotionCard key={project.id}>
-              <ProjectCard project={project} />
-            </MotionCard>
-          ))}
-        </StaggerContainer>
+        {loading ? (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            {Array.from({ length: 6 }).map((_, i) => (
+              <ProjectCardSkeleton key={i} />
+            ))}
+          </div>
+        ) : (
+          <StaggerContainer className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            {filtered.map((project) => (
+              <MotionCard key={project.id}>
+                <ProjectCard project={project} />
+              </MotionCard>
+            ))}
+          </StaggerContainer>
+        )}
 
-        {filtered.length === 0 && (
+        {!loading && filtered.length === 0 && (
           <FadeIn>
             <div className="text-center py-12 text-muted-foreground">
               <p className="text-sm">No projects found matching your criteria.</p>
