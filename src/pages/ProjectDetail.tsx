@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, Activity } from "lucide-react";
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
 import { mockProjects, mockEvalMetrics, taskTypeLabels, baseModelLabels } from "@/data/mockData";
 import type { ProjectStatus } from "@/types";
@@ -51,6 +51,11 @@ export default function ProjectDetail() {
           </div>
           <p className="text-sm text-muted-foreground mt-0.5">{project.description}</p>
         </div>
+        <Button variant="outline" size="sm" className="gap-2" asChild>
+          <Link to={`/projects/${project.id}/training`}>
+            <Activity className="h-3.5 w-3.5" /> Training Monitor
+          </Link>
+        </Button>
       </div>
 
       <Tabs defaultValue="overview">
