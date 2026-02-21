@@ -1,115 +1,78 @@
 
 
-## แผนพัฒนา Automated SLM Fine-Tuning Platform (Frontend UI)
+## Phase 2: Dashboard & Project Management
 
-### ภาพรวม
-สร้าง Web Application สำหรับแพลตฟอร์มปรับแต่งโมเดลภาษาขนาดเล็กแบบอัตโนมัติ ออกแบบด้วย Clean Light Theme สไตล์ Stripe/Notion ใช้ mock data เพื่อแสดง flow ทั้งหมด พร้อมเชื่อมต่อ Backend จริงในอนาคต
+### สิ่งที่จะสร้าง
 
----
+**1. Mock Data Layer** (`src/data/mockData.ts`)
+- ข้อมูลจำลองสำหรับ Projects, Models, Training Jobs, Usage Stats, Credit Balance
+- Types/Interfaces สำหรับทุก entity (`src/types/index.ts`)
 
-### Phase 1: Landing Page & Authentication
+**2. Dashboard Layout with Sidebar** (`src/components/dashboard/DashboardLayout.tsx`)
+- ใช้ shadcn SidebarProvider + Sidebar component
+- Sidebar แสดงเมนู: Dashboard, Projects, Models, Playground, API Keys, Settings
+- แสดง Credit Balance และ Plan Tier (เช่น "Pro Plan - 850 credits") ที่ footer ของ sidebar
+- SidebarTrigger ที่ header เพื่อ collapse/expand
+- ใช้ NavLink สำหรับ active route highlighting
 
-**Landing Page**
-- Hero section นำเสนอ value proposition ของแพลตฟอร์ม
-- Features section แสดงความสามารถหลัก (Prompt-based Fine-tuning, Auto Evaluation, Multi-model Support)
-- Use Cases section พร้อมตัวอย่างการใช้งาน (Classification, NER, QA, Function Calling)
-- Interactive Demo section ให้ผู้ใช้ทดลองพิมพ์ prompt ตัวอย่าง
-- Pricing section แสดง 3 แผน (Free, Pro, Enterprise)
-- CTA สำหรับสมัครใช้งาน
+**3. หน้า Dashboard หลัก** (`src/pages/Dashboard.tsx`)
+- **Stats Cards**: จำนวน Projects, Models trained, Training hours used, Credits remaining
+- **Recent Projects**: ตารางแสดง 5 โปรเจกต์ล่าสุด พร้อมสถานะ (Training, Completed, Failed)
+- **Training Activity Chart**: กราฟ Recharts แสดง training jobs ใน 7 วันที่ผ่านมา
+- **Quick Actions**: ปุ่ม "New Project", "Browse Models", "Open Playground"
 
-**Authentication Pages**
-- หน้า Sign Up / Login ด้วย Email/Password
-- แสดง UI สำหรับ Google Social Login
-- หน้าเลือก Subscription Tier
+**4. หน้า Projects** (`src/pages/Projects.tsx`)
+- รายการโปรเจกต์ทั้งหมดแบบ card grid
+- แต่ละ card แสดง: ชื่อ, task type, base model, สถานะ, วันที่สร้าง
+- ปุ่ม "New Project" เปิด dialog/wizard
+- Filter/Search bar
 
----
+**5. หน้า Project Detail** (`src/pages/ProjectDetail.tsx`)
+- Overview tab: ข้อมูลโปรเจกต์, configuration, สถานะปัจจุบัน
+- Training tab: progress bar, loss curve placeholder
+- Evaluation tab: metrics placeholder
 
-### Phase 2: Dashboard & Project Management
+**6. หน้า Models** (`src/pages/Models.tsx`)
+- รายการโมเดลที่ train เสร็จแล้ว
+- แสดง: ชื่อโมเดล, base model, task type, accuracy, ขนาดไฟล์, วันที่สร้าง
+- ปุ่ม Export, Deploy, Test in Playground
 
-**Main Dashboard**
-- Project List แสดงรายการโปรเจกต์ทั้งหมดพร้อมสถานะ
-- สร้างโปรเจกต์ใหม่ (New Project wizard)
-- Training Status overview พร้อม progress indicators
-- Model Inventory แสดงโมเดลที่ train เสร็จแล้ว
-- Usage Analytics แสดงสถิติการใช้งาน, Credit Balance, Training History
-- Cost Estimation Panel แสดงค่าใช้จ่ายโดยประมาณ
-
-**Sidebar Navigation**
-- Dashboard, Projects, Models, Playground, API Keys, Settings
-- แสดง credit balance และ plan tier ปัจจุบัน
-
----
-
-### Phase 3: Prompt Interface & Job Configuration
-
-**Prompt Interface (หน้าสร้าง Fine-tuning Job)**
-- Chat-like interface สำหรับป้อน Task Prompt / Job Description
-- Guided Task Selection Workflow ให้เลือกประเภทงาน (Classification, NER, QA, Function Calling, Extraction, Ranking) พร้อมคำอธิบายและตัวอย่าง
-- Upload Few-Shot Examples รองรับ CSV, JSON, JSONL
-- Upload Supplementary Domain Knowledge (Unstructured Data)
-- Configuration Editor สำหรับ Training Parameters (Model Size, Epochs, Learning Rate) สำหรับผู้ใช้ขั้นสูง
-- Template Library พร้อม Pre-built Templates สำหรับ Common Use Cases
-
-**Base Model Selection**
-- แสดงรายการ Base Models ที่รองรับ (Qwen2.5, Gemma 2, Phi-3, Llama 3.2, SmolLM2)
-- แสดงข้อมูลเปรียบเทียบ (ขนาด, ความเร็ว, ความเหมาะสมกับ task)
+**7. Routing Update** (`src/App.tsx`)
+- เพิ่ม routes: `/dashboard`, `/projects`, `/projects/:id`, `/models`
+- Dashboard routes ใช้ DashboardLayout wrapper
 
 ---
 
-### Phase 4: Training Monitor & Evaluation
+### โครงสร้างไฟล์ใหม่
 
-**Training Progress**
-- Real-time Progress Bar แสดง Epoch Progress, Loss Curve (ด้วย Recharts)
-- Training Log viewer
-- สถานะแต่ละขั้นตอน: Task Scoping → Synthetic Data Generation → Data Curation → Fine-Tuning → Evaluation
+```text
+src/
+  types/
+    index.ts              -- TypeScript interfaces
+  data/
+    mockData.ts           -- Mock data สำหรับทุกหน้า
+  components/
+    dashboard/
+      DashboardLayout.tsx -- Layout with Sidebar
+      AppSidebar.tsx      -- Sidebar component
+      StatsCards.tsx       -- Dashboard stat cards
+      RecentProjects.tsx  -- Recent projects table
+      ActivityChart.tsx   -- Training activity chart
+      ProjectCard.tsx     -- Project card component
+      ModelCard.tsx       -- Model card component
+      NewProjectDialog.tsx -- Create project dialog
+  pages/
+    Dashboard.tsx
+    Projects.tsx
+    ProjectDetail.tsx
+    Models.tsx
+```
 
-**Evaluation Viewer**
-- แสดงผลเปรียบเทียบ Student SLM vs Teacher LLM แบบ Side-by-Side
-- ค่า Metrics: Accuracy, Relevance, Coherence, F1-Score, ROUGE, Latency
-- Model Comparison Dashboard สำหรับเปรียบเทียบ Model Versions ต่างๆ (กราฟและตาราง)
+### รายละเอียดทางเทคนิค
 
----
-
-### Phase 5: Playground & Model Management
-
-**Inference Playground**
-- Chat interface สำหรับทดลองใช้งานโมเดลที่ train เสร็จ
-- รองรับ Single-Turn และ Multi-Turn Conversation
-- A/B Comparison ระหว่างโมเดลเวอร์ชันต่างๆ หรือ Student vs Teacher
-- แสดง latency และ token usage ของแต่ละ response
-
-**Model Management**
-- Model Registry แสดง Model Artifacts, Versions, Metadata
-- Export options (ONNX, GGUF, SafeTensors) - แสดง UI สำหรับดาวน์โหลด
-- API Endpoint info สำหรับแต่ละโมเดล (OpenAI-compatible format)
-
----
-
-### Phase 6: Settings & API Management
-
-**API Key Management**
-- สร้างและจัดการ API Keys สำหรับเชื่อมต่อภายนอก
-- แสดง code examples (Python, JavaScript, cURL)
-
-**Notification Settings**
-- ตั้งค่าการแจ้งเตือน (Training complete, Evaluation done, Credit low)
-- Webhook configuration UI
-
-**Account Settings**
-- Profile, Billing/Subscription management
-- Team management (สำหรับ Enterprise)
-
----
-
-### เทคโนโลยีที่ใช้
-- **UI Framework:** React + TypeScript + Tailwind CSS + shadcn/ui
-- **Charts:** Recharts สำหรับ Loss Curves, Metrics visualization
-- **Routing:** React Router สำหรับทุกหน้า
-- **State:** React Query + Local State สำหรับ mock data
-- **Theme:** Clean Light Theme พร้อม Dark mode toggle
-
-### หมายเหตุ
-- ทุกหน้าจะใช้ mock data ที่สมจริง เพื่อให้เห็นภาพการทำงานจริงของแพลตฟอร์ม
-- โครงสร้างโค้ดจะออกแบบให้พร้อมเชื่อมต่อ Backend API (FastAPI) ในอนาคต
-- เนื่องจากเป็นโปรเจกต์ขนาดใหญ่ จะแบ่งการพัฒนาเป็น Phase เริ่มจาก Phase 1-2 ก่อน แล้วค่อยเพิ่ม Phase ถัดไป
-
+- ใช้ `SidebarProvider` ครอบ `DashboardLayout` เป็น wrapper สำหรับทุกหน้า dashboard
+- Sidebar ใช้ `collapsible="icon"` เพื่อ collapse เหลือแค่ไอคอน
+- `SidebarTrigger` อยู่ที่ header bar ด้านบนเท่านั้น (ไม่ซ้ำในตัว sidebar)
+- ใช้ `NavLink` + `useLocation` สำหรับ active state
+- Recharts `AreaChart` สำหรับ training activity
+- Mock data ออกแบบให้ตรงกับ API response structure ที่จะใช้กับ FastAPI ในอนาคต
