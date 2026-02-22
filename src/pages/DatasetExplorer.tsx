@@ -3,18 +3,48 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Slider } from "@/components/ui/slider";
+import { Progress } from "@/components/ui/progress";
 import { PageTransition, FadeIn } from "@/components/motion";
-import { Database, Table, BarChart3, FileText } from "lucide-react";
+import { Database, Table, BarChart3, FileText, Sparkles } from "lucide-react";
 import { mockDatasets, mockSchemas, mockSampleRows, mockColumnStats } from "@/data/datasetMockData";
+import { mockAugmentedSamples } from "@/data/deploymentMockData";
 import { useLanguage } from "@/i18n/LanguageContext";
+import { useToast } from "@/hooks/use-toast";
+
+const TECHNIQUES = [
+  { key: "paraphrase", label: "Paraphrase" },
+  { key: "back-translation", label: "Back-Translation (TH↔EN)" },
+  { key: "synonym", label: "Synonym Replacement" },
+  { key: "random-insert", label: "Random Insertion" },
+];
 
 export default function DatasetExplorer() {
   const [selectedId, setSelectedId] = useState(mockDatasets[0].id);
+  const [augTechnique, setAugTechnique] = useState("paraphrase");
+  const [augFactor, setAugFactor] = useState(2);
+  const [augmenting, setAugmenting] = useState(false);
   const { t } = useLanguage();
+  const { toast } = useToast();
   const dataset = mockDatasets.find((d) => d.id === selectedId)!;
   const schema = mockSchemas[selectedId] || [];
   const samples = mockSampleRows[selectedId] || [];
   const stats = mockColumnStats[selectedId] || [];
+
+  const handleAugment = () => {
+    setAugmenting(true);
+    setTimeout(() => {
+      setAugmenting(false);
+      toast({ title: t("augment.applied"), description: `${dataset.rows * augFactor} ${t("dataset.rows")}` });
+    }, 2000);
+  };
+
+  const filteredAug = mockAugmentedSamples.filter((a) =>
+    augTechnique === "paraphrase" ? a.technique === "Paraphrase" :
+    augTechnique === "back-translation" ? a.technique === "Back-Translation" :
+    augTechnique === "synonym" ? a.technique === "Synonym Replacement" : true
+  );
 
   return (
     <PageTransition>
@@ -69,6 +99,7 @@ export default function DatasetExplorer() {
               <TabsTrigger value="schema" className="text-xs">{t("dataset.schema")}</TabsTrigger>
               <TabsTrigger value="sample" className="text-xs">{t("dataset.sampleData")}</TabsTrigger>
               <TabsTrigger value="stats" className="text-xs">{t("dataset.statistics")}</TabsTrigger>
+              <TabsTrigger value="augment" className="text-xs">{t("augment.title")}</TabsTrigger>
             </TabsList>
 
             <TabsContent value="schema">
@@ -168,6 +199,67 @@ export default function DatasetExplorer() {
                   ))}
                 </CardContent>
               </Card>
+            </TabsContent>
+
+            <TabsContent value="augment">
+              <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+                <Card className="lg:col-span-1">
+                  <CardHeader>
+                    <CardTitle className="text-sm flex items-center gap-2">
+                      <Sparkles className="h-4 w-4 text-primary" /> {t("augment.config")}
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-4">
+                    <div className="space-y-2">
+                      <label className="text-xs font-medium">{t("augment.technique")}</label>
+                      <Select value={augTechnique} onValueChange={setAugTechnique}>
+                        <SelectTrigger className="text-xs"><SelectValue /></SelectTrigger>
+                        <SelectContent>
+                          {TECHNIQUES.map((tech) => (
+                            <SelectItem key={tech.key} value={tech.key}>{tech.label}</SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
+                    <div className="space-y-2">
+                      <label className="text-xs font-medium">{t("augment.factor")}: {augFactor}x</label>
+                      <Slider value={[augFactor]} onValueChange={([v]) => setAugFactor(v)} min={2} max={5} step={1} />
+                    </div>
+                    <div className="grid grid-cols-2 gap-2 text-center text-xs">
+                      <div className="p-2 rounded-lg bg-muted">
+                        <p className="font-bold text-foreground">{dataset.rows.toLocaleString()}</p>
+                        <p className="text-muted-foreground">{t("augment.original")}</p>
+                      </div>
+                      <div className="p-2 rounded-lg bg-primary/10 border border-primary/20">
+                        <p className="font-bold text-primary">{(dataset.rows * augFactor).toLocaleString()}</p>
+                        <p className="text-muted-foreground">{t("augment.augmented")}</p>
+                      </div>
+                    </div>
+                    <Button className="w-full" onClick={handleAugment} disabled={augmenting}>
+                      {augmenting ? t("augment.processing") : t("augment.apply")}
+                    </Button>
+                    {augmenting && <Progress value={65} className="h-1.5" />}
+                  </CardContent>
+                </Card>
+
+                <Card className="lg:col-span-2">
+                  <CardHeader>
+                    <CardTitle className="text-sm">{t("augment.preview")}</CardTitle>
+                    <CardDescription>{t("augment.previewDesc")}</CardDescription>
+                  </CardHeader>
+                  <CardContent className="space-y-3">
+                    {(filteredAug.length > 0 ? filteredAug : mockAugmentedSamples.slice(0, 3)).map((sample, i) => (
+                      <div key={i} className="p-3 rounded-lg border border-border space-y-1.5">
+                        <div>
+                          <Badge variant="outline" className="text-[10px] mb-1">{sample.technique}</Badge>
+                          <p className="text-xs text-muted-foreground">{t("augment.original")}: {sample.original}</p>
+                        </div>
+                        <p className="text-xs text-foreground font-medium">{t("augment.result")}: {sample.augmented}</p>
+                      </div>
+                    ))}
+                  </CardContent>
+                </Card>
+              </div>
             </TabsContent>
           </Tabs>
         </FadeIn>

@@ -9,6 +9,9 @@ import {
   BarChart3,
   Database,
   Calculator,
+  Rocket,
+  Trophy,
+  Tag,
 } from "lucide-react";
 import { NavLink } from "@/components/NavLink";
 import {
@@ -33,6 +36,9 @@ const navItems = [
   { titleKey: "nav.analytics", url: "/analytics", icon: BarChart3 },
   { titleKey: "nav.datasets", url: "/datasets", icon: Database },
   { titleKey: "nav.calculator", url: "/calculator", icon: Calculator },
+  { titleKey: "nav.deployment", url: "/deployment", icon: Rocket },
+  { titleKey: "nav.leaderboard", url: "/leaderboard", icon: Trophy },
+  { titleKey: "nav.annotate", url: "/annotate", icon: Tag },
   { titleKey: "nav.apiKeys", url: "/api-keys", icon: Key },
   { titleKey: "nav.settings", url: "/settings", icon: Settings },
 ];

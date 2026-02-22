@@ -3,8 +3,17 @@ import { Label } from "@/components/ui/label";
 import { Slider } from "@/components/ui/slider";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Wand2 } from "lucide-react";
 import type { ProjectFormData } from "@/pages/NewProject";
 import { taskTypeLabels, baseModelLabels } from "@/data/mockData";
+import { useLanguage } from "@/i18n/LanguageContext";
+
+function getSuggestions(datasetSize: number) {
+  if (datasetSize < 1000) return { lr: 1e-4, epochs: 10, batch: 8, label: "small" };
+  if (datasetSize <= 5000) return { lr: 2e-4, epochs: 5, batch: 16, label: "medium" };
+  return { lr: 3e-4, epochs: 3, batch: 32, label: "large" };
+}
 
 export function ConfigurationStep({
   formData,
@@ -14,6 +23,18 @@ export function ConfigurationStep({
   updateForm: (p: Partial<ProjectFormData>) => void;
 }) {
   const estimatedCredits = Math.round(formData.epochs * formData.batchSize * 0.8);
+  const { t } = useLanguage();
+  const fileCount = formData.files.length;
+  const estimatedRows = fileCount * 500;
+  const suggestion = getSuggestions(estimatedRows);
+
+  const applySuggestions = () => {
+    updateForm({
+      epochs: suggestion.epochs,
+      batchSize: suggestion.batch,
+      learningRate: suggestion.lr,
+    });
+  };
 
   return (
     <div className="space-y-5">
@@ -23,6 +44,35 @@ export function ConfigurationStep({
           Adjust training parameters. Default values work well for most tasks.
         </p>
       </div>
+
+      {/* Auto-tuning suggestion */}
+      <Card className="border-primary/20 bg-accent/30">
+        <CardContent className="p-4">
+          <div className="flex items-center justify-between mb-2">
+            <div className="flex items-center gap-2">
+              <Wand2 className="h-4 w-4 text-primary" />
+              <span className="text-xs font-medium text-foreground">{t("tuning.suggestions")}</span>
+            </div>
+            <Button size="sm" variant="outline" className="text-xs h-7" onClick={applySuggestions}>
+              {t("tuning.apply")}
+            </Button>
+          </div>
+          <p className="text-[10px] text-muted-foreground mb-2">
+            {t("tuning.datasetLabel")}: {suggestion.label} (~{estimatedRows} {t("calc.samples")})
+          </p>
+          <div className="flex gap-2">
+            {[
+              { label: "LR", value: suggestion.lr },
+              { label: "Epochs", value: suggestion.epochs },
+              { label: "Batch", value: suggestion.batch },
+            ].map((s) => (
+              <Badge key={s.label} variant="secondary" className="text-[10px]">
+                {s.label}: {s.value}
+              </Badge>
+            ))}
+          </div>
+        </CardContent>
+      </Card>
 
       {/* Summary */}
       <Card className="bg-accent/50 border-primary/20">
