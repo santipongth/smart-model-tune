@@ -14,7 +14,7 @@ function getInitialLanguage(): Language {
     const stored = localStorage.getItem("app-language");
     if (stored === "th" || stored === "en") return stored;
   } catch {}
-  return "en";
+  return "th";
 }
 
 export function LanguageProvider({ children }: { children: ReactNode }) {
