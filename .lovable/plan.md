@@ -1,102 +1,163 @@
 
 
-# Thai Language Support (i18n)
+# Phase 9: Advanced Platform Features (8 Features)
 
 ## Overview
-เพิ่มระบบสลับภาษาไทย/อังกฤษทั่วทั้งแอป โดยสร้าง i18n system ด้วย React Context พร้อมไฟล์แปลภาษา และปุ่มสลับภาษาใน header
+เพิ่ม 8 ฟีเจอร์ใหม่ครอบคลุมทั้ง project management, model versioning, AI-assisted tuning, data tools, deployment, leaderboard, annotation และ onboarding
 
 ---
 
-## Approach
-ใช้ React Context + custom hook (`useLanguage`) แทนการติดตั้ง library ภายนอก เพื่อให้ lightweight และควบคุมได้ง่าย ภาษาที่เลือกจะถูกบันทึกใน localStorage
+## Feature 1: Export/Import Projects
+
+**What**: ผู้ใช้สามารถดาวน์โหลด project config เป็น JSON และนำเข้ากลับมาสร้าง project ใหม่ได้
+
+**Changes**:
+- **`src/pages/ProjectDetail.tsx`**: Add "Export JSON" button in header that downloads project config (name, taskType, baseModel, epochs, learningRate, datasetSize) as `.json` file using `URL.createObjectURL`
+- **`src/pages/Projects.tsx`**: Add "Import Project" button that opens a file input dialog, reads JSON, validates schema with basic checks, and adds to the mock project list with toast confirmation
+- **`src/i18n/translations.ts`**: Add ~8 keys for export/import labels in both languages
 
 ---
 
-## New Files
+## Feature 2: Version History with Rollback
 
-### 1. `src/i18n/translations.ts`
-ไฟล์รวม dictionary สำหรับ 2 ภาษา (en, th) ครอบคลุมทุกหน้าหลัก:
-- **Dashboard**: titles, stats labels, quick actions
-- **Sidebar**: nav items (Dashboard, Projects, Models, Playground, Analytics, Datasets, Cost Calculator, API Keys, Settings)
-- **Settings**: tab names, form labels, button text
-- **Landing page**: hero text, features, pricing, CTA buttons
-- **Navbar**: login, signup, nav links
-- **Common**: Save, Cancel, Delete, Search, Loading, etc.
-- **Notifications**: notification titles
-- **Analytics, Datasets, Calculator, Model Comparison**: page-specific text
+**What**: แสดง version history ของแต่ละ project พร้อมปุ่ม rollback ไปยัง version ก่อนหน้า
 
-### 2. `src/i18n/LanguageContext.tsx`
-- `LanguageProvider` component wrapping the app
-- `useLanguage()` hook returning `{ language, setLanguage, t }` 
-- `t(key)` function ที่รับ dot-notation key เช่น `t("dashboard.title")` แล้วคืนค่าข้อความตามภาษาปัจจุบัน
-- เก็บค่าภาษาใน localStorage key `"app-language"`
-
-### 3. `src/components/LanguageSwitcher.tsx`
-- ปุ่มสลับภาษาขนาดเล็ก แสดง "EN" / "TH"
-- ใช้ `Button` variant="ghost" size="sm"
-- คลิกแล้วสลับระหว่าง en/th
+**Changes**:
+- **`src/data/mockData.ts`**: Add `mockVersionHistory` data structure with 2-3 versions per completed project (version number, config snapshot, metrics, date, notes)
+- **`src/pages/ProjectDetail.tsx`**: Add new "Versions" tab showing version list with config diff, metrics comparison, and "Rollback" button per version. Rollback updates local state with toast confirmation
+- **`src/i18n/translations.ts`**: Add ~10 keys for version history labels
 
 ---
 
-## Modified Files
+## Feature 3: Hyperparameter Auto-Tuning
 
-### 4. `src/App.tsx`
-- ครอบ `LanguageProvider` รอบ app
+**What**: แนะนำค่า hyperparameters ที่เหมาะสม (learning rate, epochs, batch size) ตามลักษณะ dataset
 
-### 5. `src/components/dashboard/DashboardLayout.tsx`
-- เพิ่ม `LanguageSwitcher` ใน header ข้าง ThemeToggle
-
-### 6. `src/components/landing/Navbar.tsx`
-- เพิ่ม `LanguageSwitcher` ข้าง ThemeToggle
-
-### 7. `src/components/dashboard/AppSidebar.tsx`
-- แปลง nav item titles ให้ใช้ `t()` เช่น `t("nav.dashboard")`, `t("nav.projects")`
-- แปล "Credits" และ "Plan" labels
-
-### 8. `src/pages/Dashboard.tsx`
-- ใช้ `t()` สำหรับ "Dashboard", "Overview of your fine-tuning workspace", quick action labels
-
-### 9. `src/pages/Settings.tsx`
-- แปล tab names, section titles, form labels, button text ทุก tab (API Keys, Team, Notifications, Webhooks, Account, Billing)
-
-### 10. `src/components/landing/HeroSection.tsx`
-- แปล headline, subtitle, CTA buttons
-
-### 11. `src/components/landing/Navbar.tsx`
-- แปล "Log in", "Get Started", nav links
-
-### 12. `src/components/landing/PricingSection.tsx`
-- แปล plan names, feature lists, CTA
-
-### 13. `src/components/landing/FeaturesSection.tsx`
-- แปล section title, feature cards
-
-### 14. `src/components/CommandPalette.tsx`
-- แปล placeholder text, group headings
-
-### 15. `src/components/NotificationCenter.tsx`
-- แปล notification titles, "Mark all as read", "Notifications" heading
+**Changes**:
+- **`src/components/new-project/ConfigurationStep.tsx`**: Add "Auto-suggest" button that calculates recommended values based on dataset size and base model:
+  - Small datasets (<1000): lower LR (1e-4), more epochs (8-10), smaller batch (8)
+  - Medium (1000-5000): moderate LR (2e-4), 5 epochs, batch 16
+  - Large (>5000): higher LR (3e-4), fewer epochs (3), batch 32
+  - Show recommendations as highlighted badges with "Apply" button
+- **`src/pages/ProjectDetail.tsx`**: Add "Tuning Suggestions" card in overview tab showing recommendations based on current config
+- **`src/i18n/translations.ts`**: Add ~8 keys for auto-tuning labels
 
 ---
 
-## Translation Coverage
+## Feature 4: Data Augmentation Tools
 
-| Section | Keys (approx) |
-|---------|---------------|
-| Navigation/Sidebar | 12 |
-| Dashboard | 8 |
-| Settings (all tabs) | 40 |
-| Landing page | 25 |
-| Common/Shared | 15 |
-| Analytics/Datasets/Calculator | 20 |
-| **Total** | **~120 keys** |
+**What**: เครื่องมือสร้างข้อมูลเพิ่มเติมในหน้า Dataset Explorer (paraphrase, back-translation, synonym replacement)
+
+**Changes**:
+- **`src/pages/DatasetExplorer.tsx`**: Add new "Augmentation" tab with:
+  - Technique selector: Paraphrase, Back-Translation (TH<>EN), Synonym Replacement, Random Insertion
+  - Augmentation factor slider (2x - 5x)
+  - Preview of augmented samples (mock generated)
+  - "Apply Augmentation" button with progress indicator and toast
+  - Stats card showing original vs augmented row counts
+- **`src/data/datasetMockData.ts`**: Add mock augmented sample data
+- **`src/i18n/translations.ts`**: Add ~12 keys for augmentation labels
+
+---
+
+## Feature 5: Model Deployment Dashboard
+
+**What**: หน้า deploy โมเดลเป็น API endpoint พร้อม usage monitoring และ rate limiting
+
+**Changes**:
+- **`src/pages/Deployment.tsx`** (new): Full deployment dashboard with:
+  - Deployed models list with status indicators (active/inactive/scaling)
+  - Per-endpoint stats: requests/min, avg latency, error rate, uptime
+  - Rate limiting config: requests/min limit, burst limit, throttle policy
+  - Usage chart (recharts AreaChart) showing requests over time
+  - One-click deploy/undeploy buttons with confirmation dialog
+  - Endpoint URL display with copy button
+- **`src/data/deploymentMockData.ts`** (new): Mock deployment data
+- **`src/App.tsx`**: Add route `/deployment`
+- **`src/components/dashboard/AppSidebar.tsx`**: Add "Deployment" nav item with Rocket icon
+- **`src/i18n/translations.ts`**: Add ~20 keys for deployment labels
+
+---
+
+## Feature 6: Model Leaderboard
+
+**What**: ตารางจัดอันดับโมเดลทั้งหมดข้าม project เรียงตาม metrics
+
+**Changes**:
+- **`src/pages/Leaderboard.tsx`** (new): Unified ranking page with:
+  - Sortable table: rank, model name, project, base model, task type, accuracy, F1, latency, file size
+  - Filter by task type
+  - Sort by any metric column (click header to toggle asc/desc)
+  - Medal icons for top 3 (gold, silver, bronze)
+  - "View Model" and "Deploy" action buttons per row
+  - Summary cards: total models, avg accuracy, best model highlight
+- **`src/App.tsx`**: Add route `/leaderboard`
+- **`src/components/dashboard/AppSidebar.tsx`**: Add "Leaderboard" nav item with Trophy icon
+- **`src/i18n/translations.ts`**: Add ~15 keys for leaderboard labels
+
+---
+
+## Feature 7: Annotation Tool
+
+**What**: เครื่องมือ labeling ข้อมูลสำหรับสร้าง training dataset ในตัว
+
+**Changes**:
+- **`src/pages/AnnotationTool.tsx`** (new): Data labeling interface with:
+  - Text display area showing one sample at a time
+  - Label buttons for classification tasks (configurable labels)
+  - Entity highlighting for NER tasks (select text span + assign entity type)
+  - Navigation: Previous/Next/Skip buttons with keyboard shortcuts (1-9 for labels, arrow keys for nav)
+  - Progress bar showing annotated/total
+  - Export annotations as JSON
+  - Mock dataset of 20 unlabeled samples
+  - Stats sidebar: label distribution pie chart, annotation speed
+- **`src/App.tsx`**: Add route `/annotate`
+- **`src/components/dashboard/AppSidebar.tsx`**: Add "Annotate" nav item with Tag icon
+- **`src/i18n/translations.ts`**: Add ~15 keys for annotation labels
+
+---
+
+## Feature 8: Onboarding Tour
+
+**What**: Interactive walkthrough ที่แนะนำ feature หลักของ platform ให้ผู้ใช้ใหม่
+
+**Changes**:
+- **`src/components/OnboardingTour.tsx`** (new): Tour overlay component with:
+  - Step-by-step tooltip system highlighting UI elements
+  - Steps: Welcome > Sidebar nav > New Project > Models > Playground > Analytics > Settings
+  - Each step has title, description, and highlighted target area
+  - Progress dots, Next/Skip/Done buttons
+  - Semi-transparent backdrop with spotlight cutout effect using CSS
+  - Auto-starts on first visit (checked via localStorage `onboarding-completed`)
+  - "Restart Tour" button accessible from Settings
+- **`src/components/dashboard/DashboardLayout.tsx`**: Mount `OnboardingTour` component
+- **`src/pages/Settings.tsx`**: Add "Restart Onboarding Tour" button in Account tab
+- **`src/i18n/translations.ts`**: Add ~20 keys for onboarding step text
+
+---
+
+## Implementation Order
+
+1. **Export/Import** -- small change to existing pages
+2. **Version History** -- extends ProjectDetail
+3. **Hyperparameter Auto-Tuning** -- extends ConfigurationStep
+4. **Data Augmentation** -- extends DatasetExplorer
+5. **Leaderboard** -- new standalone page
+6. **Model Deployment Dashboard** -- new page with charts
+7. **Annotation Tool** -- new standalone page
+8. **Onboarding Tour** -- overlay component, final polish
 
 ---
 
 ## Technical Notes
-- ไม่ต้องติดตั้ง dependency ใหม่ -- ใช้ React Context ล้วน
-- ภาษาที่เลือกจะ persist ผ่าน localStorage
-- Default language: English (en)
-- `t()` function จะ fallback เป็น key name ถ้าไม่พบ translation
-- New files: 3, Modified files: ~12
+
+- All features are mock/client-side only -- no backend required
+- New files: ~5 new page files + 1 mock data file + 1 component (OnboardingTour)
+- Modified files: ~10 (App.tsx, AppSidebar.tsx, ProjectDetail, DatasetExplorer, ConfigurationStep, Projects, Settings, DashboardLayout, mockData, translations)
+- Uses existing libraries: `recharts`, `framer-motion`, `lucide-react`, Radix UI
+- JSON export uses `Blob` + `URL.createObjectURL` + `<a>` download pattern
+- JSON import uses `<input type="file">` with `FileReader`
+- Onboarding tour uses CSS `box-shadow` spotlight effect (no external tour library needed)
+- Annotation tool keyboard shortcuts via `useEffect` + `keydown` listener
+- All new text content will have both EN and TH translations (~108 new keys total)
 
