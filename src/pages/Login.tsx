@@ -5,8 +5,11 @@ import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { Zap } from "lucide-react";
+import { useLanguage } from "@/i18n/LanguageContext";
 
 const Login = () => {
+  const { t } = useLanguage();
+
   return (
     <div className="min-h-screen flex items-center justify-center bg-secondary/20 p-4">
       <Card className="w-full max-w-md">
@@ -17,8 +20,8 @@ const Login = () => {
             </div>
             <span className="font-semibold text-lg">TuneLab</span>
           </Link>
-          <CardTitle className="text-xl">Welcome back</CardTitle>
-          <CardDescription>Sign in to your account</CardDescription>
+          <CardTitle className="text-xl">{t("login.welcome")}</CardTitle>
+          <CardDescription>{t("login.subtitle")}</CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
           <Button variant="outline" className="w-full" onClick={() => {}}>
@@ -28,34 +31,34 @@ const Login = () => {
               <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/>
               <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
             </svg>
-            Continue with Google
+            {t("login.google")}
           </Button>
 
           <div className="relative">
             <Separator />
             <span className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 bg-card px-2 text-xs text-muted-foreground">
-              or
+              {t("common.or")}
             </span>
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="email">Email</Label>
+            <Label htmlFor="email">{t("login.email")}</Label>
             <Input id="email" type="email" placeholder="you@company.com" />
           </div>
           <div className="space-y-2">
             <div className="flex items-center justify-between">
-              <Label htmlFor="password">Password</Label>
-              <a href="#" className="text-xs text-primary hover:underline">Forgot password?</a>
+              <Label htmlFor="password">{t("login.password")}</Label>
+              <a href="#" className="text-xs text-primary hover:underline">{t("login.forgot")}</a>
             </div>
             <Input id="password" type="password" placeholder="••••••••" />
           </div>
 
-          <Button className="w-full">Sign In</Button>
+          <Button className="w-full">{t("login.signIn")}</Button>
         </CardContent>
         <CardFooter className="justify-center">
           <p className="text-sm text-muted-foreground">
-            Don't have an account?{" "}
-            <Link to="/signup" className="text-primary hover:underline font-medium">Sign up</Link>
+            {t("login.noAccount")}{" "}
+            <Link to="/signup" className="text-primary hover:underline font-medium">{t("login.signUp")}</Link>
           </p>
         </CardFooter>
       </Card>

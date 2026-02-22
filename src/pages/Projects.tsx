@@ -7,11 +7,13 @@ import { mockProjects, taskTypeLabels } from "@/data/mockData";
 import { Search } from "lucide-react";
 import { PageTransition, FadeIn, StaggerContainer, MotionCard } from "@/components/motion";
 import { ProjectCardSkeleton } from "@/components/skeletons/ProjectCardSkeleton";
+import { useLanguage } from "@/i18n/LanguageContext";
 
 export default function Projects() {
   const [search, setSearch] = useState("");
   const [filterTask, setFilterTask] = useState("all");
   const [loading, setLoading] = useState(true);
+  const { t } = useLanguage();
 
   useEffect(() => {
     const timer = setTimeout(() => setLoading(false), 1200);
@@ -30,8 +32,8 @@ export default function Projects() {
         <FadeIn>
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-2xl font-bold text-foreground">Projects</h1>
-              <p className="text-sm text-muted-foreground">{mockProjects.length} projects total</p>
+              <h1 className="text-2xl font-bold text-foreground">{t("projects.title")}</h1>
+              <p className="text-sm text-muted-foreground">{t("projects.total").replace("{count}", String(mockProjects.length))}</p>
             </div>
             <NewProjectDialog />
           </div>
@@ -41,12 +43,12 @@ export default function Projects() {
           <div className="flex flex-col sm:flex-row gap-3">
             <div className="relative flex-1">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-              <Input placeholder="Search projects..." value={search} onChange={(e) => setSearch(e.target.value)} className="pl-9" />
+              <Input placeholder={t("projects.searchPlaceholder")} value={search} onChange={(e) => setSearch(e.target.value)} className="pl-9" />
             </div>
             <Select value={filterTask} onValueChange={setFilterTask}>
-              <SelectTrigger className="w-full sm:w-48"><SelectValue placeholder="Filter by task" /></SelectTrigger>
+              <SelectTrigger className="w-full sm:w-48"><SelectValue placeholder={t("projects.filterByTask")} /></SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">All Tasks</SelectItem>
+                <SelectItem value="all">{t("projects.allTasks")}</SelectItem>
                 {Object.entries(taskTypeLabels).map(([key, label]) => (
                   <SelectItem key={key} value={key}>{label}</SelectItem>
                 ))}
@@ -74,7 +76,7 @@ export default function Projects() {
         {!loading && filtered.length === 0 && (
           <FadeIn>
             <div className="text-center py-12 text-muted-foreground">
-              <p className="text-sm">No projects found matching your criteria.</p>
+              <p className="text-sm">{t("projects.noResults")}</p>
             </div>
           </FadeIn>
         )}

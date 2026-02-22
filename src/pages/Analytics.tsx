@@ -11,11 +11,13 @@ import {
 import {
   generateApiCallData, generateLatencyData, generateEndpointStats, getAnalyticsSummary,
 } from "@/data/analyticsMockData";
+import { useLanguage } from "@/i18n/LanguageContext";
 
 const timeRanges = ["24h", "7d", "30d", "90d"] as const;
 
 export default function Analytics() {
   const [range, setRange] = useState<string>("7d");
+  const { t } = useLanguage();
 
   const summary = useMemo(() => getAnalyticsSummary(range), [range]);
   const apiData = useMemo(() => generateApiCallData(range), [range]);
@@ -23,10 +25,10 @@ export default function Analytics() {
   const endpoints = useMemo(() => generateEndpointStats(), []);
 
   const statCards = [
-    { label: "Total API Calls", value: summary.totalCalls.toLocaleString(), icon: BarChart3, change: "+12.3%" },
-    { label: "Avg Latency", value: `${summary.avgLatency}ms`, icon: Clock, change: "-0.8ms" },
-    { label: "Error Rate", value: `${summary.errorRate}%`, icon: AlertTriangle, change: "-0.3%" },
-    { label: "Uptime", value: `${summary.uptime}%`, icon: Activity, change: "+0.1%" },
+    { label: t("analytics.totalCalls"), value: summary.totalCalls.toLocaleString(), icon: BarChart3, change: "+12.3%" },
+    { label: t("analytics.avgLatency"), value: `${summary.avgLatency}ms`, icon: Clock, change: "-0.8ms" },
+    { label: t("analytics.errorRate"), value: `${summary.errorRate}%`, icon: AlertTriangle, change: "-0.3%" },
+    { label: t("analytics.uptime"), value: `${summary.uptime}%`, icon: Activity, change: "+0.1%" },
   ];
 
   return (
@@ -35,8 +37,8 @@ export default function Analytics() {
         <FadeIn>
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
             <div>
-              <h1 className="text-2xl font-bold text-foreground">Analytics</h1>
-              <p className="text-sm text-muted-foreground">Monitor API usage, latency, and errors</p>
+              <h1 className="text-2xl font-bold text-foreground">{t("analytics.title")}</h1>
+              <p className="text-sm text-muted-foreground">{t("analytics.subtitle")}</p>
             </div>
             <div className="flex gap-1">
               {timeRanges.map((r) => (
@@ -69,7 +71,7 @@ export default function Analytics() {
 
         <FadeIn delay={0.2}>
           <Card>
-            <CardHeader><CardTitle className="text-lg">API Calls Over Time</CardTitle></CardHeader>
+            <CardHeader><CardTitle className="text-lg">{t("analytics.apiCallsOverTime")}</CardTitle></CardHeader>
             <CardContent>
               <div className="h-72">
                 <ResponsiveContainer width="100%" height="100%">
@@ -90,7 +92,7 @@ export default function Analytics() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           <FadeIn delay={0.3}>
             <Card>
-              <CardHeader><CardTitle className="text-lg">Latency (ms)</CardTitle></CardHeader>
+              <CardHeader><CardTitle className="text-lg">{t("analytics.latency")}</CardTitle></CardHeader>
               <CardContent>
                 <div className="h-64">
                   <ResponsiveContainer width="100%" height="100%">
@@ -112,7 +114,7 @@ export default function Analytics() {
 
           <FadeIn delay={0.3}>
             <Card>
-              <CardHeader><CardTitle className="text-lg">Error Rate by Endpoint</CardTitle></CardHeader>
+              <CardHeader><CardTitle className="text-lg">{t("analytics.errorByEndpoint")}</CardTitle></CardHeader>
               <CardContent>
                 <div className="h-64">
                   <ResponsiveContainer width="100%" height="100%">
@@ -132,16 +134,16 @@ export default function Analytics() {
 
         <FadeIn delay={0.4}>
           <Card>
-            <CardHeader><CardTitle className="text-lg">Top Endpoints</CardTitle></CardHeader>
+            <CardHeader><CardTitle className="text-lg">{t("analytics.topEndpoints")}</CardTitle></CardHeader>
             <CardContent>
               <div className="overflow-x-auto">
                 <table className="w-full text-sm">
                   <thead>
                     <tr className="border-b border-border">
-                      <th className="text-left py-2 text-muted-foreground font-medium">Endpoint</th>
-                      <th className="text-right py-2 text-muted-foreground font-medium">Calls</th>
-                      <th className="text-right py-2 text-muted-foreground font-medium">Avg Latency</th>
-                      <th className="text-right py-2 text-muted-foreground font-medium">Error Rate</th>
+                      <th className="text-left py-2 text-muted-foreground font-medium">{t("analytics.endpoint")}</th>
+                      <th className="text-right py-2 text-muted-foreground font-medium">{t("analytics.calls")}</th>
+                      <th className="text-right py-2 text-muted-foreground font-medium">{t("analytics.avgLatency")}</th>
+                      <th className="text-right py-2 text-muted-foreground font-medium">{t("analytics.errorRate")}</th>
                     </tr>
                   </thead>
                   <tbody>

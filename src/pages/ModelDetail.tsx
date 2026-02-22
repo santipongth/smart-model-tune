@@ -7,6 +7,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ArrowLeft, Download, Rocket, MessageSquare, Copy, ExternalLink, CheckCircle2 } from "lucide-react";
 import { mockModels, taskTypeLabels, baseModelLabels, mockEvalMetrics } from "@/data/mockData";
 import { useState } from "react";
+import { useLanguage } from "@/i18n/LanguageContext";
 
 const exportFormats = [
   { format: "SafeTensors", size: "1.2 GB", description: "Default format, best compatibility with HuggingFace" },
@@ -68,12 +69,13 @@ export default function ModelDetail() {
   const model = mockModels.find((m) => m.id === id);
   const [codeTab, setCodeTab] = useState<"python" | "curl" | "javascript">("python");
   const [copied, setCopied] = useState(false);
+  const { t } = useLanguage();
 
   if (!model) {
     return (
       <div className="text-center py-20">
-        <p className="text-muted-foreground">Model not found.</p>
-        <Button variant="link" asChild><Link to="/models">Back to Models</Link></Button>
+        <p className="text-muted-foreground">{t("modelDetail.notFound")}</p>
+        <Button variant="link" asChild><Link to="/models">{t("modelDetail.backToModels")}</Link></Button>
       </div>
     );
   }
@@ -111,37 +113,36 @@ export default function ModelDetail() {
         <div className="flex gap-2">
           <Button variant="outline" size="sm" className="gap-2" asChild>
             <Link to="/playground">
-              <MessageSquare className="h-3.5 w-3.5" /> Test
+              <MessageSquare className="h-3.5 w-3.5" /> {t("modelDetail.test")}
             </Link>
           </Button>
           <Button size="sm" className="gap-2">
             <Rocket className="h-3.5 w-3.5" />
-            {model.status === "deployed" ? "Deployed" : "Deploy"}
+            {model.status === "deployed" ? t("modelDetail.deployed") : t("modelDetail.deploy")}
           </Button>
         </div>
       </div>
 
       <Tabs defaultValue="overview">
         <TabsList>
-          <TabsTrigger value="overview">Overview</TabsTrigger>
-          <TabsTrigger value="export">Export</TabsTrigger>
-          <TabsTrigger value="api">API Endpoint</TabsTrigger>
-          <TabsTrigger value="versions">Versions</TabsTrigger>
+          <TabsTrigger value="overview">{t("modelDetail.overview")}</TabsTrigger>
+          <TabsTrigger value="export">{t("modelDetail.export")}</TabsTrigger>
+          <TabsTrigger value="api">{t("modelDetail.apiEndpoint")}</TabsTrigger>
+          <TabsTrigger value="versions">{t("modelDetail.versions")}</TabsTrigger>
         </TabsList>
 
-        {/* Overview */}
         <TabsContent value="overview" className="space-y-4 mt-4">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <Card>
-              <CardHeader className="pb-2"><CardTitle className="text-sm">Model Info</CardTitle></CardHeader>
+              <CardHeader className="pb-2"><CardTitle className="text-sm">{t("modelDetail.modelInfo")}</CardTitle></CardHeader>
               <CardContent className="space-y-2 text-sm">
                 {[
                   ["Model ID", model.id],
-                  ["Base Model", baseModelLabels[model.baseModel]],
-                  ["Task Type", taskTypeLabels[model.taskType]],
-                  ["File Size", model.fileSize],
-                  ["Format", model.format],
-                  ["Created", new Date(model.createdAt).toLocaleString()],
+                  [t("projectDetail.baseModel"), baseModelLabels[model.baseModel]],
+                  [t("projectDetail.taskType"), taskTypeLabels[model.taskType]],
+                  [t("dataset.fileSize"), model.fileSize],
+                  [t("dataset.format"), model.format],
+                  [t("projectDetail.created"), new Date(model.createdAt).toLocaleString()],
                 ].map(([label, value]) => (
                   <div key={String(label)} className="flex justify-between">
                     <span className="text-muted-foreground">{label}</span>
@@ -153,7 +154,7 @@ export default function ModelDetail() {
 
             {metrics ? (
               <Card>
-                <CardHeader className="pb-2"><CardTitle className="text-sm">Performance Metrics</CardTitle></CardHeader>
+                <CardHeader className="pb-2"><CardTitle className="text-sm">{t("modelDetail.performanceMetrics")}</CardTitle></CardHeader>
                 <CardContent>
                   <div className="grid grid-cols-2 gap-3">
                     {[
@@ -175,14 +176,13 @@ export default function ModelDetail() {
             ) : (
               <Card>
                 <CardContent className="p-6 text-center text-muted-foreground text-sm">
-                  Metrics not yet available for this model.
+                  {t("modelDetail.metricsNotAvailable")}
                 </CardContent>
               </Card>
             )}
           </div>
         </TabsContent>
 
-        {/* Export */}
         <TabsContent value="export" className="space-y-4 mt-4">
           <div className="space-y-3">
             {exportFormats.map((fmt) => (
@@ -200,7 +200,7 @@ export default function ModelDetail() {
                   <div className="flex items-center gap-3">
                     <span className="text-xs text-muted-foreground">{fmt.size}</span>
                     <Button variant="outline" size="sm" className="gap-2">
-                      <Download className="h-3.5 w-3.5" /> Download
+                      <Download className="h-3.5 w-3.5" /> {t("modelDetail.download")}
                     </Button>
                   </div>
                 </CardContent>
@@ -209,7 +209,6 @@ export default function ModelDetail() {
           </div>
         </TabsContent>
 
-        {/* API Endpoint */}
         <TabsContent value="api" className="space-y-4 mt-4">
           <Card>
             <CardHeader className="pb-2">
@@ -221,7 +220,6 @@ export default function ModelDetail() {
               </div>
             </CardHeader>
             <CardContent className="space-y-4">
-              {/* Endpoint URL */}
               <div className="flex items-center gap-2 bg-secondary/50 rounded-md px-3 py-2">
                 <code className="text-xs font-mono text-foreground flex-1">
                   POST https://api.slmstudio.dev/v1/inference
@@ -231,7 +229,6 @@ export default function ModelDetail() {
                 </Button>
               </div>
 
-              {/* Code Examples */}
               <div>
                 <div className="flex gap-1 mb-2">
                   {(["python", "curl", "javascript"] as const).map((lang) => (
@@ -265,10 +262,9 @@ export default function ModelDetail() {
           </Card>
         </TabsContent>
 
-        {/* Versions */}
         <TabsContent value="versions" className="space-y-4 mt-4">
           <Card>
-            <CardHeader className="pb-2"><CardTitle className="text-sm">Model Versions</CardTitle></CardHeader>
+            <CardHeader className="pb-2"><CardTitle className="text-sm">{t("modelDetail.modelVersions")}</CardTitle></CardHeader>
             <CardContent className="space-y-3">
               {[
                 { version: "v1.0", date: model.createdAt, accuracy: model.accuracy, status: "current", note: "Initial release" },
@@ -292,7 +288,7 @@ export default function ModelDetail() {
                 </div>
               ))}
               <p className="text-xs text-muted-foreground text-center pt-2">
-                New versions will appear here when you retrain the model
+                {t("modelDetail.newVersionHint")}
               </p>
             </CardContent>
           </Card>
