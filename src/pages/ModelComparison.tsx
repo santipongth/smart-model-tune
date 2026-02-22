@@ -8,8 +8,9 @@ import { GitCompare, Trophy, Rocket } from "lucide-react";
 import { mockModels } from "@/data/mockData";
 import {
   RadarChart, Radar, PolarGrid, PolarAngleAxis, PolarRadiusAxis, ResponsiveContainer,
-  BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend,
+  BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip,
 } from "recharts";
+import { useLanguage } from "@/i18n/LanguageContext";
 
 const modelMetrics: Record<string, { accuracy: number; f1: number; precision: number; recall: number; latency: number; size: string }> = {
   "model-1": { accuracy: 94.2, f1: 93.8, precision: 95.1, recall: 92.5, latency: 3.8, size: "1.2 GB" },
@@ -21,6 +22,7 @@ const COLORS = ["hsl(var(--primary))", "hsl(var(--warning))", "hsl(var(--destruc
 
 export default function ModelComparison() {
   const [selected, setSelected] = useState<string[]>([mockModels[0].id, mockModels[1].id]);
+  const { t } = useLanguage();
 
   const handleSelect = (index: number, value: string) => {
     const next = [...selected];
@@ -74,11 +76,11 @@ export default function ModelComparison() {
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
             <div>
               <h1 className="text-2xl font-bold text-foreground flex items-center gap-2">
-                <GitCompare className="h-6 w-6 text-primary" /> Model Comparison
+                <GitCompare className="h-6 w-6 text-primary" /> {t("compare.title")}
               </h1>
-              <p className="text-sm text-muted-foreground">Compare trained models side-by-side</p>
+              <p className="text-sm text-muted-foreground">{t("compare.subtitle")}</p>
             </div>
-            {selected.length < 3 && <Button variant="outline" size="sm" onClick={addSlot}>Add Model</Button>}
+            {selected.length < 3 && <Button variant="outline" size="sm" onClick={addSlot}>{t("compare.addModel")}</Button>}
           </div>
         </FadeIn>
 
@@ -109,13 +111,13 @@ export default function ModelComparison() {
 
         <FadeIn delay={0.15}>
           <Card>
-            <CardHeader><CardTitle className="text-lg">Metrics Comparison</CardTitle></CardHeader>
+            <CardHeader><CardTitle className="text-lg">{t("compare.metricsComparison")}</CardTitle></CardHeader>
             <CardContent>
               <div className="overflow-x-auto">
                 <table className="w-full text-sm">
                   <thead>
                     <tr className="border-b border-border">
-                      <th className="text-left py-2 text-muted-foreground font-medium">Metric</th>
+                      <th className="text-left py-2 text-muted-foreground font-medium">{t("compare.metric")}</th>
                       {selected.map((id, i) => (
                         <th key={id} className="text-right py-2 text-muted-foreground font-medium">
                           <div className="flex items-center justify-end gap-1.5">
@@ -145,7 +147,7 @@ export default function ModelComparison() {
                       );
                     })}
                     <tr className="border-b border-border/50">
-                      <td className="py-2.5">Model Size</td>
+                      <td className="py-2.5">{t("compare.modelSize")}</td>
                       {selected.map((id) => (
                         <td key={id} className="py-2.5 text-right">{modelMetrics[id]?.size}</td>
                       ))}
@@ -160,7 +162,7 @@ export default function ModelComparison() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           <FadeIn delay={0.2}>
             <Card>
-              <CardHeader><CardTitle className="text-lg">Radar Overview</CardTitle></CardHeader>
+              <CardHeader><CardTitle className="text-lg">{t("compare.radarOverview")}</CardTitle></CardHeader>
               <CardContent>
                 <div className="h-72">
                   <ResponsiveContainer width="100%" height="100%">
@@ -180,7 +182,7 @@ export default function ModelComparison() {
 
           <FadeIn delay={0.2}>
             <Card>
-              <CardHeader><CardTitle className="text-lg">Latency Comparison</CardTitle></CardHeader>
+              <CardHeader><CardTitle className="text-lg">{t("compare.latencyComparison")}</CardTitle></CardHeader>
               <CardContent>
                 <div className="h-72">
                   <ResponsiveContainer width="100%" height="100%">
@@ -205,7 +207,7 @@ export default function ModelComparison() {
         <FadeIn delay={0.3}>
           <div className="flex justify-end">
             <Button size="lg">
-              <Rocket className="h-4 w-4 mr-2" /> Deploy Best Model
+              <Rocket className="h-4 w-4 mr-2" /> {t("compare.deployBest")}
             </Button>
           </div>
         </FadeIn>

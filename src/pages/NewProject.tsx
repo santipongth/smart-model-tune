@@ -10,14 +10,7 @@ import { ModelSelectionStep } from "@/components/new-project/ModelSelectionStep"
 import { ConfigurationStep } from "@/components/new-project/ConfigurationStep";
 import { TemplateLibrary } from "@/components/new-project/TemplateLibrary";
 import type { TaskType, BaseModel } from "@/types";
-
-const steps = [
-  { id: "prompt", label: "Task Prompt" },
-  { id: "task", label: "Task Type" },
-  { id: "data", label: "Upload Data" },
-  { id: "model", label: "Base Model" },
-  { id: "config", label: "Configuration" },
-];
+import { useLanguage } from "@/i18n/LanguageContext";
 
 export interface ProjectFormData {
   projectName: string;
@@ -45,6 +38,15 @@ export default function NewProject() {
   const [currentStep, setCurrentStep] = useState(0);
   const [formData, setFormData] = useState<ProjectFormData>(initialFormData);
   const [showTemplates, setShowTemplates] = useState(false);
+  const { t } = useLanguage();
+
+  const steps = [
+    { id: "prompt", label: t("newProject.taskPrompt") },
+    { id: "task", label: t("newProject.taskType") },
+    { id: "data", label: t("newProject.uploadData") },
+    { id: "model", label: t("newProject.baseModel") },
+    { id: "config", label: t("newProject.configuration") },
+  ];
 
   const updateForm = (partial: Partial<ProjectFormData>) => {
     setFormData((prev) => ({ ...prev, ...partial }));
@@ -54,7 +56,7 @@ export default function NewProject() {
     switch (currentStep) {
       case 0: return formData.taskPrompt.trim().length > 10;
       case 1: return formData.taskType !== null;
-      case 2: return true; // optional
+      case 2: return true;
       case 3: return formData.baseModel !== null;
       case 4: return true;
       default: return false;
@@ -70,32 +72,29 @@ export default function NewProject() {
       baseModel: template.baseModel,
     });
     setShowTemplates(false);
-    setCurrentStep(2); // skip to data upload
+    setCurrentStep(2);
   };
 
   return (
     <div className="max-w-4xl mx-auto space-y-6">
-      {/* Header */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
           <Button variant="ghost" size="icon" asChild>
             <Link to="/projects"><ArrowLeft className="h-4 w-4" /></Link>
           </Button>
           <div>
-            <h1 className="text-xl font-bold text-foreground">New Fine-Tuning Project</h1>
-            <p className="text-sm text-muted-foreground">Configure and launch your training job</p>
+            <h1 className="text-xl font-bold text-foreground">{t("newProject.title")}</h1>
+            <p className="text-sm text-muted-foreground">{t("newProject.subtitle")}</p>
           </div>
         </div>
         <Button variant="outline" size="sm" className="gap-2" onClick={() => setShowTemplates(!showTemplates)}>
           <Sparkles className="h-3.5 w-3.5" />
-          {showTemplates ? "Hide Templates" : "Use Template"}
+          {showTemplates ? t("newProject.hideTemplates") : t("newProject.useTemplate")}
         </Button>
       </div>
 
-      {/* Template Library */}
       {showTemplates && <TemplateLibrary onSelect={handleTemplateSelect} />}
 
-      {/* Stepper */}
       <div className="flex items-center gap-1">
         {steps.map((step, i) => (
           <div key={step.id} className="flex items-center flex-1">
@@ -119,7 +118,6 @@ export default function NewProject() {
         ))}
       </div>
 
-      {/* Step Content */}
       <Card>
         <CardContent className="p-6">
           {currentStep === 0 && <TaskPromptStep formData={formData} updateForm={updateForm} />}
@@ -130,7 +128,6 @@ export default function NewProject() {
         </CardContent>
       </Card>
 
-      {/* Navigation */}
       <div className="flex justify-between">
         <Button
           variant="outline"
@@ -138,16 +135,16 @@ export default function NewProject() {
           disabled={currentStep === 0}
           className="gap-2"
         >
-          <ArrowLeft className="h-4 w-4" /> Back
+          <ArrowLeft className="h-4 w-4" /> {t("common.back")}
         </Button>
         {currentStep < steps.length - 1 ? (
           <Button onClick={() => setCurrentStep((s) => s + 1)} disabled={!canProceed()} className="gap-2">
-            Next <ArrowRight className="h-4 w-4" />
+            {t("common.next")} <ArrowRight className="h-4 w-4" />
           </Button>
         ) : (
           <Button className="gap-2" asChild>
             <Link to="/projects">
-              <Sparkles className="h-4 w-4" /> Launch Training
+              <Sparkles className="h-4 w-4" /> {t("newProject.launchTraining")}
             </Link>
           </Button>
         )}

@@ -9,6 +9,7 @@ import { ArrowLeft, Activity } from "lucide-react";
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
 import { mockProjects, mockEvalMetrics, taskTypeLabels, baseModelLabels } from "@/data/mockData";
 import type { ProjectStatus } from "@/types";
+import { useLanguage } from "@/i18n/LanguageContext";
 
 const statusVariant: Record<ProjectStatus, "default" | "secondary" | "destructive" | "outline"> = {
   completed: "default",
@@ -18,7 +19,6 @@ const statusVariant: Record<ProjectStatus, "default" | "secondary" | "destructiv
   failed: "destructive",
 };
 
-// Mock loss curve data
 const lossCurve = Array.from({ length: 50 }, (_, i) => ({
   step: (i + 1) * 20,
   loss: 2.5 * Math.exp(-i * 0.06) + 0.15 + Math.random() * 0.08,
@@ -27,12 +27,13 @@ const lossCurve = Array.from({ length: 50 }, (_, i) => ({
 export default function ProjectDetail() {
   const { id } = useParams<{ id: string }>();
   const project = mockProjects.find((p) => p.id === id);
+  const { t } = useLanguage();
 
   if (!project) {
     return (
       <div className="text-center py-20">
-        <p className="text-muted-foreground">Project not found.</p>
-        <Button variant="link" asChild><Link to="/projects">Back to Projects</Link></Button>
+        <p className="text-muted-foreground">{t("projectDetail.notFound")}</p>
+        <Button variant="link" asChild><Link to="/projects">{t("projectDetail.backToProjects")}</Link></Button>
       </div>
     );
   }
@@ -55,29 +56,29 @@ export default function ProjectDetail() {
         </div>
         <Button variant="outline" size="sm" className="gap-2" asChild>
           <Link to={`/projects/${project.id}/training`}>
-            <Activity className="h-3.5 w-3.5" /> Training Monitor
+            <Activity className="h-3.5 w-3.5" /> {t("projectDetail.trainingMonitor")}
           </Link>
         </Button>
       </div>
 
       <Tabs defaultValue="overview">
         <TabsList>
-          <TabsTrigger value="overview">Overview</TabsTrigger>
-          <TabsTrigger value="training">Training</TabsTrigger>
-          <TabsTrigger value="evaluation">Evaluation</TabsTrigger>
+          <TabsTrigger value="overview">{t("projectDetail.overview")}</TabsTrigger>
+          <TabsTrigger value="training">{t("projectDetail.training")}</TabsTrigger>
+          <TabsTrigger value="evaluation">{t("projectDetail.evaluation")}</TabsTrigger>
         </TabsList>
 
         <TabsContent value="overview" className="space-y-4 mt-4">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <Card>
-              <CardHeader className="pb-2"><CardTitle className="text-sm">Configuration</CardTitle></CardHeader>
+              <CardHeader className="pb-2"><CardTitle className="text-sm">{t("projectDetail.configuration")}</CardTitle></CardHeader>
               <CardContent className="space-y-2 text-sm">
                 {[
-                  ["Task Type", taskTypeLabels[project.taskType]],
-                  ["Base Model", baseModelLabels[project.baseModel]],
-                  ["Epochs", project.epochs],
-                  ["Learning Rate", project.learningRate],
-                  ["Dataset Size", `${project.datasetSize} samples`],
+                  [t("projectDetail.taskType"), taskTypeLabels[project.taskType]],
+                  [t("projectDetail.baseModel"), baseModelLabels[project.baseModel]],
+                  [t("projectDetail.epochs"), project.epochs],
+                  [t("projectDetail.learningRate"), project.learningRate],
+                  [t("projectDetail.datasetSize"), `${project.datasetSize} ${t("calc.samples")}`],
                 ].map(([label, value]) => (
                   <div key={String(label)} className="flex justify-between">
                     <span className="text-muted-foreground">{label}</span>
@@ -87,13 +88,13 @@ export default function ProjectDetail() {
               </CardContent>
             </Card>
             <Card>
-              <CardHeader className="pb-2"><CardTitle className="text-sm">Status</CardTitle></CardHeader>
+              <CardHeader className="pb-2"><CardTitle className="text-sm">{t("projectDetail.status")}</CardTitle></CardHeader>
               <CardContent className="space-y-2 text-sm">
                 {[
-                  ["Created", new Date(project.createdAt).toLocaleString()],
-                  ["Last Updated", new Date(project.updatedAt).toLocaleString()],
-                  ["Credits Used", project.creditsCost],
-                  ["Progress", `${project.progress}%`],
+                  [t("projectDetail.created"), new Date(project.createdAt).toLocaleString()],
+                  [t("projectDetail.lastUpdated"), new Date(project.updatedAt).toLocaleString()],
+                  [t("projectDetail.creditsUsed"), project.creditsCost],
+                  [t("projectDetail.progress"), `${project.progress}%`],
                 ].map(([label, value]) => (
                   <div key={String(label)} className="flex justify-between">
                     <span className="text-muted-foreground">{label}</span>
@@ -110,7 +111,7 @@ export default function ProjectDetail() {
             <Card>
               <CardContent className="p-5 space-y-2">
                 <div className="flex justify-between text-sm">
-                  <span className="text-muted-foreground">Training Progress</span>
+                  <span className="text-muted-foreground">{t("projectDetail.trainingProgress")}</span>
                   <span className="font-medium text-foreground">{project.progress}%</span>
                 </div>
                 <Progress value={project.progress} className="h-2" />
@@ -118,7 +119,7 @@ export default function ProjectDetail() {
             </Card>
           )}
           <Card>
-            <CardHeader className="pb-2"><CardTitle className="text-sm">Loss Curve</CardTitle></CardHeader>
+            <CardHeader className="pb-2"><CardTitle className="text-sm">{t("projectDetail.lossCurve")}</CardTitle></CardHeader>
             <CardContent>
               <div className="h-[260px]">
                 <ResponsiveContainer width="100%" height="100%">
@@ -144,7 +145,7 @@ export default function ProjectDetail() {
         <TabsContent value="evaluation" className="space-y-4 mt-4">
           {metrics ? (
             <Card>
-              <CardHeader className="pb-2"><CardTitle className="text-sm">Evaluation Metrics</CardTitle></CardHeader>
+              <CardHeader className="pb-2"><CardTitle className="text-sm">{t("projectDetail.evalMetrics")}</CardTitle></CardHeader>
               <CardContent>
                 <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
                   {[
@@ -165,7 +166,7 @@ export default function ProjectDetail() {
             </Card>
           ) : (
             <div className="text-center py-12 text-muted-foreground text-sm">
-              Evaluation metrics will be available once training is complete.
+              {t("projectDetail.evalPending")}
             </div>
           )}
         </TabsContent>

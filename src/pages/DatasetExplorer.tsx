@@ -6,9 +6,11 @@ import { Badge } from "@/components/ui/badge";
 import { PageTransition, FadeIn } from "@/components/motion";
 import { Database, Table, BarChart3, FileText } from "lucide-react";
 import { mockDatasets, mockSchemas, mockSampleRows, mockColumnStats } from "@/data/datasetMockData";
+import { useLanguage } from "@/i18n/LanguageContext";
 
 export default function DatasetExplorer() {
   const [selectedId, setSelectedId] = useState(mockDatasets[0].id);
+  const { t } = useLanguage();
   const dataset = mockDatasets.find((d) => d.id === selectedId)!;
   const schema = mockSchemas[selectedId] || [];
   const samples = mockSampleRows[selectedId] || [];
@@ -20,8 +22,8 @@ export default function DatasetExplorer() {
         <FadeIn>
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
             <div>
-              <h1 className="text-2xl font-bold text-foreground">Dataset Explorer</h1>
-              <p className="text-sm text-muted-foreground">Preview datasets, inspect schema, and view statistics</p>
+              <h1 className="text-2xl font-bold text-foreground">{t("dataset.title")}</h1>
+              <p className="text-sm text-muted-foreground">{t("dataset.subtitle")}</p>
             </div>
             <Select value={selectedId} onValueChange={setSelectedId}>
               <SelectTrigger className="w-full sm:w-56">
@@ -41,10 +43,10 @@ export default function DatasetExplorer() {
         <FadeIn delay={0.1}>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             {[
-              { label: "Rows", value: dataset.rows.toLocaleString(), icon: Table },
-              { label: "Columns", value: dataset.columns, icon: Database },
-              { label: "File Size", value: dataset.fileSize, icon: FileText },
-              { label: "Format", value: dataset.format, icon: BarChart3 },
+              { label: t("dataset.rows"), value: dataset.rows.toLocaleString(), icon: Table },
+              { label: t("dataset.columns"), value: dataset.columns, icon: Database },
+              { label: t("dataset.fileSize"), value: dataset.fileSize, icon: FileText },
+              { label: t("dataset.format"), value: dataset.format, icon: BarChart3 },
             ].map((item) => (
               <Card key={item.label}>
                 <CardContent className="p-4 flex items-center gap-3">
@@ -64,26 +66,26 @@ export default function DatasetExplorer() {
         <FadeIn delay={0.2}>
           <Tabs defaultValue="schema" className="space-y-4">
             <TabsList>
-              <TabsTrigger value="schema" className="text-xs">Schema</TabsTrigger>
-              <TabsTrigger value="sample" className="text-xs">Sample Data</TabsTrigger>
-              <TabsTrigger value="stats" className="text-xs">Statistics</TabsTrigger>
+              <TabsTrigger value="schema" className="text-xs">{t("dataset.schema")}</TabsTrigger>
+              <TabsTrigger value="sample" className="text-xs">{t("dataset.sampleData")}</TabsTrigger>
+              <TabsTrigger value="stats" className="text-xs">{t("dataset.statistics")}</TabsTrigger>
             </TabsList>
 
             <TabsContent value="schema">
               <Card>
                 <CardHeader>
-                  <CardTitle className="text-lg">Column Schema</CardTitle>
-                  <CardDescription>Data types and constraints for each column</CardDescription>
+                  <CardTitle className="text-lg">{t("dataset.columnSchema")}</CardTitle>
+                  <CardDescription>{t("dataset.schemaDesc")}</CardDescription>
                 </CardHeader>
                 <CardContent>
                   <div className="overflow-x-auto">
                     <table className="w-full text-sm">
                       <thead>
                         <tr className="border-b border-border">
-                          <th className="text-left py-2 text-muted-foreground font-medium">Column</th>
-                          <th className="text-left py-2 text-muted-foreground font-medium">Type</th>
-                          <th className="text-left py-2 text-muted-foreground font-medium">Nullable</th>
-                          <th className="text-right py-2 text-muted-foreground font-medium">Unique Values</th>
+                          <th className="text-left py-2 text-muted-foreground font-medium">{t("dataset.column")}</th>
+                          <th className="text-left py-2 text-muted-foreground font-medium">{t("dataset.type")}</th>
+                          <th className="text-left py-2 text-muted-foreground font-medium">{t("dataset.nullable")}</th>
+                          <th className="text-right py-2 text-muted-foreground font-medium">{t("dataset.uniqueValues")}</th>
                         </tr>
                       </thead>
                       <tbody>
@@ -105,8 +107,8 @@ export default function DatasetExplorer() {
             <TabsContent value="sample">
               <Card>
                 <CardHeader>
-                  <CardTitle className="text-lg">Sample Rows</CardTitle>
-                  <CardDescription>First {samples.length} rows from the dataset</CardDescription>
+                  <CardTitle className="text-lg">{t("dataset.sampleRows")}</CardTitle>
+                  <CardDescription>{t("dataset.firstRows").replace("{count}", String(samples.length))}</CardDescription>
                 </CardHeader>
                 <CardContent>
                   <div className="overflow-x-auto">
@@ -136,7 +138,7 @@ export default function DatasetExplorer() {
             <TabsContent value="stats">
               <Card>
                 <CardHeader>
-                  <CardTitle className="text-lg">Column Statistics</CardTitle>
+                  <CardTitle className="text-lg">{t("dataset.columnStats")}</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">
                   {stats.map((col) => (

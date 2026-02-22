@@ -7,7 +7,8 @@ import { Badge } from "@/components/ui/badge";
 import { Slider } from "@/components/ui/slider";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { PageTransition, FadeIn } from "@/components/motion";
-import { Calculator, Zap, ArrowRight, Check } from "lucide-react";
+import { Calculator, Zap, ArrowRight } from "lucide-react";
+import { useLanguage } from "@/i18n/LanguageContext";
 
 const baseModels = [
   { id: "qwen-0.5b", name: "Qwen2.5-0.5B", params: "0.5B", costMultiplier: 1 },
@@ -30,6 +31,7 @@ export default function CostCalculator() {
   const [datasetSize, setDatasetSize] = useState(5000);
   const [epochs, setEpochs] = useState(3);
   const [loraRank, setLoraRank] = useState(16);
+  const { t } = useLanguage();
 
   const model = baseModels.find((m) => m.id === modelId)!;
 
@@ -48,9 +50,9 @@ export default function CostCalculator() {
         <FadeIn>
           <div>
             <h1 className="text-2xl font-bold text-foreground flex items-center gap-2">
-              <Calculator className="h-6 w-6 text-primary" /> Cost Calculator
+              <Calculator className="h-6 w-6 text-primary" /> {t("calc.title")}
             </h1>
-            <p className="text-sm text-muted-foreground">Estimate credits needed for your fine-tuning job</p>
+            <p className="text-sm text-muted-foreground">{t("calc.subtitle")}</p>
           </div>
         </FadeIn>
 
@@ -58,12 +60,12 @@ export default function CostCalculator() {
           <FadeIn delay={0.1}>
             <Card>
               <CardHeader>
-                <CardTitle className="text-lg">Configuration</CardTitle>
-                <CardDescription>Adjust parameters to estimate costs</CardDescription>
+                <CardTitle className="text-lg">{t("calc.configuration")}</CardTitle>
+                <CardDescription>{t("calc.configDesc")}</CardDescription>
               </CardHeader>
               <CardContent className="space-y-6">
                 <div className="space-y-2">
-                  <Label>Base Model</Label>
+                  <Label>{t("calc.baseModel")}</Label>
                   <Select value={modelId} onValueChange={setModelId}>
                     <SelectTrigger><SelectValue /></SelectTrigger>
                     <SelectContent>
@@ -81,8 +83,8 @@ export default function CostCalculator() {
 
                 <div className="space-y-2">
                   <div className="flex justify-between">
-                    <Label>Dataset Size</Label>
-                    <span className="text-sm font-medium text-foreground">{datasetSize.toLocaleString()} samples</span>
+                    <Label>{t("calc.datasetSize")}</Label>
+                    <span className="text-sm font-medium text-foreground">{datasetSize.toLocaleString()} {t("calc.samples")}</span>
                   </div>
                   <Slider value={[datasetSize]} onValueChange={([v]) => setDatasetSize(v)} min={100} max={50000} step={100} />
                   <div className="flex justify-between text-[10px] text-muted-foreground"><span>100</span><span>50,000</span></div>
@@ -90,7 +92,7 @@ export default function CostCalculator() {
 
                 <div className="space-y-2">
                   <div className="flex justify-between">
-                    <Label>Epochs</Label>
+                    <Label>{t("calc.epochs")}</Label>
                     <span className="text-sm font-medium text-foreground">{epochs}</span>
                   </div>
                   <Slider value={[epochs]} onValueChange={([v]) => setEpochs(v)} min={1} max={20} step={1} />
@@ -98,7 +100,7 @@ export default function CostCalculator() {
                 </div>
 
                 <div className="space-y-2">
-                  <Label>LoRA Rank</Label>
+                  <Label>{t("calc.loraRank")}</Label>
                   <div className="flex gap-2">
                     {loraRanks.map((r) => (
                       <Button key={r} variant={loraRank === r ? "default" : "outline"} size="sm" onClick={() => setLoraRank(r)} className="flex-1 text-xs">
@@ -115,29 +117,29 @@ export default function CostCalculator() {
             <Card>
               <CardHeader>
                 <CardTitle className="text-lg flex items-center gap-2">
-                  <Zap className="h-5 w-5 text-primary" /> Credit Estimate
+                  <Zap className="h-5 w-5 text-primary" /> {t("calc.creditEstimate")}
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="space-y-3">
                   {[
-                    { label: "Data Generation", value: costs.dataGenCredits },
-                    { label: "Training Compute", value: costs.trainingCredits },
-                    { label: "Evaluation", value: costs.evalCredits },
+                    { label: t("calc.dataGeneration"), value: costs.dataGenCredits },
+                    { label: t("calc.trainingCompute"), value: costs.trainingCredits },
+                    { label: t("calc.evaluation"), value: costs.evalCredits },
                   ].map((item) => (
                     <div key={item.label} className="flex justify-between items-center py-2 border-b border-border/50">
                       <span className="text-sm text-muted-foreground">{item.label}</span>
-                      <span className="text-sm font-medium">{item.value.toLocaleString()} credits</span>
+                      <span className="text-sm font-medium">{item.value.toLocaleString()} {t("calc.credits")}</span>
                     </div>
                   ))}
                   <div className="flex justify-between items-center pt-2">
-                    <span className="text-base font-semibold">Total</span>
-                    <span className="text-xl font-bold text-primary">{costs.total.toLocaleString()} credits</span>
+                    <span className="text-base font-semibold">{t("common.total")}</span>
+                    <span className="text-xl font-bold text-primary">{costs.total.toLocaleString()} {t("calc.credits")}</span>
                   </div>
                 </div>
 
                 <div className="pt-4 border-t border-border">
-                  <p className="text-xs text-muted-foreground mb-3">Estimated cost per plan:</p>
+                  <p className="text-xs text-muted-foreground mb-3">{t("calc.estimatedCost")}</p>
                   <div className="space-y-2">
                     {planLimits.map((plan) => {
                       const usd = plan.pricePerCredit > 0 ? (costs.total * plan.pricePerCredit).toFixed(2) : "Free";
@@ -146,9 +148,9 @@ export default function CostCalculator() {
                         <div key={plan.name} className="flex items-center justify-between p-2 rounded-lg bg-muted/50">
                           <div className="flex items-center gap-2">
                             <span className="text-sm font-medium">{plan.name}</span>
-                            {fits && <Badge variant="outline" className="text-[9px] text-primary">Fits</Badge>}
+                            {fits && <Badge variant="outline" className="text-[9px] text-primary">{t("calc.fits")}</Badge>}
                           </div>
-                          <span className="text-sm font-medium">{usd === "Free" ? "Included" : `~$${usd}`}</span>
+                          <span className="text-sm font-medium">{usd === "Free" ? t("calc.included") : `~$${usd}`}</span>
                         </div>
                       );
                     })}
@@ -157,7 +159,7 @@ export default function CostCalculator() {
 
                 <Button className="w-full mt-4" asChild>
                   <Link to="/projects/new">
-                    Start Project with This Config <ArrowRight className="ml-2 h-4 w-4" />
+                    {t("calc.startProject")} <ArrowRight className="ml-2 h-4 w-4" />
                   </Link>
                 </Button>
               </CardContent>
