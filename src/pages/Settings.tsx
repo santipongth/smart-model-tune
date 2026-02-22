@@ -11,11 +11,12 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import {
   Key, Copy, Eye, EyeOff, Plus, Trash2, Bell, User, CreditCard,
   Check, Shield, Clock, Code, ChevronRight, Zap, AlertTriangle, Users, Mail, MoreHorizontal, Crown, UserCheck, EyeIcon,
-  Webhook, Send, Pause, Play,
+  Webhook, Send, Pause, Play, RotateCcw,
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { PageTransition, FadeIn } from "@/components/motion";
 import { useLanguage } from "@/i18n/LanguageContext";
+import { restartOnboarding } from "@/components/OnboardingTour";
 
 // --- API Keys Tab ---
 interface ApiKey {
@@ -357,6 +358,16 @@ function AccountTab() {
               <p className="text-xs text-muted-foreground">Permanently delete your account and all data</p>
             </div>
             <Button variant="destructive" size="sm">Delete</Button>
+          </div>
+          <Separator />
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-sm font-medium">Onboarding Tour</p>
+              <p className="text-xs text-muted-foreground">Restart the interactive platform walkthrough</p>
+            </div>
+            <Button variant="outline" size="sm" className="gap-1.5" onClick={restartOnboarding}>
+              <RotateCcw className="h-3.5 w-3.5" /> Restart Tour
+            </Button>
           </div>
         </CardContent>
       </Card>

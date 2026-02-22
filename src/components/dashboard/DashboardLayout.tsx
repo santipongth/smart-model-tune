@@ -6,6 +6,7 @@ import { ThemeToggle } from "@/components/ThemeToggle";
 import { NotificationCenter } from "@/components/NotificationCenter";
 import { CommandPalette } from "@/components/CommandPalette";
 import { LanguageSwitcher } from "@/components/LanguageSwitcher";
+import { OnboardingTour } from "@/components/OnboardingTour";
 
 function AnimatedOutlet() {
   const location = useLocation();
@@ -29,6 +30,7 @@ function AnimatedOutlet() {
 export default function DashboardLayout() {
   return (
     <SidebarProvider>
+      <OnboardingTour />
       <div className="min-h-screen flex w-full">
         <AppSidebar />
         <div className="flex-1 flex flex-col min-w-0">

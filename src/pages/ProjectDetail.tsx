@@ -1,3 +1,4 @@
+import { useState, useRef } from "react";
 import { useParams, Link } from "react-router-dom";
 import { PageTransition, FadeIn } from "@/components/motion";
 import { Badge } from "@/components/ui/badge";
@@ -5,11 +6,13 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { ArrowLeft, Activity } from "lucide-react";
+import { ArrowLeft, Activity, Download, RotateCcw, Wand2 } from "lucide-react";
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
 import { mockProjects, mockEvalMetrics, taskTypeLabels, baseModelLabels } from "@/data/mockData";
+import { mockVersionHistory } from "@/data/deploymentMockData";
 import type { ProjectStatus } from "@/types";
 import { useLanguage } from "@/i18n/LanguageContext";
+import { useToast } from "@/hooks/use-toast";
 
 const statusVariant: Record<ProjectStatus, "default" | "secondary" | "destructive" | "outline"> = {
   completed: "default",
@@ -24,10 +27,17 @@ const lossCurve = Array.from({ length: 50 }, (_, i) => ({
   loss: 2.5 * Math.exp(-i * 0.06) + 0.15 + Math.random() * 0.08,
 }));
 
+function getSuggestions(datasetSize: number) {
+  if (datasetSize < 1000) return { lr: 1e-4, epochs: 10, batch: 8, label: "small" };
+  if (datasetSize <= 5000) return { lr: 2e-4, epochs: 5, batch: 16, label: "medium" };
+  return { lr: 3e-4, epochs: 3, batch: 32, label: "large" };
+}
+
 export default function ProjectDetail() {
   const { id } = useParams<{ id: string }>();
   const project = mockProjects.find((p) => p.id === id);
   const { t } = useLanguage();
+  const { toast } = useToast();
 
   if (!project) {
     return (
@@ -39,6 +49,32 @@ export default function ProjectDetail() {
   }
 
   const metrics = mockEvalMetrics[project.id];
+  const versions = mockVersionHistory[project.id as keyof typeof mockVersionHistory] || [];
+  const suggestion = getSuggestions(project.datasetSize);
+
+  const handleExport = () => {
+    const config = {
+      name: project.name,
+      description: project.description,
+      taskType: project.taskType,
+      baseModel: project.baseModel,
+      epochs: project.epochs,
+      learningRate: project.learningRate,
+      datasetSize: project.datasetSize,
+    };
+    const blob = new Blob([JSON.stringify(config, null, 2)], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `${project.name.replace(/\s+/g, "-").toLowerCase()}.json`;
+    a.click();
+    URL.revokeObjectURL(url);
+    toast({ title: t("export.exported") });
+  };
+
+  const handleRollback = (version: string) => {
+    toast({ title: t("versions.rolledBack"), description: `→ ${version}` });
+  };
 
   return (
     <PageTransition>
@@ -54,6 +90,9 @@ export default function ProjectDetail() {
           </div>
           <p className="text-sm text-muted-foreground mt-0.5">{project.description}</p>
         </div>
+        <Button variant="outline" size="sm" className="gap-2" onClick={handleExport}>
+          <Download className="h-3.5 w-3.5" /> {t("export.exportJson")}
+        </Button>
         <Button variant="outline" size="sm" className="gap-2" asChild>
           <Link to={`/projects/${project.id}/training`}>
             <Activity className="h-3.5 w-3.5" /> {t("projectDetail.trainingMonitor")}
@@ -66,6 +105,7 @@ export default function ProjectDetail() {
           <TabsTrigger value="overview">{t("projectDetail.overview")}</TabsTrigger>
           <TabsTrigger value="training">{t("projectDetail.training")}</TabsTrigger>
           <TabsTrigger value="evaluation">{t("projectDetail.evaluation")}</TabsTrigger>
+          <TabsTrigger value="versions">{t("versions.title")}</TabsTrigger>
         </TabsList>
 
         <TabsContent value="overview" className="space-y-4 mt-4">
@@ -104,6 +144,33 @@ export default function ProjectDetail() {
               </CardContent>
             </Card>
           </div>
+
+          {/* Tuning Suggestions */}
+          <Card className="border-primary/20 bg-accent/30">
+            <CardHeader className="pb-2">
+              <CardTitle className="text-sm flex items-center gap-2">
+                <Wand2 className="h-4 w-4 text-primary" /> {t("tuning.suggestions")}
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="text-xs text-muted-foreground mb-3">
+                {t("tuning.datasetLabel")}: {suggestion.label} ({project.datasetSize} {t("calc.samples")})
+              </p>
+              <div className="grid grid-cols-3 gap-3">
+                {[
+                  { label: "Learning Rate", value: suggestion.lr, current: project.learningRate },
+                  { label: "Epochs", value: suggestion.epochs, current: project.epochs },
+                  { label: "Batch Size", value: suggestion.batch, current: "—" },
+                ].map((s) => (
+                  <div key={s.label} className="text-center p-2 rounded-lg bg-background border border-border">
+                    <p className="text-xs text-muted-foreground">{s.label}</p>
+                    <p className="text-sm font-bold text-primary">{s.value}</p>
+                    <p className="text-[10px] text-muted-foreground">{t("tuning.current")}: {s.current}</p>
+                  </div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
         </TabsContent>
 
         <TabsContent value="training" className="space-y-4 mt-4">
@@ -167,6 +234,50 @@ export default function ProjectDetail() {
           ) : (
             <div className="text-center py-12 text-muted-foreground text-sm">
               {t("projectDetail.evalPending")}
+            </div>
+          )}
+        </TabsContent>
+
+        <TabsContent value="versions" className="space-y-4 mt-4">
+          {versions.length > 0 ? (
+            <div className="space-y-3">
+              {versions.map((v) => (
+                <Card key={v.version} className={v.current ? "border-primary/30" : ""}>
+                  <CardContent className="p-4">
+                    <div className="flex items-center justify-between mb-2">
+                      <div className="flex items-center gap-2">
+                        <span className="font-bold text-foreground">{v.version}</span>
+                        {v.current && <Badge>{t("versions.current")}</Badge>}
+                      </div>
+                      {!v.current && (
+                        <Button variant="outline" size="sm" className="gap-1.5" onClick={() => handleRollback(v.version)}>
+                          <RotateCcw className="h-3 w-3" /> {t("versions.rollback")}
+                        </Button>
+                      )}
+                    </div>
+                    <p className="text-xs text-muted-foreground mb-2">{new Date(v.date).toLocaleString()}</p>
+                    <p className="text-xs text-muted-foreground italic mb-2">{v.notes}</p>
+                    <div className="grid grid-cols-2 md:grid-cols-5 gap-2 text-xs">
+                      {[
+                        ["Epochs", v.epochs],
+                        ["LR", v.learningRate],
+                        ["Batch", v.batchSize],
+                        ["Accuracy", v.accuracy ? `${v.accuracy}%` : "—"],
+                        ["F1", v.f1Score ? `${v.f1Score}%` : "—"],
+                      ].map(([label, val]) => (
+                        <div key={String(label)} className="text-center p-1.5 rounded bg-muted">
+                          <p className="text-muted-foreground">{label}</p>
+                          <p className="font-medium text-foreground">{String(val)}</p>
+                        </div>
+                      ))}
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          ) : (
+            <div className="text-center py-12 text-muted-foreground text-sm">
+              {t("versions.noVersions")}
             </div>
           )}
         </TabsContent>
