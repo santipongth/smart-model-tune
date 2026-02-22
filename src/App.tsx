@@ -4,6 +4,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { ThemeProvider } from "@/components/ThemeProvider";
+import { LanguageProvider } from "@/i18n/LanguageContext";
 import Index from "./pages/Index";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
@@ -27,36 +28,38 @@ const queryClient = new QueryClient();
 
 const App = () => (
   <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
-    <QueryClientProvider client={queryClient}>
-      <TooltipProvider>
-        <Toaster />
-        <Sonner />
-        <BrowserRouter>
-          <Routes>
-            <Route path="/" element={<Index />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/signup" element={<Signup />} />
-            <Route element={<DashboardLayout />}>
-              <Route path="/dashboard" element={<Dashboard />} />
-              <Route path="/projects" element={<Projects />} />
-              <Route path="/projects/new" element={<NewProject />} />
-              <Route path="/projects/:id" element={<ProjectDetail />} />
-              <Route path="/projects/:id/training" element={<TrainingMonitor />} />
-              <Route path="/models" element={<Models />} />
-              <Route path="/models/:id" element={<ModelDetail />} />
-              <Route path="/models/compare" element={<ModelComparison />} />
-              <Route path="/playground" element={<Playground />} />
-              <Route path="/analytics" element={<Analytics />} />
-              <Route path="/datasets" element={<DatasetExplorer />} />
-              <Route path="/calculator" element={<CostCalculator />} />
-              <Route path="/settings" element={<Settings />} />
-              <Route path="/api-keys" element={<Settings />} />
-            </Route>
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-        </BrowserRouter>
-      </TooltipProvider>
-    </QueryClientProvider>
+    <LanguageProvider>
+      <QueryClientProvider client={queryClient}>
+        <TooltipProvider>
+          <Toaster />
+          <Sonner />
+          <BrowserRouter>
+            <Routes>
+              <Route path="/" element={<Index />} />
+              <Route path="/login" element={<Login />} />
+              <Route path="/signup" element={<Signup />} />
+              <Route element={<DashboardLayout />}>
+                <Route path="/dashboard" element={<Dashboard />} />
+                <Route path="/projects" element={<Projects />} />
+                <Route path="/projects/new" element={<NewProject />} />
+                <Route path="/projects/:id" element={<ProjectDetail />} />
+                <Route path="/projects/:id/training" element={<TrainingMonitor />} />
+                <Route path="/models" element={<Models />} />
+                <Route path="/models/:id" element={<ModelDetail />} />
+                <Route path="/models/compare" element={<ModelComparison />} />
+                <Route path="/playground" element={<Playground />} />
+                <Route path="/analytics" element={<Analytics />} />
+                <Route path="/datasets" element={<DatasetExplorer />} />
+                <Route path="/calculator" element={<CostCalculator />} />
+                <Route path="/settings" element={<Settings />} />
+                <Route path="/api-keys" element={<Settings />} />
+              </Route>
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </BrowserRouter>
+        </TooltipProvider>
+      </QueryClientProvider>
+    </LanguageProvider>
   </ThemeProvider>
 );
 
