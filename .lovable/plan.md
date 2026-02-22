@@ -1,143 +1,102 @@
 
 
-# Phase 8: Platform Feature Expansion
+# Thai Language Support (i18n)
 
-## Status Check - Already Implemented
-The following features from the request are already in the codebase:
-- **Loading Skeletons**: DashboardSkeleton, ProjectCardSkeleton, ModelCardSkeleton, TrainingMonitorSkeleton all exist with simulated loading states
-- **Notification Center**: Bell icon with popover dropdown, unread badge, mark-as-read functionality already in DashboardLayout header
-- **Landing Scroll Animations**: HeroSection, FeaturesSection, PricingSection, DemoSection, UseCasesSection, Footer all have framer-motion whileInView animations
-
-## New Features to Implement (6 items)
+## Overview
+เพิ่มระบบสลับภาษาไทย/อังกฤษทั่วทั้งแอป โดยสร้าง i18n system ด้วย React Context พร้อมไฟล์แปลภาษา และปุ่มสลับภาษาใน header
 
 ---
 
-### Feature 1: Responsive Mobile Layout
-
-**What**: Adjust all dashboard pages, sidebar, header, and landing page for smooth mobile usage.
-
-**Changes**:
-- **`src/components/landing/Navbar.tsx`**: Add mobile hamburger menu with Sheet/Drawer for nav links; hide desktop nav on small screens
-- **`src/components/dashboard/DashboardLayout.tsx`**: Reduce header padding on mobile; ensure sidebar collapses properly on small screens
-- **`src/pages/Dashboard.tsx`**: Stack quick action buttons vertically on mobile
-- **`src/pages/Settings.tsx`**: Change TabsList from `grid-cols-5` to scrollable horizontal tabs on mobile; stack form inputs vertically
-- **`src/pages/Playground.tsx`**: Force single-column chat layout on mobile regardless of A/B mode
-- **`src/pages/ProjectDetail.tsx`**: Stack config/status cards vertically on small screens (already uses `md:grid-cols-2`)
-- **`src/pages/TrainingMonitor.tsx`**: Adjust stat cards grid from `grid-cols-4` to `grid-cols-2` on mobile (already done)
-- **`src/components/landing/HeroSection.tsx`**: Reduce heading size, stack buttons vertically on mobile
-- **`src/components/landing/PricingSection.tsx`**: Single-column pricing cards on mobile
+## Approach
+ใช้ React Context + custom hook (`useLanguage`) แทนการติดตั้ง library ภายนอก เพื่อให้ lightweight และควบคุมได้ง่าย ภาษาที่เลือกจะถูกบันทึกใน localStorage
 
 ---
 
-### Feature 2: Usage Analytics Dashboard
+## New Files
 
-**What**: New page with charts showing API calls, latency, error rate over selectable time ranges.
+### 1. `src/i18n/translations.ts`
+ไฟล์รวม dictionary สำหรับ 2 ภาษา (en, th) ครอบคลุมทุกหน้าหลัก:
+- **Dashboard**: titles, stats labels, quick actions
+- **Sidebar**: nav items (Dashboard, Projects, Models, Playground, Analytics, Datasets, Cost Calculator, API Keys, Settings)
+- **Settings**: tab names, form labels, button text
+- **Landing page**: hero text, features, pricing, CTA buttons
+- **Navbar**: login, signup, nav links
+- **Common**: Save, Cancel, Delete, Search, Loading, etc.
+- **Notifications**: notification titles
+- **Analytics, Datasets, Calculator, Model Comparison**: page-specific text
 
-**Changes**:
-- **`src/pages/Analytics.tsx`** (new): Full analytics page with:
-  - Time range selector (24h, 7d, 30d, 90d)
-  - Summary stat cards: Total API Calls, Avg Latency, Error Rate, Uptime
-  - Line chart: API calls over time (using recharts AreaChart)
-  - Line chart: Latency (p50, p95, p99) over time
-  - Bar chart: Error rate by endpoint
-  - Table: Top endpoints by usage
-  - All data is mock-generated based on selected time range
-- **`src/data/analyticsMockData.ts`** (new): Mock data generators for API calls, latency, errors
-- **`src/App.tsx`**: Add route `/analytics`
-- **`src/components/dashboard/AppSidebar.tsx`**: Add "Analytics" nav item with BarChart3 icon
+### 2. `src/i18n/LanguageContext.tsx`
+- `LanguageProvider` component wrapping the app
+- `useLanguage()` hook returning `{ language, setLanguage, t }` 
+- `t(key)` function ที่รับ dot-notation key เช่น `t("dashboard.title")` แล้วคืนค่าข้อความตามภาษาปัจจุบัน
+- เก็บค่าภาษาใน localStorage key `"app-language"`
 
----
-
-### Feature 3: Dataset Explorer
-
-**What**: New page to preview uploaded datasets with schema detection, sample rows, and column statistics.
-
-**Changes**:
-- **`src/pages/DatasetExplorer.tsx`** (new):
-  - Dataset selector dropdown (mock datasets from projects)
-  - Schema tab: column name, type, nullable, unique count
-  - Sample Data tab: first 10 rows displayed in a table
-  - Statistics tab: per-column stats (min, max, mean, distribution for numeric; top values for categorical; text length stats for text)
-  - Dataset overview card: row count, column count, file size, format
-- **`src/data/datasetMockData.ts`** (new): Mock schema, sample rows, and statistics data for 3 datasets
-- **`src/App.tsx`**: Add route `/datasets`
-- **`src/components/dashboard/AppSidebar.tsx`**: Add "Datasets" nav item with Database icon
+### 3. `src/components/LanguageSwitcher.tsx`
+- ปุ่มสลับภาษาขนาดเล็ก แสดง "EN" / "TH"
+- ใช้ `Button` variant="ghost" size="sm"
+- คลิกแล้วสลับระหว่าง en/th
 
 ---
 
-### Feature 4: Cost Calculator
+## Modified Files
 
-**What**: Interactive calculator to estimate credits needed based on model size, dataset size, and training epochs.
+### 4. `src/App.tsx`
+- ครอบ `LanguageProvider` รอบ app
 
-**Changes**:
-- **`src/pages/CostCalculator.tsx`** (new):
-  - Base model selector (with parameter counts)
-  - Dataset size input (slider: 100 to 50,000 samples)
-  - Epochs input (slider: 1 to 20)
-  - LoRA rank selector (8, 16, 32, 64)
-  - Real-time credit estimate display with breakdown:
-    - Data generation cost
-    - Training compute cost
-    - Evaluation cost
-    - Total credits and approximate USD
-  - Comparison card showing estimates for Free vs Pro vs Enterprise
-  - "Start Project with This Config" button linking to /projects/new
-- **`src/App.tsx`**: Add route `/calculator`
-- **`src/components/dashboard/AppSidebar.tsx`**: Add "Cost Calculator" nav item with Calculator icon
+### 5. `src/components/dashboard/DashboardLayout.tsx`
+- เพิ่ม `LanguageSwitcher` ใน header ข้าง ThemeToggle
 
----
+### 6. `src/components/landing/Navbar.tsx`
+- เพิ่ม `LanguageSwitcher` ข้าง ThemeToggle
 
-### Feature 5: Model Comparison
+### 7. `src/components/dashboard/AppSidebar.tsx`
+- แปลง nav item titles ให้ใช้ `t()` เช่น `t("nav.dashboard")`, `t("nav.projects")`
+- แปล "Credits" และ "Plan" labels
 
-**What**: Side-by-side comparison page for 2-3 trained models showing metrics, speed, and quality scores.
+### 8. `src/pages/Dashboard.tsx`
+- ใช้ `t()` สำหรับ "Dashboard", "Overview of your fine-tuning workspace", quick action labels
 
-**Changes**:
-- **`src/pages/ModelComparison.tsx`** (new):
-  - Model selector: pick 2-3 models from dropdown
-  - Comparison table: base model, task type, accuracy, F1, precision, recall, latency, file size, format
-  - Radar chart (recharts RadarChart): overlay metrics for selected models
-  - Bar chart: latency comparison
-  - Winner badges per metric (highlight best value)
-  - "Deploy Best Model" action button
-- **`src/App.tsx`**: Add route `/models/compare`
-- **`src/components/dashboard/AppSidebar.tsx`**: No sidebar change (accessed from Models page via button)
-- **`src/pages/Models.tsx`**: Add "Compare Models" button linking to `/models/compare`
+### 9. `src/pages/Settings.tsx`
+- แปล tab names, section titles, form labels, button text ทุก tab (API Keys, Team, Notifications, Webhooks, Account, Billing)
 
----
+### 10. `src/components/landing/HeroSection.tsx`
+- แปล headline, subtitle, CTA buttons
 
-### Feature 6: Webhooks Management
+### 11. `src/components/landing/Navbar.tsx`
+- แปล "Log in", "Get Started", nav links
 
-**What**: Settings tab to configure webhook URLs for training events (complete, failed, etc.)
+### 12. `src/components/landing/PricingSection.tsx`
+- แปล plan names, feature lists, CTA
 
-**Changes**:
-- **`src/pages/Settings.tsx`**: Add new "Webhooks" tab with:
-  - Add webhook form: URL input, event type multi-select (training.complete, training.failed, model.deployed, credit.low)
-  - Webhook list: URL, events subscribed, status (active/paused), last triggered timestamp
-  - Test webhook button (simulates POST with toast confirmation)
-  - Delete webhook button
-  - Secret signing key display (mock) for verification
-  - TabsList updated from `grid-cols-5` to `grid-cols-6`
+### 13. `src/components/landing/FeaturesSection.tsx`
+- แปล section title, feature cards
+
+### 14. `src/components/CommandPalette.tsx`
+- แปล placeholder text, group headings
+
+### 15. `src/components/NotificationCenter.tsx`
+- แปล notification titles, "Mark all as read", "Notifications" heading
 
 ---
 
-## Implementation Order
+## Translation Coverage
 
-1. **Responsive Mobile** -- foundation for all other pages
-2. **Usage Analytics** -- new page + mock data
-3. **Dataset Explorer** -- new page + mock data
-4. **Cost Calculator** -- new page (standalone logic)
-5. **Model Comparison** -- new page with charts
-6. **Webhooks** -- Settings tab addition
+| Section | Keys (approx) |
+|---------|---------------|
+| Navigation/Sidebar | 12 |
+| Dashboard | 8 |
+| Settings (all tabs) | 40 |
+| Landing page | 25 |
+| Common/Shared | 15 |
+| Analytics/Datasets/Calculator | 20 |
+| **Total** | **~120 keys** |
 
 ---
 
 ## Technical Notes
-
-- All data is mock/client-side only (no backend required)
-- Uses existing libraries: `recharts`, `framer-motion`, `lucide-react`, Radix UI components
-- New files: ~7 new files (4 pages, 2 mock data files, 0 new components beyond pages)
-- Modified files: ~6 files (App.tsx, AppSidebar.tsx, Settings.tsx, Models.tsx, Navbar.tsx, various pages for responsive)
-- Charts use `recharts` (RadarChart, AreaChart, BarChart) already installed
-- Responsive approach: Tailwind breakpoint utilities (`sm:`, `md:`, `lg:`) -- no new CSS needed
-- Sheet component from `src/components/ui/sheet.tsx` used for mobile nav menu
+- ไม่ต้องติดตั้ง dependency ใหม่ -- ใช้ React Context ล้วน
+- ภาษาที่เลือกจะ persist ผ่าน localStorage
+- Default language: English (en)
+- `t()` function จะ fallback เป็น key name ถ้าไม่พบ translation
+- New files: 3, Modified files: ~12
 
