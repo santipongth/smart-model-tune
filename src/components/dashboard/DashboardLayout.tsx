@@ -5,6 +5,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { NotificationCenter } from "@/components/NotificationCenter";
 import { CommandPalette } from "@/components/CommandPalette";
+import { LanguageSwitcher } from "@/components/LanguageSwitcher";
 
 function AnimatedOutlet() {
   const location = useLocation();
@@ -37,6 +38,7 @@ export default function DashboardLayout() {
             <div className="ml-auto flex items-center gap-1">
               <CommandPalette />
               <NotificationCenter />
+              <LanguageSwitcher />
               <ThemeToggle />
             </div>
           </header>

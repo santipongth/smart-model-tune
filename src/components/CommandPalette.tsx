@@ -12,10 +12,12 @@ import {
 import { FolderKanban, Box, LayoutDashboard, Settings, MessageSquare, Plus, Search } from "lucide-react";
 import { mockProjects, mockModels } from "@/data/mockData";
 import { Button } from "@/components/ui/button";
+import { useLanguage } from "@/i18n/LanguageContext";
 
 export function CommandPalette() {
   const [open, setOpen] = useState(false);
   const navigate = useNavigate();
+  const { t } = useLanguage();
 
   useEffect(() => {
     const down = (e: KeyboardEvent) => {
@@ -42,52 +44,52 @@ export function CommandPalette() {
         className="hidden sm:inline-flex gap-2 text-muted-foreground h-8 px-3"
       >
         <Search className="h-3.5 w-3.5" />
-        <span className="text-xs">Search...</span>
+        <span className="text-xs">{t("command.search")}</span>
         <kbd className="pointer-events-none ml-2 inline-flex h-5 select-none items-center gap-1 rounded border bg-muted px-1.5 font-mono text-[10px] font-medium text-muted-foreground">
           ⌘K
         </kbd>
       </Button>
 
       <CommandDialog open={open} onOpenChange={setOpen}>
-        <CommandInput placeholder="Search projects, models, pages..." />
+        <CommandInput placeholder={t("command.searchPlaceholder")} />
         <CommandList>
-          <CommandEmpty>No results found.</CommandEmpty>
+          <CommandEmpty>{t("command.noResults")}</CommandEmpty>
 
-          <CommandGroup heading="Quick Actions">
+          <CommandGroup heading={t("command.quickActions")}>
             <CommandItem onSelect={() => runCommand("/projects/new")}>
               <Plus className="mr-2 h-4 w-4" />
-              New Project
+              {t("command.newProject")}
             </CommandItem>
           </CommandGroup>
 
           <CommandSeparator />
 
-          <CommandGroup heading="Pages">
+          <CommandGroup heading={t("command.pages")}>
             <CommandItem onSelect={() => runCommand("/dashboard")}>
               <LayoutDashboard className="mr-2 h-4 w-4" />
-              Dashboard
+              {t("nav.dashboard")}
             </CommandItem>
             <CommandItem onSelect={() => runCommand("/projects")}>
               <FolderKanban className="mr-2 h-4 w-4" />
-              Projects
+              {t("nav.projects")}
             </CommandItem>
             <CommandItem onSelect={() => runCommand("/models")}>
               <Box className="mr-2 h-4 w-4" />
-              Models
+              {t("nav.models")}
             </CommandItem>
             <CommandItem onSelect={() => runCommand("/playground")}>
               <MessageSquare className="mr-2 h-4 w-4" />
-              Playground
+              {t("nav.playground")}
             </CommandItem>
             <CommandItem onSelect={() => runCommand("/settings")}>
               <Settings className="mr-2 h-4 w-4" />
-              Settings
+              {t("nav.settings")}
             </CommandItem>
           </CommandGroup>
 
           <CommandSeparator />
 
-          <CommandGroup heading="Projects">
+          <CommandGroup heading={t("command.projects")}>
             {mockProjects.map((p) => (
               <CommandItem key={p.id} onSelect={() => runCommand(`/projects/${p.id}`)}>
                 <FolderKanban className="mr-2 h-4 w-4" />
@@ -98,7 +100,7 @@ export function CommandPalette() {
 
           <CommandSeparator />
 
-          <CommandGroup heading="Models">
+          <CommandGroup heading={t("command.models")}>
             {mockModels.map((m) => (
               <CommandItem key={m.id} onSelect={() => runCommand(`/models/${m.id}`)}>
                 <Box className="mr-2 h-4 w-4" />

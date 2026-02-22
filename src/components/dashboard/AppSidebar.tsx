@@ -23,22 +23,24 @@ import {
   SidebarFooter,
 } from "@/components/ui/sidebar";
 import { mockUsageStats } from "@/data/mockData";
+import { useLanguage } from "@/i18n/LanguageContext";
 
 const navItems = [
-  { title: "Dashboard", url: "/dashboard", icon: LayoutDashboard },
-  { title: "Projects", url: "/projects", icon: FolderKanban },
-  { title: "Models", url: "/models", icon: Box },
-  { title: "Playground", url: "/playground", icon: MessageSquare },
-  { title: "Analytics", url: "/analytics", icon: BarChart3 },
-  { title: "Datasets", url: "/datasets", icon: Database },
-  { title: "Cost Calculator", url: "/calculator", icon: Calculator },
-  { title: "API Keys", url: "/api-keys", icon: Key },
-  { title: "Settings", url: "/settings", icon: Settings },
+  { titleKey: "nav.dashboard", url: "/dashboard", icon: LayoutDashboard },
+  { titleKey: "nav.projects", url: "/projects", icon: FolderKanban },
+  { titleKey: "nav.models", url: "/models", icon: Box },
+  { titleKey: "nav.playground", url: "/playground", icon: MessageSquare },
+  { titleKey: "nav.analytics", url: "/analytics", icon: BarChart3 },
+  { titleKey: "nav.datasets", url: "/datasets", icon: Database },
+  { titleKey: "nav.calculator", url: "/calculator", icon: Calculator },
+  { titleKey: "nav.apiKeys", url: "/api-keys", icon: Key },
+  { titleKey: "nav.settings", url: "/settings", icon: Settings },
 ];
 
 export function AppSidebar() {
   const { creditsRemaining, creditsTotal, planTier } = mockUsageStats;
   const creditPercent = (creditsRemaining / creditsTotal) * 100;
+  const { t } = useLanguage();
 
   return (
     <Sidebar collapsible="icon">
@@ -53,15 +55,15 @@ export function AppSidebar() {
           <SidebarGroupContent>
             <SidebarMenu>
               {navItems.map((item) => (
-                <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton asChild tooltip={item.title}>
+                <SidebarMenuItem key={item.titleKey}>
+                  <SidebarMenuButton asChild tooltip={t(item.titleKey)}>
                     <NavLink
                       to={item.url}
                       className="flex items-center gap-3 px-3 py-2 rounded-md text-muted-foreground hover:bg-accent hover:text-accent-foreground transition-colors"
                       activeClassName="bg-accent text-accent-foreground font-medium"
                     >
                       <item.icon className="h-4 w-4 shrink-0" />
-                      <span>{item.title}</span>
+                      <span>{t(item.titleKey)}</span>
                     </NavLink>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
@@ -74,7 +76,7 @@ export function AppSidebar() {
       <SidebarFooter className="p-3 border-t border-border">
         <div className="space-y-2 group-data-[collapsible=icon]:hidden">
           <div className="flex items-center justify-between text-xs">
-            <span className="text-muted-foreground">Credits</span>
+            <span className="text-muted-foreground">{t("nav.credits")}</span>
             <span className="font-medium text-foreground">{creditsRemaining} / {creditsTotal}</span>
           </div>
           <div className="h-1.5 bg-secondary rounded-full overflow-hidden">
@@ -83,7 +85,7 @@ export function AppSidebar() {
               style={{ width: `${creditPercent}%` }}
             />
           </div>
-          <p className="text-xs text-muted-foreground">{planTier} Plan</p>
+          <p className="text-xs text-muted-foreground">{planTier} {t("nav.plan")}</p>
         </div>
       </SidebarFooter>
     </Sidebar>

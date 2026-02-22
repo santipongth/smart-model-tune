@@ -2,6 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Check } from "lucide-react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
+import { useLanguage } from "@/i18n/LanguageContext";
 
 const plans = [
   {
@@ -34,6 +35,8 @@ const plans = [
 ];
 
 const PricingSection = () => {
+  const { t } = useLanguage();
+
   return (
     <section id="pricing" className="py-24">
       <div className="container">
@@ -44,9 +47,9 @@ const PricingSection = () => {
           transition={{ duration: 0.5 }}
           className="text-center mb-16"
         >
-          <p className="text-sm font-medium text-primary mb-2">Pricing</p>
-          <h2 className="text-3xl font-bold tracking-tight md:text-4xl">Simple, transparent pricing</h2>
-          <p className="mt-4 text-muted-foreground">Start free. Scale as you grow.</p>
+          <p className="text-sm font-medium text-primary mb-2">{t("pricing.label")}</p>
+          <h2 className="text-3xl font-bold tracking-tight md:text-4xl">{t("pricing.title")}</h2>
+          <p className="mt-4 text-muted-foreground">{t("pricing.subtitle")}</p>
         </motion.div>
 
         <div className="grid gap-6 md:grid-cols-3 max-w-4xl mx-auto">
@@ -72,7 +75,7 @@ const PricingSection = () => {
                   transition={{ duration: 0.3, delay: 0.4 }}
                   className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full bg-primary px-3 py-0.5 text-xs font-medium text-primary-foreground"
                 >
-                  Most Popular
+                  {t("pricing.mostPopular")}
                 </motion.div>
               )}
               <h3 className="font-semibold text-lg">{plan.name}</h3>

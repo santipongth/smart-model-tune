@@ -15,6 +15,7 @@ import {
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { PageTransition, FadeIn } from "@/components/motion";
+import { useLanguage } from "@/i18n/LanguageContext";
 
 // --- API Keys Tab ---
 interface ApiKey {
@@ -857,13 +858,15 @@ function WebhooksTab() {
 
 // --- Main Settings Page ---
 export default function Settings() {
+  const { t } = useLanguage();
+
   return (
     <PageTransition>
       <div className="space-y-6">
         <FadeIn>
           <div>
-            <h1 className="text-2xl font-bold">Settings</h1>
-            <p className="text-muted-foreground text-sm">Manage your account, API keys, and billing</p>
+            <h1 className="text-2xl font-bold">{t("settings.title")}</h1>
+            <p className="text-muted-foreground text-sm">{t("settings.subtitle")}</p>
           </div>
         </FadeIn>
 
@@ -871,22 +874,22 @@ export default function Settings() {
           <Tabs defaultValue="api-keys" className="space-y-6">
             <TabsList className="flex w-full max-w-3xl overflow-x-auto">
               <TabsTrigger value="api-keys" className="text-xs">
-                <Key className="h-3.5 w-3.5 mr-1.5" /> API Keys
+                <Key className="h-3.5 w-3.5 mr-1.5" /> {t("settings.apiKeys")}
               </TabsTrigger>
               <TabsTrigger value="team" className="text-xs">
-                <Users className="h-3.5 w-3.5 mr-1.5" /> Team
+                <Users className="h-3.5 w-3.5 mr-1.5" /> {t("settings.team")}
               </TabsTrigger>
               <TabsTrigger value="notifications" className="text-xs">
-                <Bell className="h-3.5 w-3.5 mr-1.5" /> Notifications
+                <Bell className="h-3.5 w-3.5 mr-1.5" /> {t("settings.notifications")}
               </TabsTrigger>
               <TabsTrigger value="webhooks" className="text-xs">
-                <Webhook className="h-3.5 w-3.5 mr-1.5" /> Webhooks
+                <Webhook className="h-3.5 w-3.5 mr-1.5" /> {t("settings.webhooks")}
               </TabsTrigger>
               <TabsTrigger value="account" className="text-xs">
-                <User className="h-3.5 w-3.5 mr-1.5" /> Account
+                <User className="h-3.5 w-3.5 mr-1.5" /> {t("settings.account")}
               </TabsTrigger>
               <TabsTrigger value="billing" className="text-xs">
-                <CreditCard className="h-3.5 w-3.5 mr-1.5" /> Billing
+                <CreditCard className="h-3.5 w-3.5 mr-1.5" /> {t("settings.billing")}
               </TabsTrigger>
             </TabsList>
 

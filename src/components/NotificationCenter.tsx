@@ -2,11 +2,12 @@ import { useState } from "react";
 import { Bell, CheckCircle2, AlertTriangle, Rocket, Users } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { useLanguage } from "@/i18n/LanguageContext";
 
 interface Notification {
   id: string;
   icon: React.ElementType;
-  title: string;
+  titleKey: string;
   description: string;
   timestamp: string;
   read: boolean;
@@ -16,7 +17,7 @@ const initialNotifications: Notification[] = [
   {
     id: "n1",
     icon: CheckCircle2,
-    title: "Training Complete",
+    titleKey: "notif.trainingComplete",
     description: "Customer Intent Classifier finished with 94.2% accuracy.",
     timestamp: "2 hours ago",
     read: false,
@@ -24,7 +25,7 @@ const initialNotifications: Notification[] = [
   {
     id: "n2",
     icon: AlertTriangle,
-    title: "Credit Warning",
+    titleKey: "notif.creditWarning",
     description: "You have 150 credits remaining. Consider upgrading your plan.",
     timestamp: "5 hours ago",
     read: false,
@@ -32,7 +33,7 @@ const initialNotifications: Notification[] = [
   {
     id: "n3",
     icon: Rocket,
-    title: "Model Deployed",
+    titleKey: "notif.modelDeployed",
     description: "intent-classifier-v1 is now live on the API endpoint.",
     timestamp: "1 day ago",
     read: false,
@@ -40,7 +41,7 @@ const initialNotifications: Notification[] = [
   {
     id: "n4",
     icon: Users,
-    title: "Team Invite",
+    titleKey: "notif.teamInvite",
     description: "john@example.com accepted your team invitation.",
     timestamp: "2 days ago",
     read: true,
@@ -50,6 +51,7 @@ const initialNotifications: Notification[] = [
 export function NotificationCenter() {
   const [notifications, setNotifications] = useState(initialNotifications);
   const unreadCount = notifications.filter((n) => !n.read).length;
+  const { t } = useLanguage();
 
   const markAllRead = () => {
     setNotifications((prev) => prev.map((n) => ({ ...n, read: true })));
@@ -75,13 +77,13 @@ export function NotificationCenter() {
       </PopoverTrigger>
       <PopoverContent align="end" className="w-80 p-0">
         <div className="flex items-center justify-between border-b px-4 py-3">
-          <h4 className="text-sm font-semibold">Notifications</h4>
+          <h4 className="text-sm font-semibold">{t("notif.title")}</h4>
           {unreadCount > 0 && (
             <button
               onClick={markAllRead}
               className="text-xs text-primary hover:underline"
             >
-              Mark all as read
+              {t("notif.markAllRead")}
             </button>
           )}
         </div>
@@ -96,7 +98,7 @@ export function NotificationCenter() {
             >
               <n.icon className="h-4 w-4 mt-0.5 shrink-0 text-muted-foreground" />
               <div className="flex-1 min-w-0">
-                <p className="text-sm font-medium leading-tight">{n.title}</p>
+                <p className="text-sm font-medium leading-tight">{t(n.titleKey)}</p>
                 <p className="text-xs text-muted-foreground mt-0.5 truncate">{n.description}</p>
                 <p className="text-[10px] text-muted-foreground mt-1">{n.timestamp}</p>
               </div>
