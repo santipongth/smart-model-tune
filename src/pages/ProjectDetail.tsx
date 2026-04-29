@@ -11,6 +11,8 @@ import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContai
 import { mockProjects, mockEvalMetrics, taskTypeLabels, baseModelLabels } from "@/data/mockData";
 import { mockVersionHistory } from "@/data/deploymentMockData";
 import { TuningReport } from "@/components/training/TuningReport";
+import { TuningHistory } from "@/components/training/TuningHistory";
+import { getLatestTuningRun, setAppliedRun } from "@/lib/tuningGenerator";
 import type { ProjectStatus } from "@/types";
 import { useLanguage } from "@/i18n/LanguageContext";
 import { useToast } from "@/hooks/use-toast";
@@ -285,7 +287,36 @@ export default function ProjectDetail() {
         </TabsContent>
 
         <TabsContent value="tuning" className="space-y-4 mt-4">
-          <TuningReport />
+          <Tabs defaultValue="latest">
+            <TabsList>
+              <TabsTrigger value="latest">{t("tuningHistory.latestRun")}</TabsTrigger>
+              <TabsTrigger value="history">{t("tuningHistory.title")}</TabsTrigger>
+            </TabsList>
+            <TabsContent value="latest" className="mt-4">
+              {(() => {
+                const latest = getLatestTuningRun(project.id);
+                if (!latest) {
+                  return (
+                    <div className="text-center py-12 text-muted-foreground text-sm">
+                      {t("tuningHistory.empty")}
+                    </div>
+                  );
+                }
+                return (
+                  <TuningReport
+                    report={latest.report}
+                    onApply={() => {
+                      setAppliedRun(project.id, latest.runId);
+                      toast({ title: t("tuningReport.applied"), description: t("tuningReport.appliedDesc") });
+                    }}
+                  />
+                );
+              })()}
+            </TabsContent>
+            <TabsContent value="history" className="mt-4">
+              <TuningHistory projectId={project.id} />
+            </TabsContent>
+          </Tabs>
         </TabsContent>
       </Tabs>
     </div>

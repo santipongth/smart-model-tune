@@ -2,15 +2,20 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
-import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Trophy, ArrowRight, TrendingUp, Beaker, CheckCircle2, Clock, Coins } from "lucide-react";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, ScatterChart, Scatter } from "recharts";
-import { mockTuningReport } from "@/data/tuningReportMockData";
+import type { TuningReport as TuningReportData } from "@/data/tuningReportMockData";
 import { useLanguage } from "@/i18n/LanguageContext";
 import { useToast } from "@/hooks/use-toast";
 
-export function TuningReport() {
-  const r = mockTuningReport;
+interface TuningReportProps {
+  report: TuningReportData;
+  onApply?: () => void;
+  applyLabel?: string;
+}
+
+export function TuningReport({ report, onApply, applyLabel }: TuningReportProps) {
+  const r = report;
   const { t } = useLanguage();
   const { toast } = useToast();
 
@@ -33,7 +38,11 @@ export function TuningReport() {
   const lossDrop = (r.baseline.valLoss - r.best.valLoss).toFixed(3);
 
   const handleApply = () => {
-    toast({ title: t("tuningReport.applied"), description: t("tuningReport.appliedDesc") });
+    if (onApply) {
+      onApply();
+    } else {
+      toast({ title: t("tuningReport.applied"), description: t("tuningReport.appliedDesc") });
+    }
   };
 
   return (
@@ -142,7 +151,7 @@ export function TuningReport() {
             </div>
           ))}
           <Button onClick={handleApply} className="w-full gap-2 mt-2">
-            <CheckCircle2 className="h-4 w-4" /> {t("tuningReport.applyAll")}
+            <CheckCircle2 className="h-4 w-4" /> {applyLabel ?? t("tuningReport.applyAll")}
           </Button>
         </CardContent>
       </Card>
