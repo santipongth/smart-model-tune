@@ -324,6 +324,19 @@ export const translations: Record<Language, Record<string, string>> = {
     "tuningReport.status": "Status",
     "tuningReport.searchSpace": "Search Space",
 
+    // Tuning History
+    "tuningHistory.title": "Run History",
+    "tuningHistory.latestRun": "Latest Run",
+    "tuningHistory.subtitle": "{n} previous tuning runs for this project",
+    "tuningHistory.empty": "No tuning runs yet for this project.",
+    "tuningHistory.applied": "Applied",
+    "tuningHistory.viewDetails": "View Details",
+    "tuningHistory.restore": "Restore",
+    "tuningHistory.restoreThisRun": "Restore This Run",
+    "tuningHistory.alreadyApplied": "Currently Applied",
+    "tuningHistory.restored": "Tuning Run Restored",
+    "tuningHistory.backToHistory": "Back to history",
+
     // Data Augmentation
     "augment.title": "Augmentation",
     "augment.config": "Augmentation Config",
