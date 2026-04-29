@@ -16,6 +16,8 @@ export interface Project {
   learningRate: number;
   datasetSize: number;
   creditsCost: number;
+  pinned?: boolean;
+  tags?: string[];
 }
 
 export interface TrainedModel {
