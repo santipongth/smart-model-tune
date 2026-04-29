@@ -208,7 +208,14 @@ export default function Deployment() {
             )}
           </FadeIn>
         </div>
+          </TabsContent>
+
+          <TabsContent value="ab">
+            <ABTestingPanel />
+          </TabsContent>
+        </Tabs>
       </div>
     </PageTransition>
   );
 }
+
