@@ -40,9 +40,17 @@ function getSuggestions(datasetSize: number) {
 
 export default function ProjectDetail() {
   const { id } = useParams<{ id: string }>();
-  const project = mockProjects.find((p) => p.id === id);
+  const { project, loading } = useProject(id);
   const { t } = useLanguage();
   const { toast } = useToast();
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center py-20">
+        <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
+      </div>
+    );
+  }
 
   if (!project) {
     return (
