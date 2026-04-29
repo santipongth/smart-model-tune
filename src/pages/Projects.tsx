@@ -70,7 +70,7 @@ export default function Projects() {
           <div className="flex items-center justify-between">
             <div>
               <h1 className="text-2xl font-bold text-foreground">{t("projects.title")}</h1>
-              <p className="text-sm text-muted-foreground">{t("projects.total").replace("{count}", String(allProjects.length))}</p>
+              <p className="text-sm text-muted-foreground">{t("projects.total").replace("{count}", String(projects.length))}</p>
             </div>
             <div className="flex gap-2">
               <input ref={fileRef} type="file" accept=".json" className="hidden" onChange={handleImport} />
