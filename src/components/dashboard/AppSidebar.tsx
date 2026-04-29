@@ -54,6 +54,16 @@ export function AppSidebar() {
   const { creditsRemaining, creditsTotal, planTier } = mockUsageStats;
   const creditPercent = (creditsRemaining / creditsTotal) * 100;
   const { t } = useLanguage();
+  const { user, profile, signOut } = useAuth();
+  const navigate = useNavigate();
+
+  const handleSignOut = async () => {
+    await signOut();
+    navigate("/login", { replace: true });
+  };
+
+  const displayName = profile?.display_name ?? user?.email?.split("@")[0] ?? "User";
+  const initials = displayName.slice(0, 2).toUpperCase();
 
   return (
     <Sidebar collapsible="icon">
