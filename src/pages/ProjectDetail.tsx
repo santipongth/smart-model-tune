@@ -283,6 +283,10 @@ export default function ProjectDetail() {
             </div>
           )}
         </TabsContent>
+
+        <TabsContent value="tuning" className="space-y-4 mt-4">
+          <TuningReport />
+        </TabsContent>
       </Tabs>
     </div>
     </PageTransition>
