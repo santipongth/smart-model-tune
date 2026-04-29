@@ -97,7 +97,20 @@ export async function createProject(input: CreateProjectInput): Promise<Project>
 }
 
 export async function updateProject(id: string, patch: Partial<Project>): Promise<Project> {
-  const dbPatch: Record<string, unknown> = {};
+  const dbPatch: {
+    name?: string;
+    description?: string;
+    task_type?: string;
+    base_model?: string;
+    status?: string;
+    progress?: number;
+    epochs?: number;
+    learning_rate?: number;
+    dataset_size?: number;
+    credits_cost?: number;
+    pinned?: boolean;
+    tags?: string[];
+  } = {};
   if (patch.name !== undefined) dbPatch.name = patch.name;
   if (patch.description !== undefined) dbPatch.description = patch.description;
   if (patch.taskType !== undefined) dbPatch.task_type = patch.taskType;
