@@ -324,7 +324,7 @@ export default function ProjectDetail() {
               })()}
             </TabsContent>
             <TabsContent value="history" className="mt-4">
-              <TuningHistory projectId={project.id} />
+              <TuningHistory project={project} />
             </TabsContent>
           </Tabs>
         </TabsContent>
