@@ -193,10 +193,9 @@ export default function NewProject() {
             {t("common.next")} <ArrowRight className="h-4 w-4" />
           </Button>
         ) : (
-          <Button className="gap-2" asChild>
-            <Link to="/projects">
-              <Sparkles className="h-4 w-4" /> {t("newProject.launchTraining")}
-            </Link>
+          <Button className="gap-2" onClick={handleLaunch} disabled={launching || !formData.taskType || !formData.baseModel}>
+            {launching ? <Loader2 className="h-4 w-4 animate-spin" /> : <Sparkles className="h-4 w-4" />}
+            {t("newProject.launchTraining")}
           </Button>
         )}
       </div>
