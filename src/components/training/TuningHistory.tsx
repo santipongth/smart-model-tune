@@ -13,18 +13,18 @@ import { useLanguage } from "@/i18n/LanguageContext";
 import { useToast } from "@/hooks/use-toast";
 
 interface TuningHistoryProps {
-  projectId: string;
+  project: import("@/types").Project;
 }
 
-export function TuningHistory({ projectId }: TuningHistoryProps) {
+export function TuningHistory({ project }: TuningHistoryProps) {
   const { t } = useLanguage();
   const { toast } = useToast();
-  const [runs, setRuns] = useState<TuningRun[]>(() => getTuningRunsForProject(projectId));
+  const [runs, setRuns] = useState<TuningRun[]>(() => getTuningRunsForProject(project));
   const [viewing, setViewing] = useState<TuningRun | null>(null);
 
   const handleRestore = (run: TuningRun) => {
-    setAppliedRun(projectId, run.runId);
-    setRuns(getTuningRunsForProject(projectId));
+    setAppliedRun(project.id, run.runId);
+    setRuns(getTuningRunsForProject(project));
     toast({
       title: t("tuningHistory.restored"),
       description: `${run.label} • Trial #${run.bestTrial} → ${run.bestAccuracy}%`,
