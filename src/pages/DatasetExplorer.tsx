@@ -10,6 +10,7 @@ import { PageTransition, FadeIn } from "@/components/motion";
 import { Database, Table, BarChart3, FileText, Sparkles } from "lucide-react";
 import { mockDatasets, mockSchemas, mockSampleRows, mockColumnStats } from "@/data/datasetMockData";
 import { mockAugmentedSamples } from "@/data/deploymentMockData";
+import { QualityReport } from "@/components/dataset/QualityReport";
 import { useLanguage } from "@/i18n/LanguageContext";
 import { useToast } from "@/hooks/use-toast";
 
@@ -99,6 +100,7 @@ export default function DatasetExplorer() {
               <TabsTrigger value="schema" className="text-xs">{t("dataset.schema")}</TabsTrigger>
               <TabsTrigger value="sample" className="text-xs">{t("dataset.sampleData")}</TabsTrigger>
               <TabsTrigger value="stats" className="text-xs">{t("dataset.statistics")}</TabsTrigger>
+              <TabsTrigger value="quality" className="text-xs">{t("quality.tab")}</TabsTrigger>
               <TabsTrigger value="augment" className="text-xs">{t("augment.title")}</TabsTrigger>
             </TabsList>
 
@@ -199,6 +201,10 @@ export default function DatasetExplorer() {
                   ))}
                 </CardContent>
               </Card>
+            </TabsContent>
+
+            <TabsContent value="quality">
+              <QualityReport />
             </TabsContent>
 
             <TabsContent value="augment">

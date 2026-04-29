@@ -8,6 +8,7 @@ import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import { Columns2, MessageSquare } from "lucide-react";
 import { ChatPanel } from "@/components/playground/ChatPanel";
+import { PromptOptimizer } from "@/components/playground/PromptOptimizer";
 import { mockModels } from "@/data/mockData";
 import { useLanguage } from "@/i18n/LanguageContext";
 
@@ -35,6 +36,7 @@ export default function Playground() {
           <p className="text-sm text-muted-foreground">{t("playground.subtitle")}</p>
         </div>
         <div className="flex items-center gap-3">
+          <PromptOptimizer />
           <div className="flex items-center gap-2">
             <MessageSquare className="h-4 w-4 text-muted-foreground" />
             <Label htmlFor="ab-toggle" className="text-sm text-muted-foreground cursor-pointer">{t("playground.single")}</Label>
