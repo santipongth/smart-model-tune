@@ -784,6 +784,15 @@ export const translations: Record<Language, Record<string, string>> = {
     "newProject.baseModel": "โมเดลพื้นฐาน",
     "newProject.configuration": "การตั้งค่า",
     "newProject.launchTraining": "เริ่มการฝึก",
+    "newProject.launched": "สร้างโปรเจกต์แล้ว",
+    "newProject.launchFailed": "สร้างโปรเจกต์ไม่สำเร็จ",
+
+    // Auth
+    "auth.signInFailed": "เข้าสู่ระบบไม่สำเร็จ",
+    "auth.signUpFailed": "สมัครสมาชิกไม่สำเร็จ",
+    "auth.welcome": "ยินดีต้อนรับสู่ TuneLab",
+    "auth.accountReady": "บัญชีของคุณพร้อมใช้งานแล้ว",
+    "auth.signOut": "ออกจากระบบ",
 
     // Export/Import
     "export.exportJson": "ส่งออก JSON",
