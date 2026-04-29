@@ -40,7 +40,35 @@ export default function NewProject() {
   const [currentStep, setCurrentStep] = useState(0);
   const [formData, setFormData] = useState<ProjectFormData>(initialFormData);
   const [showTemplates, setShowTemplates] = useState(false);
+  const [launching, setLaunching] = useState(false);
   const { t } = useLanguage();
+  const { toast } = useToast();
+  const navigate = useNavigate();
+
+  const handleLaunch = async () => {
+    if (!formData.taskType || !formData.baseModel) return;
+    setLaunching(true);
+    try {
+      const created = await createProject({
+        name: formData.projectName.trim() || formData.taskPrompt.slice(0, 60) || "Untitled Project",
+        description: formData.taskPrompt,
+        taskType: formData.taskType,
+        baseModel: formData.baseModel,
+        epochs: formData.epochs,
+        learningRate: formData.learningRate,
+        datasetSize: formData.files.length * 100,
+      });
+      toast({ title: t("newProject.launched"), description: created.name });
+      navigate(`/projects/${created.id}`);
+    } catch (e) {
+      toast({
+        title: t("newProject.launchFailed"),
+        description: (e as Error).message,
+        variant: "destructive",
+      });
+      setLaunching(false);
+    }
+  };
 
   useEffect(() => {
     const stored = sessionStorage.getItem("template-prefill");
