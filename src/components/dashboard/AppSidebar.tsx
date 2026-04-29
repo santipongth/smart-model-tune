@@ -12,6 +12,7 @@ import {
   Rocket,
   Trophy,
   Tag,
+  LayoutTemplate,
 } from "lucide-react";
 import { NavLink } from "@/components/NavLink";
 import {
@@ -31,6 +32,7 @@ import { useLanguage } from "@/i18n/LanguageContext";
 const navItems = [
   { titleKey: "nav.dashboard", url: "/dashboard", icon: LayoutDashboard },
   { titleKey: "nav.projects", url: "/projects", icon: FolderKanban },
+  { titleKey: "nav.templates", url: "/templates", icon: LayoutTemplate },
   { titleKey: "nav.models", url: "/models", icon: Box },
   { titleKey: "nav.playground", url: "/playground", icon: MessageSquare },
   { titleKey: "nav.analytics", url: "/analytics", icon: BarChart3 },

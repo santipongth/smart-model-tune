@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { ArrowLeft, ArrowRight, Check, Sparkles } from "lucide-react";
@@ -39,6 +39,27 @@ export default function NewProject() {
   const [formData, setFormData] = useState<ProjectFormData>(initialFormData);
   const [showTemplates, setShowTemplates] = useState(false);
   const { t } = useLanguage();
+
+  useEffect(() => {
+    const stored = sessionStorage.getItem("template-prefill");
+    if (stored) {
+      try {
+        const tpl = JSON.parse(stored);
+        setFormData((p) => ({
+          ...p,
+          projectName: tpl.name ?? p.projectName,
+          taskPrompt: tpl.prompt ?? p.taskPrompt,
+          taskType: tpl.taskType ?? p.taskType,
+          baseModel: tpl.baseModel ?? p.baseModel,
+          epochs: tpl.epochs ?? p.epochs,
+          learningRate: tpl.learningRate ?? p.learningRate,
+        }));
+        sessionStorage.removeItem("template-prefill");
+      } catch {
+        // ignore
+      }
+    }
+  }, []);
 
   const steps = [
     { id: "prompt", label: t("newProject.taskPrompt") },

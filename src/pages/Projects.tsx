@@ -28,12 +28,17 @@ export default function Projects() {
   }, []);
 
   const allProjects = [...mockProjects, ...extraProjects];
+  const allTags = Array.from(new Set(allProjects.flatMap((p) => p.tags ?? [])));
+  const [filterTag, setFilterTag] = useState("all");
 
-  const filtered = allProjects.filter((p) => {
-    const matchesSearch = p.name.toLowerCase().includes(search.toLowerCase());
-    const matchesTask = filterTask === "all" || p.taskType === filterTask;
-    return matchesSearch && matchesTask;
-  });
+  const filtered = allProjects
+    .filter((p) => {
+      const matchesSearch = p.name.toLowerCase().includes(search.toLowerCase());
+      const matchesTask = filterTask === "all" || p.taskType === filterTask;
+      const matchesTag = filterTag === "all" || p.tags?.includes(filterTag);
+      return matchesSearch && matchesTask && matchesTag;
+    })
+    .sort((a, b) => Number(!!b.pinned) - Number(!!a.pinned));
 
   const handleImport = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -105,6 +110,17 @@ export default function Projects() {
                 ))}
               </SelectContent>
             </Select>
+            {allTags.length > 0 && (
+              <Select value={filterTag} onValueChange={setFilterTag}>
+                <SelectTrigger className="w-full sm:w-40"><SelectValue placeholder={t("projects.filterByTag")} /></SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">{t("projects.allTags")}</SelectItem>
+                  {allTags.map((tag) => (
+                    <SelectItem key={tag} value={tag}>{tag}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            )}
           </div>
         </FadeIn>
 

@@ -15,6 +15,8 @@ export const mockProjects: Project[] = [
     learningRate: 2e-4,
     datasetSize: 2400,
     creditsCost: 120,
+    pinned: true,
+    tags: ["production", "client-A"],
   },
   {
     id: "proj-002",
@@ -30,6 +32,7 @@ export const mockProjects: Project[] = [
     learningRate: 1e-4,
     datasetSize: 5200,
     creditsCost: 280,
+    tags: ["experiment"],
   },
   {
     id: "proj-003",
@@ -45,6 +48,8 @@ export const mockProjects: Project[] = [
     learningRate: 3e-4,
     datasetSize: 1800,
     creditsCost: 95,
+    pinned: true,
+    tags: ["production"],
   },
   {
     id: "proj-004",

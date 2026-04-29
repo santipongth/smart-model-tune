@@ -14,6 +14,7 @@ import { EvaluationViewer } from "@/components/training/EvaluationViewer";
 import { mockPipelineSteps, mockTrainingLog, mockLossCurve, mockComparisonResults } from "@/data/trainingMockData";
 import { mockProjects, baseModelLabels, taskTypeLabels } from "@/data/mockData";
 import { TrainingMonitorSkeleton } from "@/components/skeletons/TrainingMonitorSkeleton";
+import { DiagnosticPanel } from "@/components/training/DiagnosticPanel";
 import { useLanguage } from "@/i18n/LanguageContext";
 
 export default function TrainingMonitor() {
@@ -93,6 +94,8 @@ export default function TrainingMonitor() {
           </CardContent>
         </Card>
       )}
+
+      <DiagnosticPanel projectStatus={project.status} />
 
       <Tabs defaultValue="pipeline">
         <TabsList>
