@@ -304,7 +304,7 @@ export default function ProjectDetail() {
             </TabsList>
             <TabsContent value="latest" className="mt-4">
               {(() => {
-                const latest = getLatestTuningRun(project.id);
+                const latest = getLatestTuningRun(project);
                 if (!latest) {
                   return (
                     <div className="text-center py-12 text-muted-foreground text-sm">
