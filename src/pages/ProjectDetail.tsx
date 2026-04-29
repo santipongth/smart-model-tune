@@ -11,6 +11,8 @@ import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContai
 import { mockProjects, mockEvalMetrics, taskTypeLabels, baseModelLabels } from "@/data/mockData";
 import { mockVersionHistory } from "@/data/deploymentMockData";
 import { TuningReport } from "@/components/training/TuningReport";
+import { TuningHistory } from "@/components/training/TuningHistory";
+import { getLatestTuningRun, setAppliedRun } from "@/lib/tuningGenerator";
 import type { ProjectStatus } from "@/types";
 import { useLanguage } from "@/i18n/LanguageContext";
 import { useToast } from "@/hooks/use-toast";
