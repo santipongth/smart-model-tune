@@ -110,6 +110,17 @@ export default function Projects() {
                 ))}
               </SelectContent>
             </Select>
+            {allTags.length > 0 && (
+              <Select value={filterTag} onValueChange={setFilterTag}>
+                <SelectTrigger className="w-full sm:w-40"><SelectValue placeholder={t("projects.filterByTag")} /></SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">{t("projects.allTags")}</SelectItem>
+                  {allTags.map((tag) => (
+                    <SelectItem key={tag} value={tag}>{tag}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            )}
           </div>
         </FadeIn>
 
