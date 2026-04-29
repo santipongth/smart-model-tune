@@ -278,6 +278,15 @@ export const translations: Record<Language, Record<string, string>> = {
     "newProject.baseModel": "Base Model",
     "newProject.configuration": "Configuration",
     "newProject.launchTraining": "Launch Training",
+    "newProject.launched": "Project Created",
+    "newProject.launchFailed": "Could not create project",
+
+    // Auth
+    "auth.signInFailed": "Sign in failed",
+    "auth.signUpFailed": "Sign up failed",
+    "auth.welcome": "Welcome to TuneLab",
+    "auth.accountReady": "Your account is ready.",
+    "auth.signOut": "Sign out",
 
     // Export/Import
     "export.exportJson": "Export JSON",
