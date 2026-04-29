@@ -381,6 +381,85 @@ export const translations: Record<Language, Record<string, string>> = {
     "onboarding.analytics.desc": "Track API usage, latency, error rates, and costs across all your deployed models.",
     "onboarding.done.title": "You're All Set!",
     "onboarding.done.desc": "Start by creating a new project or exploring the dashboard. You can restart this tour anytime from Settings.",
+
+    // Templates Marketplace
+    "nav.templates": "Templates",
+    "templates.title": "Template Marketplace",
+    "templates.subtitle": "Start your project from a pre-configured template — fine-tuned and ready to go.",
+    "templates.searchPlaceholder": "Search templates by name or tag...",
+    "templates.useTemplate": "Use Template",
+    "templates.featured": "Featured",
+    "templates.templates": "templates",
+    "templates.created": "Project prefilled from template",
+    "templates.noResults": "No templates match your filter",
+
+    // Projects extras
+    "projects.filterByTag": "Filter by tag",
+    "projects.allTags": "All tags",
+
+    // Quality Report
+    "quality.tab": "Quality Report",
+    "quality.overallScore": "Quality Score",
+    "quality.excellent": "Excellent quality",
+    "quality.needsWork": "Needs improvement",
+    "quality.poor": "Poor quality",
+    "quality.duplicates": "Duplicates",
+    "quality.missingLabels": "Missing Labels",
+    "quality.outliers": "Outliers",
+    "quality.classDistribution": "Class Distribution",
+    "quality.classDistDesc": "Sample count per label",
+    "quality.lengthDistribution": "Text Length Distribution",
+    "quality.lengthDistDesc": "Character count buckets",
+    "quality.aiSuggestions": "AI Suggestions",
+    "quality.aiSuggestionsDesc": "Issues detected and recommended fixes",
+
+    // Diagnostic Panel
+    "diagnostic.title": "Failure Diagnostician",
+    "diagnostic.subtitle": "AI-analyzed root cause and suggested fixes",
+    "diagnostic.confidence": "confidence",
+    "diagnostic.rootCause": "Most likely root cause",
+    "diagnostic.symptoms": "Symptoms detected",
+    "diagnostic.suggestedFixes": "Suggested Fixes",
+    "diagnostic.recommended": "Recommended",
+    "diagnostic.similarCases": "{n} similar cases resolved with these fixes",
+    "diagnostic.retryWithFix": "Retry with fix",
+
+    // Prompt Optimizer
+    "optimizer.button": "Optimize Prompt",
+    "optimizer.title": "Smart Prompt Optimizer",
+    "optimizer.subtitle": "Let AI improve your system prompt for better accuracy and clarity.",
+    "optimizer.yourPrompt": "Your current prompt",
+    "optimizer.placeholder": "Paste your system prompt here...",
+    "optimizer.optimize": "Optimize with AI",
+    "optimizer.analyzing": "Analyzing prompt...",
+    "optimizer.optimized": "Optimized",
+    "optimizer.improvements": "Predicted Improvements",
+    "optimizer.apply": "Apply optimized prompt",
+    "optimizer.applied": "Prompt applied",
+    "optimizer.copiedToClipboard": "Copied to clipboard",
+
+    // A/B Testing
+    "ab.tabTitle": "A/B Testing",
+    "ab.title": "Live A/B Test",
+    "ab.subtitle": "Split traffic between two model versions and compare real-time metrics.",
+    "ab.running": "Running",
+    "ab.stopped": "Stopped",
+    "ab.variant": "Variant",
+    "ab.variantA": "Variant A",
+    "ab.variantB": "Variant B",
+    "ab.trafficSplit": "Traffic split",
+    "ab.requests": "Requests",
+    "ab.latency": "Latency",
+    "ab.errorRate": "Error rate",
+    "ab.promoteToProduction": "Promote to 100%",
+    "ab.promoted": "Promoted to production",
+    "ab.recommendation": "Recommendation",
+    "ab.recommendationDesc": "{name} shows lower latency and error rate. Consider promoting to 100% traffic.",
+    "ab.latencyChart": "Latency over time (ms)",
+    "ab.errorChart": "Error rate over time (%)",
+
+    // Deployment extras
+    "deploy.endpointsTab": "Endpoints",
   },
   th: {
     // Nav / Sidebar
