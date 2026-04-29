@@ -10,6 +10,7 @@ import { ArrowLeft, Activity, Download, RotateCcw, Wand2 } from "lucide-react";
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
 import { mockProjects, mockEvalMetrics, taskTypeLabels, baseModelLabels } from "@/data/mockData";
 import { mockVersionHistory } from "@/data/deploymentMockData";
+import { TuningReport } from "@/components/training/TuningReport";
 import type { ProjectStatus } from "@/types";
 import { useLanguage } from "@/i18n/LanguageContext";
 import { useToast } from "@/hooks/use-toast";
