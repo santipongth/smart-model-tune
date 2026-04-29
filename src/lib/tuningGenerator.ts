@@ -4,7 +4,6 @@
 //
 // When real backend is wired up, swap callers from these helpers to API calls.
 
-import { mockProjects } from "@/data/mockData";
 import type { TuningReport, TuningTrial, TuningRecommendation } from "@/data/tuningReportMockData";
 import type { Project } from "@/types";
 
