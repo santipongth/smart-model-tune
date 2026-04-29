@@ -6,10 +6,12 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Slider } from "@/components/ui/slider";
 import { PageTransition, FadeIn } from "@/components/motion";
-import { Rocket, Copy, Power, PowerOff, Activity, Clock, AlertTriangle, Shield } from "lucide-react";
+import { Rocket, Copy, Power, PowerOff, Activity, Clock, AlertTriangle, Shield, Beaker } from "lucide-react";
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { mockDeployedEndpoints, mockUsageTimeline } from "@/data/deploymentMockData";
 import type { DeployedEndpoint } from "@/data/deploymentMockData";
+import { ABTestingPanel } from "@/components/deployment/ABTestingPanel";
 import { useToast } from "@/hooks/use-toast";
 import { useLanguage } from "@/i18n/LanguageContext";
 
@@ -70,6 +72,13 @@ export default function Deployment() {
           </div>
         </FadeIn>
 
+        <Tabs defaultValue="endpoints" className="space-y-4">
+          <TabsList>
+            <TabsTrigger value="endpoints" className="text-xs gap-1.5"><Rocket className="h-3.5 w-3.5" /> {t("deploy.endpointsTab")}</TabsTrigger>
+            <TabsTrigger value="ab" className="text-xs gap-1.5"><Beaker className="h-3.5 w-3.5" /> {t("ab.tabTitle")}</TabsTrigger>
+          </TabsList>
+
+          <TabsContent value="endpoints">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           <FadeIn delay={0.15} className="lg:col-span-1">
             <Card>
