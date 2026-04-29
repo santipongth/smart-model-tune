@@ -96,7 +96,7 @@ export function AppSidebar() {
         </SidebarGroup>
       </SidebarContent>
 
-      <SidebarFooter className="p-3 border-t border-border">
+      <SidebarFooter className="p-3 border-t border-border space-y-3">
         <div className="space-y-2 group-data-[collapsible=icon]:hidden">
           <div className="flex items-center justify-between text-xs">
             <span className="text-muted-foreground">{t("nav.credits")}</span>
@@ -110,6 +110,29 @@ export function AppSidebar() {
           </div>
           <p className="text-xs text-muted-foreground">{planTier} {t("nav.plan")}</p>
         </div>
+
+        {user && (
+          <div className="flex items-center gap-2 pt-2 border-t border-border group-data-[collapsible=icon]:flex-col group-data-[collapsible=icon]:border-t-0 group-data-[collapsible=icon]:pt-0">
+            <Avatar className="h-7 w-7 shrink-0">
+              <AvatarFallback className="text-[10px] bg-primary/10 text-primary font-semibold">
+                {initials}
+              </AvatarFallback>
+            </Avatar>
+            <div className="flex-1 min-w-0 group-data-[collapsible=icon]:hidden">
+              <p className="text-xs font-medium text-foreground truncate">{displayName}</p>
+              <p className="text-[10px] text-muted-foreground truncate">{user.email}</p>
+            </div>
+            <Button
+              variant="ghost"
+              size="icon"
+              className="h-7 w-7 shrink-0"
+              onClick={handleSignOut}
+              title={t("auth.signOut")}
+            >
+              <LogOut className="h-3.5 w-3.5" />
+            </Button>
+          </div>
+        )}
       </SidebarFooter>
     </Sidebar>
   );
