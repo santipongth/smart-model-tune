@@ -26,6 +26,7 @@ import ModelComparison from "./pages/ModelComparison";
 import Deployment from "./pages/Deployment";
 import Leaderboard from "./pages/Leaderboard";
 import AnnotationTool from "./pages/AnnotationTool";
+import Templates from "./pages/Templates";
 
 const queryClient = new QueryClient();
 
@@ -57,6 +58,7 @@ const App = () => (
                 <Route path="/deployment" element={<Deployment />} />
                 <Route path="/leaderboard" element={<Leaderboard />} />
                 <Route path="/annotate" element={<AnnotationTool />} />
+                <Route path="/templates" element={<Templates />} />
                 <Route path="/settings" element={<Settings />} />
                 <Route path="/api-keys" element={<Settings />} />
               </Route>
