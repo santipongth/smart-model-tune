@@ -8,11 +8,13 @@ import { Progress } from "@/components/ui/progress";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ArrowLeft, Activity, Download, RotateCcw, Wand2 } from "lucide-react";
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
-import { mockProjects, mockEvalMetrics, taskTypeLabels, baseModelLabels } from "@/data/mockData";
+import { mockEvalMetrics, taskTypeLabels, baseModelLabels } from "@/data/mockData";
 import { mockVersionHistory } from "@/data/deploymentMockData";
 import { TuningReport } from "@/components/training/TuningReport";
 import { TuningHistory } from "@/components/training/TuningHistory";
 import { getLatestTuningRun, setAppliedRun } from "@/lib/tuningGenerator";
+import { useProject } from "@/hooks/useProjects";
+import { Loader2 } from "lucide-react";
 import type { ProjectStatus } from "@/types";
 import { useLanguage } from "@/i18n/LanguageContext";
 import { useToast } from "@/hooks/use-toast";
@@ -38,9 +40,17 @@ function getSuggestions(datasetSize: number) {
 
 export default function ProjectDetail() {
   const { id } = useParams<{ id: string }>();
-  const project = mockProjects.find((p) => p.id === id);
+  const { project, loading } = useProject(id);
   const { t } = useLanguage();
   const { toast } = useToast();
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center py-20">
+        <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
+      </div>
+    );
+  }
 
   if (!project) {
     return (
@@ -294,7 +304,7 @@ export default function ProjectDetail() {
             </TabsList>
             <TabsContent value="latest" className="mt-4">
               {(() => {
-                const latest = getLatestTuningRun(project.id);
+                const latest = getLatestTuningRun(project);
                 if (!latest) {
                   return (
                     <div className="text-center py-12 text-muted-foreground text-sm">
@@ -314,7 +324,7 @@ export default function ProjectDetail() {
               })()}
             </TabsContent>
             <TabsContent value="history" className="mt-4">
-              <TuningHistory projectId={project.id} />
+              <TuningHistory project={project} />
             </TabsContent>
           </Tabs>
         </TabsContent>

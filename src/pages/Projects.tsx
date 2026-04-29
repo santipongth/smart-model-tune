@@ -4,34 +4,27 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Button } from "@/components/ui/button";
 import { ProjectCard } from "@/components/dashboard/ProjectCard";
 import { NewProjectDialog } from "@/components/dashboard/NewProjectDialog";
-import { mockProjects, taskTypeLabels } from "@/data/mockData";
+import { taskTypeLabels } from "@/data/mockData";
 import { Search, Upload } from "lucide-react";
 import { PageTransition, FadeIn, StaggerContainer, MotionCard } from "@/components/motion";
 import { ProjectCardSkeleton } from "@/components/skeletons/ProjectCardSkeleton";
 import { useLanguage } from "@/i18n/LanguageContext";
 import { useToast } from "@/hooks/use-toast";
-import type { Project } from "@/types";
-import { useEffect } from "react";
+import { useProjects } from "@/hooks/useProjects";
+import type { TaskType, BaseModel } from "@/types";
 
 export default function Projects() {
   const [search, setSearch] = useState("");
   const [filterTask, setFilterTask] = useState("all");
-  const [loading, setLoading] = useState(true);
-  const [extraProjects, setExtraProjects] = useState<Project[]>([]);
   const { t } = useLanguage();
   const { toast } = useToast();
   const fileRef = useRef<HTMLInputElement>(null);
+  const { projects, loading, create } = useProjects();
 
-  useEffect(() => {
-    const timer = setTimeout(() => setLoading(false), 1200);
-    return () => clearTimeout(timer);
-  }, []);
-
-  const allProjects = [...mockProjects, ...extraProjects];
-  const allTags = Array.from(new Set(allProjects.flatMap((p) => p.tags ?? [])));
+  const allTags = Array.from(new Set(projects.flatMap((p) => p.tags ?? [])));
   const [filterTag, setFilterTag] = useState("all");
 
-  const filtered = allProjects
+  const filtered = projects
     .filter((p) => {
       const matchesSearch = p.name.toLowerCase().includes(search.toLowerCase());
       const matchesTask = filterTask === "all" || p.taskType === filterTask;
@@ -44,30 +37,24 @@ export default function Projects() {
     const file = e.target.files?.[0];
     if (!file) return;
     const reader = new FileReader();
-    reader.onload = (ev) => {
+    reader.onload = async (ev) => {
       try {
         const data = JSON.parse(ev.target?.result as string);
         if (!data.name || !data.taskType || !data.baseModel) {
           toast({ title: t("import.invalidFormat"), variant: "destructive" });
           return;
         }
-        const newProject: Project = {
-          id: `proj-imp-${Date.now()}`,
+        await create({
           name: data.name,
           description: data.description || "",
-          taskType: data.taskType,
-          baseModel: data.baseModel,
-          status: "queued",
-          progress: 0,
-          createdAt: new Date().toISOString(),
-          updatedAt: new Date().toISOString(),
+          taskType: data.taskType as TaskType,
+          baseModel: data.baseModel as BaseModel,
           epochs: data.epochs || 3,
           learningRate: data.learningRate || 2e-4,
           datasetSize: data.datasetSize || 0,
-          creditsCost: 0,
-        };
-        setExtraProjects((prev) => [newProject, ...prev]);
-        toast({ title: t("import.success"), description: newProject.name });
+          tags: data.tags ?? [],
+        });
+        toast({ title: t("import.success"), description: data.name });
       } catch {
         toast({ title: t("import.invalidJson"), variant: "destructive" });
       }
@@ -83,7 +70,7 @@ export default function Projects() {
           <div className="flex items-center justify-between">
             <div>
               <h1 className="text-2xl font-bold text-foreground">{t("projects.title")}</h1>
-              <p className="text-sm text-muted-foreground">{t("projects.total").replace("{count}", String(allProjects.length))}</p>
+              <p className="text-sm text-muted-foreground">{t("projects.total").replace("{count}", String(projects.length))}</p>
             </div>
             <div className="flex gap-2">
               <input ref={fileRef} type="file" accept=".json" className="hidden" onChange={handleImport} />

@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { ArrowLeft, ArrowRight, Check, Sparkles } from "lucide-react";
-import { Link } from "react-router-dom";
+import { ArrowLeft, ArrowRight, Check, Sparkles, Loader2 } from "lucide-react";
+import { Link, useNavigate } from "react-router-dom";
 import { TaskPromptStep } from "@/components/new-project/TaskPromptStep";
 import { TaskSelectionStep } from "@/components/new-project/TaskSelectionStep";
 import { DataUploadStep } from "@/components/new-project/DataUploadStep";
@@ -11,6 +11,8 @@ import { ConfigurationStep } from "@/components/new-project/ConfigurationStep";
 import { TemplateLibrary } from "@/components/new-project/TemplateLibrary";
 import type { TaskType, BaseModel } from "@/types";
 import { useLanguage } from "@/i18n/LanguageContext";
+import { useToast } from "@/hooks/use-toast";
+import { createProject } from "@/lib/projectsApi";
 
 export interface ProjectFormData {
   projectName: string;
@@ -38,7 +40,35 @@ export default function NewProject() {
   const [currentStep, setCurrentStep] = useState(0);
   const [formData, setFormData] = useState<ProjectFormData>(initialFormData);
   const [showTemplates, setShowTemplates] = useState(false);
+  const [launching, setLaunching] = useState(false);
   const { t } = useLanguage();
+  const { toast } = useToast();
+  const navigate = useNavigate();
+
+  const handleLaunch = async () => {
+    if (!formData.taskType || !formData.baseModel) return;
+    setLaunching(true);
+    try {
+      const created = await createProject({
+        name: formData.projectName.trim() || formData.taskPrompt.slice(0, 60) || "Untitled Project",
+        description: formData.taskPrompt,
+        taskType: formData.taskType,
+        baseModel: formData.baseModel,
+        epochs: formData.epochs,
+        learningRate: formData.learningRate,
+        datasetSize: formData.files.length * 100,
+      });
+      toast({ title: t("newProject.launched"), description: created.name });
+      navigate(`/projects/${created.id}`);
+    } catch (e) {
+      toast({
+        title: t("newProject.launchFailed"),
+        description: (e as Error).message,
+        variant: "destructive",
+      });
+      setLaunching(false);
+    }
+  };
 
   useEffect(() => {
     const stored = sessionStorage.getItem("template-prefill");
@@ -163,10 +193,9 @@ export default function NewProject() {
             {t("common.next")} <ArrowRight className="h-4 w-4" />
           </Button>
         ) : (
-          <Button className="gap-2" asChild>
-            <Link to="/projects">
-              <Sparkles className="h-4 w-4" /> {t("newProject.launchTraining")}
-            </Link>
+          <Button className="gap-2" onClick={handleLaunch} disabled={launching || !formData.taskType || !formData.baseModel}>
+            {launching ? <Loader2 className="h-4 w-4 animate-spin" /> : <Sparkles className="h-4 w-4" />}
+            {t("newProject.launchTraining")}
           </Button>
         )}
       </div>

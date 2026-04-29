@@ -4,7 +4,6 @@
 //
 // When real backend is wired up, swap callers from these helpers to API calls.
 
-import { mockProjects } from "@/data/mockData";
 import type { TuningReport, TuningTrial, TuningRecommendation } from "@/data/tuningReportMockData";
 import type { Project } from "@/types";
 
@@ -242,23 +241,19 @@ export function setAppliedRun(projectId: string, runId: string): void {
 }
 
 // Public: get all tuning runs for a project (latest first).
-export function getTuningRunsForProject(projectId: string): TuningRun[] {
-  const project = mockProjects.find((p) => p.id === projectId);
-  if (!project) return [];
-
+export function getTuningRunsForProject(project: Project): TuningRun[] {
   // Number of past runs derived deterministically from project — gives history
   const runCount = 1 + (hashStr(project.id) % 4); // 1-4 runs
-  const applied = getAppliedRunId(projectId);
+  const applied = getAppliedRunId(project.id);
   const runs: TuningRun[] = [];
 
   for (let i = 0; i < runCount; i++) {
     const daysAgo = i * 7 + (hashStr(`${project.id}-day-${i}`) % 5);
     const report = buildReport(project, i, daysAgo);
     const runId = `${project.id}-run-${i}`;
-    const best = report.trials.find((t) => t.trial === report.bestTrial)!;
     runs.push({
       runId,
-      projectId,
+      projectId: project.id,
       startedAt: report.startedAt,
       completedAt: report.completedAt,
       totalTrials: report.totalTrials,
@@ -267,21 +262,20 @@ export function getTuningRunsForProject(projectId: string): TuningRun[] {
       bestAccuracy: report.best.accuracy,
       baselineF1: report.baseline.f1Score,
       bestF1: report.best.f1Score,
-      applied: applied ? applied === runId : i === 0, // default: latest is applied
+      applied: applied ? applied === runId : i === 0,
       label: i === 0 ? "Latest" : `Run #${runCount - i}`,
       report,
     });
   }
 
-  // Sort latest first by completedAt
   return runs.sort((a, b) => +new Date(b.completedAt) - +new Date(a.completedAt));
 }
 
-export function getLatestTuningRun(projectId: string): TuningRun | null {
-  const runs = getTuningRunsForProject(projectId);
+export function getLatestTuningRun(project: Project): TuningRun | null {
+  const runs = getTuningRunsForProject(project);
   return runs[0] ?? null;
 }
 
-export function getTuningRun(projectId: string, runId: string): TuningRun | null {
-  return getTuningRunsForProject(projectId).find((r) => r.runId === runId) ?? null;
+export function getTuningRun(project: Project, runId: string): TuningRun | null {
+  return getTuningRunsForProject(project).find((r) => r.runId === runId) ?? null;
 }
