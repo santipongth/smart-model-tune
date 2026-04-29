@@ -107,6 +107,7 @@ export default function ProjectDetail() {
           <TabsTrigger value="training">{t("projectDetail.training")}</TabsTrigger>
           <TabsTrigger value="evaluation">{t("projectDetail.evaluation")}</TabsTrigger>
           <TabsTrigger value="versions">{t("versions.title")}</TabsTrigger>
+          <TabsTrigger value="tuning">{t("projectDetail.autoTuning")}</TabsTrigger>
         </TabsList>
 
         <TabsContent value="overview" className="space-y-4 mt-4">
