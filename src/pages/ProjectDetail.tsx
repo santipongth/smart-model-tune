@@ -10,6 +10,7 @@ import { ArrowLeft, Activity, Download, RotateCcw, Wand2 } from "lucide-react";
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
 import { mockProjects, mockEvalMetrics, taskTypeLabels, baseModelLabels } from "@/data/mockData";
 import { mockVersionHistory } from "@/data/deploymentMockData";
+import { TuningReport } from "@/components/training/TuningReport";
 import type { ProjectStatus } from "@/types";
 import { useLanguage } from "@/i18n/LanguageContext";
 import { useToast } from "@/hooks/use-toast";
@@ -106,6 +107,7 @@ export default function ProjectDetail() {
           <TabsTrigger value="training">{t("projectDetail.training")}</TabsTrigger>
           <TabsTrigger value="evaluation">{t("projectDetail.evaluation")}</TabsTrigger>
           <TabsTrigger value="versions">{t("versions.title")}</TabsTrigger>
+          <TabsTrigger value="tuning">{t("projectDetail.autoTuning")}</TabsTrigger>
         </TabsList>
 
         <TabsContent value="overview" className="space-y-4 mt-4">
@@ -280,6 +282,10 @@ export default function ProjectDetail() {
               {t("versions.noVersions")}
             </div>
           )}
+        </TabsContent>
+
+        <TabsContent value="tuning" className="space-y-4 mt-4">
+          <TuningReport />
         </TabsContent>
       </Tabs>
     </div>
