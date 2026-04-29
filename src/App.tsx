@@ -27,6 +27,7 @@ import Deployment from "./pages/Deployment";
 import Leaderboard from "./pages/Leaderboard";
 import AnnotationTool from "./pages/AnnotationTool";
 import Templates from "./pages/Templates";
+import DatasetInsights from "./pages/DatasetInsights";
 
 const queryClient = new QueryClient();
 
@@ -47,6 +48,7 @@ const App = () => (
                 <Route path="/projects" element={<Projects />} />
                 <Route path="/projects/new" element={<NewProject />} />
                 <Route path="/projects/:id" element={<ProjectDetail />} />
+                <Route path="/projects/:id/insights" element={<DatasetInsights />} />
                 <Route path="/projects/:id/training" element={<TrainingMonitor />} />
                 <Route path="/models" element={<Models />} />
                 <Route path="/models/:id" element={<ModelDetail />} />

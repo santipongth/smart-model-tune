@@ -204,7 +204,7 @@ export default function DatasetExplorer() {
             </TabsContent>
 
             <TabsContent value="quality">
-              <QualityReport />
+              <QualityReport datasetId={selectedId} />
             </TabsContent>
 
             <TabsContent value="augment">
