@@ -151,7 +151,7 @@ export function TuningReport({ report, onApply, applyLabel }: TuningReportProps)
             </div>
           ))}
           <Button onClick={handleApply} className="w-full gap-2 mt-2">
-            <CheckCircle2 className="h-4 w-4" /> {t("tuningReport.applyAll")}
+            <CheckCircle2 className="h-4 w-4" /> {applyLabel ?? t("tuningReport.applyAll")}
           </Button>
         </CardContent>
       </Card>
