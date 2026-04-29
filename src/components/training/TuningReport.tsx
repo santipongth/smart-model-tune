@@ -38,7 +38,11 @@ export function TuningReport({ report, onApply, applyLabel }: TuningReportProps)
   const lossDrop = (r.baseline.valLoss - r.best.valLoss).toFixed(3);
 
   const handleApply = () => {
-    toast({ title: t("tuningReport.applied"), description: t("tuningReport.appliedDesc") });
+    if (onApply) {
+      onApply();
+    } else {
+      toast({ title: t("tuningReport.applied"), description: t("tuningReport.appliedDesc") });
+    }
   };
 
   return (
