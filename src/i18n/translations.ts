@@ -19,10 +19,6 @@ export const translations: Record<Language, Record<string, string>> = {
     // Dashboard
     "dashboard.title": "Dashboard",
     "dashboard.subtitle": "Overview of your fine-tuning workspace",
-    "dashboard.quickActions": "Quick Actions",
-    "dashboard.browseProjects": "Browse Projects",
-    "dashboard.browseModels": "Browse Models",
-    "dashboard.openPlayground": "Open Playground",
 
     // Landing Hero
     "hero.badge": "Prompt-driven fine-tuning for SLMs",
@@ -89,14 +85,8 @@ export const translations: Record<Language, Record<string, string>> = {
     "notif.teamInvite": "Team Invite",
 
     // Common
-    "common.save": "Save",
-    "common.cancel": "Cancel",
-    "common.delete": "Delete",
-    "common.loading": "Loading...",
-    "common.search": "Search",
     "common.back": "Back",
     "common.next": "Next",
-    "common.total": "Total",
     "common.or": "or",
 
     // Analytics
@@ -114,24 +104,8 @@ export const translations: Record<Language, Record<string, string>> = {
     "analytics.calls": "Calls",
 
     // Dataset Explorer
-    "dataset.title": "Dataset Explorer",
-    "dataset.subtitle": "Preview datasets, inspect schema, and view statistics",
-    "dataset.rows": "Rows",
-    "dataset.columns": "Columns",
     "dataset.fileSize": "File Size",
     "dataset.format": "Format",
-    "dataset.schema": "Schema",
-    "dataset.sampleData": "Sample Data",
-    "dataset.statistics": "Statistics",
-    "dataset.columnSchema": "Column Schema",
-    "dataset.schemaDesc": "Data types and constraints for each column",
-    "dataset.column": "Column",
-    "dataset.type": "Type",
-    "dataset.nullable": "Nullable",
-    "dataset.uniqueValues": "Unique Values",
-    "dataset.sampleRows": "Sample Rows",
-    "dataset.firstRows": "First {count} rows from the dataset",
-    "dataset.columnStats": "Column Statistics",
 
     "calc.samples": "samples",
 
@@ -151,7 +125,6 @@ export const translations: Record<Language, Record<string, string>> = {
     "playground.subtitle": "Test your fine-tuned models with real inputs",
     "playground.single": "Single",
     "playground.model": "Model",
-    "playground.samplePrompts": "Try these sample prompts:",
     "playground.abMode": "A/B Comparison Mode",
     "playground.abDesc": "Send the same input to both models and compare their outputs side by side. Check latency, token usage, and response quality to pick the best model for production.",
 
@@ -174,7 +147,6 @@ export const translations: Record<Language, Record<string, string>> = {
     "login.google": "Continue with Google",
     "login.email": "Email",
     "login.password": "Password",
-    "login.forgot": "Forgot password?",
     "login.signIn": "Sign In",
     "login.noAccount": "Don't have an account?",
     "login.signUp": "Sign up",
@@ -304,7 +276,6 @@ export const translations: Record<Language, Record<string, string>> = {
     "tuningReport.duration": "Duration",
     "tuningReport.status": "Status",
     
-
     // Tuning History
     "tuningHistory.title": "Run History",
     "tuningHistory.latestRun": "Latest Run",
@@ -313,24 +284,8 @@ export const translations: Record<Language, Record<string, string>> = {
     "tuningHistory.applied": "Applied",
     "tuningHistory.viewDetails": "View Details",
     "tuningHistory.restore": "Restore",
-    "tuningHistory.restoreThisRun": "Restore This Run",
-    "tuningHistory.alreadyApplied": "Currently Applied",
     "tuningHistory.restored": "Tuning Run Restored",
     "tuningHistory.backToHistory": "Back to history",
-
-    // Data Augmentation
-    "augment.title": "Augmentation",
-    "augment.config": "Augmentation Config",
-    "augment.technique": "Technique",
-    "augment.factor": "Augmentation Factor",
-    "augment.original": "Original",
-    "augment.augmented": "Augmented",
-    "augment.apply": "Apply Augmentation",
-    "augment.applied": "Augmentation applied",
-    "augment.processing": "Processing...",
-    "augment.preview": "Preview",
-    "augment.previewDesc": "Sample augmented outputs",
-    "augment.result": "Result",
 
     // Deployment
     "deploy.title": "Deployment Dashboard",
@@ -364,7 +319,6 @@ export const translations: Record<Language, Record<string, string>> = {
     "leaderboard.task": "Task",
     "leaderboard.actions": "Actions",
 
-
     // Onboarding
     "onboarding.skip": "Skip Tour",
     "onboarding.next": "Next",
@@ -389,10 +343,8 @@ export const translations: Record<Language, Record<string, string>> = {
     "templates.title": "Template Marketplace",
     "templates.subtitle": "Start your project from a pre-configured template — fine-tuned and ready to go.",
     "templates.searchPlaceholder": "Search templates by name, description, or tag...",
-    "templates.useTemplate": "Use Template",
     "templates.featured": "Featured",
     "templates.templates": "templates",
-    "templates.created": "Project prefilled from template",
     "templates.noResults": "No templates match your filter",
     "templates.preview": "Preview",
     "templates.quickDeploy": "Quick Deploy",
@@ -421,7 +373,6 @@ export const translations: Record<Language, Record<string, string>> = {
     "templates.maxSeqLen": "Max Seq Length",
     "templates.gradAccum": "Grad Accumulation",
     "templates.precision": "Precision",
-    "templates.tagsLabel": "Tags",
     "templates.examplePrompts": "Example Prompts",
     "templates.examplePromptsHint": "Sample input/output pairs the model will learn from.",
     "templates.exampleInput": "Input",
@@ -440,7 +391,6 @@ export const translations: Record<Language, Record<string, string>> = {
     "projects.allTags": "All tags",
 
     // Quality Report
-    "quality.tab": "Quality Report",
     "quality.overallScore": "Quality Score",
     "quality.excellent": "Excellent quality",
     "quality.needsWork": "Needs improvement",
@@ -513,10 +463,6 @@ export const translations: Record<Language, Record<string, string>> = {
     // Dashboard
     "dashboard.title": "แดชบอร์ด",
     "dashboard.subtitle": "ภาพรวมพื้นที่ Fine-tuning ของคุณ",
-    "dashboard.quickActions": "การดำเนินการด่วน",
-    "dashboard.browseProjects": "ดูโปรเจกต์",
-    "dashboard.browseModels": "ดูโมเดล",
-    "dashboard.openPlayground": "เปิด Playground",
 
     // Landing Hero
     "hero.badge": "Fine-tuning ด้วย Prompt สำหรับ SLMs",
@@ -583,14 +529,8 @@ export const translations: Record<Language, Record<string, string>> = {
     "notif.teamInvite": "คำเชิญทีม",
 
     // Common
-    "common.save": "บันทึก",
-    "common.cancel": "ยกเลิก",
-    "common.delete": "ลบ",
-    "common.loading": "กำลังโหลด...",
-    "common.search": "ค้นหา",
     "common.back": "ย้อนกลับ",
     "common.next": "ถัดไป",
-    "common.total": "รวม",
     "common.or": "หรือ",
 
     // Analytics
@@ -608,24 +548,8 @@ export const translations: Record<Language, Record<string, string>> = {
     "analytics.calls": "จำนวนเรียก",
 
     // Dataset Explorer
-    "dataset.title": "สำรวจชุดข้อมูล",
-    "dataset.subtitle": "ดูตัวอย่างข้อมูล, ตรวจสอบ schema และสถิติ",
-    "dataset.rows": "แถว",
-    "dataset.columns": "คอลัมน์",
     "dataset.fileSize": "ขนาดไฟล์",
     "dataset.format": "รูปแบบ",
-    "dataset.schema": "Schema",
-    "dataset.sampleData": "ข้อมูลตัวอย่าง",
-    "dataset.statistics": "สถิติ",
-    "dataset.columnSchema": "Schema คอลัมน์",
-    "dataset.schemaDesc": "ประเภทข้อมูลและข้อจำกัดของแต่ละคอลัมน์",
-    "dataset.column": "คอลัมน์",
-    "dataset.type": "ประเภท",
-    "dataset.nullable": "เป็น Null ได้",
-    "dataset.uniqueValues": "ค่าไม่ซ้ำ",
-    "dataset.sampleRows": "แถวตัวอย่าง",
-    "dataset.firstRows": "{count} แถวแรกจากชุดข้อมูล",
-    "dataset.columnStats": "สถิติคอลัมน์",
 
     "calc.samples": "ตัวอย่าง",
 
@@ -645,7 +569,6 @@ export const translations: Record<Language, Record<string, string>> = {
     "playground.subtitle": "ทดสอบโมเดลที่ Fine-tune แล้วด้วยข้อมูลจริง",
     "playground.single": "เดี่ยว",
     "playground.model": "โมเดล",
-    "playground.samplePrompts": "ลอง prompt ตัวอย่าง:",
     "playground.abMode": "โหมดเปรียบเทียบ A/B",
     "playground.abDesc": "ส่งข้อมูลเดียวกันไปยังทั้งสองโมเดลเพื่อเปรียบเทียบผลลัพธ์ ตรวจสอบ latency, จำนวน token และคุณภาพเพื่อเลือกโมเดลที่ดีที่สุดสำหรับการใช้งานจริง",
 
@@ -668,7 +591,6 @@ export const translations: Record<Language, Record<string, string>> = {
     "login.google": "เข้าสู่ระบบด้วย Google",
     "login.email": "อีเมล",
     "login.password": "รหัสผ่าน",
-    "login.forgot": "ลืมรหัสผ่าน?",
     "login.signIn": "เข้าสู่ระบบ",
     "login.noAccount": "ยังไม่มีบัญชี?",
     "login.signUp": "สมัครสมาชิก",
@@ -798,7 +720,6 @@ export const translations: Record<Language, Record<string, string>> = {
     "tuningReport.duration": "ระยะเวลา",
     "tuningReport.status": "สถานะ",
     
-
     // Tuning History
     "tuningHistory.title": "ประวัติการรัน",
     "tuningHistory.latestRun": "รันล่าสุด",
@@ -807,24 +728,8 @@ export const translations: Record<Language, Record<string, string>> = {
     "tuningHistory.applied": "กำลังใช้งาน",
     "tuningHistory.viewDetails": "ดูรายละเอียด",
     "tuningHistory.restore": "เลือกใช้",
-    "tuningHistory.restoreThisRun": "เลือกใช้รันนี้",
-    "tuningHistory.alreadyApplied": "กำลังใช้รันนี้อยู่",
     "tuningHistory.restored": "เลือกใช้ค่าจากรันนี้แล้ว",
     "tuningHistory.backToHistory": "ย้อนกลับ",
-
-    // Data Augmentation
-    "augment.title": "เพิ่มข้อมูล",
-    "augment.config": "ตั้งค่าการเพิ่มข้อมูล",
-    "augment.technique": "เทคนิค",
-    "augment.factor": "ตัวคูณ",
-    "augment.original": "ต้นฉบับ",
-    "augment.augmented": "เพิ่มแล้ว",
-    "augment.apply": "เพิ่มข้อมูล",
-    "augment.applied": "เพิ่มข้อมูลเสร็จสิ้น",
-    "augment.processing": "กำลังประมวลผล...",
-    "augment.preview": "ตัวอย่าง",
-    "augment.previewDesc": "ตัวอย่างผลลัพธ์การเพิ่มข้อมูล",
-    "augment.result": "ผลลัพธ์",
 
     // Deployment
     "deploy.title": "แดชบอร์ดการใช้งาน",
@@ -858,7 +763,6 @@ export const translations: Record<Language, Record<string, string>> = {
     "leaderboard.task": "งาน",
     "leaderboard.actions": "การดำเนินการ",
 
-
     // Onboarding
     "onboarding.skip": "ข้ามทัวร์",
     "onboarding.next": "ถัดไป",
@@ -883,10 +787,8 @@ export const translations: Record<Language, Record<string, string>> = {
     "templates.title": "ตลาดเทมเพลต",
     "templates.subtitle": "เริ่มโปรเจกต์จากเทมเพลตที่ตั้งค่าไว้พร้อมใช้งาน — แค่กดเดียวก็เริ่มเทรนได้",
     "templates.searchPlaceholder": "ค้นหาเทมเพลตด้วยชื่อ คำอธิบาย หรือ tag...",
-    "templates.useTemplate": "ใช้เทมเพลตนี้",
     "templates.featured": "แนะนำ",
     "templates.templates": "เทมเพลต",
-    "templates.created": "สร้างโปรเจกต์จากเทมเพลตเรียบร้อย",
     "templates.noResults": "ไม่พบเทมเพลตที่ตรงกับเงื่อนไข",
     "templates.preview": "ดูตัวอย่าง",
     "templates.quickDeploy": "เริ่มทันที",
@@ -915,7 +817,6 @@ export const translations: Record<Language, Record<string, string>> = {
     "templates.maxSeqLen": "ความยาว Sequence สูงสุด",
     "templates.gradAccum": "Gradient Accumulation",
     "templates.precision": "ความละเอียด",
-    "templates.tagsLabel": "แท็ก",
     "templates.examplePrompts": "ตัวอย่างพรอมต์",
     "templates.examplePromptsHint": "ตัวอย่างคู่ input/output ที่โมเดลจะเรียนรู้",
     "templates.exampleInput": "อินพุต",
@@ -934,7 +835,6 @@ export const translations: Record<Language, Record<string, string>> = {
     "projects.allTags": "ทุก tag",
 
     // Quality Report
-    "quality.tab": "รายงานคุณภาพ",
     "quality.overallScore": "คะแนนคุณภาพ",
     "quality.excellent": "คุณภาพดีเยี่ยม",
     "quality.needsWork": "ควรปรับปรุง",
