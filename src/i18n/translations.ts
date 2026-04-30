@@ -976,6 +976,18 @@ export const translations: Record<Language, Record<string, string>> = {
     "templates.gradAccum": "Gradient Accumulation",
     "templates.precision": "ความละเอียด",
     "templates.tagsLabel": "แท็ก",
+    "templates.examplePrompts": "ตัวอย่างพรอมต์",
+    "templates.examplePromptsHint": "ตัวอย่างคู่ input/output ที่โมเดลจะเรียนรู้",
+    "templates.exampleInput": "อินพุต",
+    "templates.exampleOutput": "เอาต์พุต",
+    "templates.datasetConfig": "การตั้งค่าชุดข้อมูล",
+    "templates.totalSamples": "จำนวนตัวอย่างทั้งหมด",
+    "templates.trainSplit": "Train",
+    "templates.valSplit": "Validation",
+    "templates.testSplit": "Test",
+    "templates.dataFormat": "รูปแบบข้อมูล",
+    "templates.augmentation": "การเพิ่มข้อมูล",
+    "templates.tokenRange": "ช่วง Token",
 
     // Projects extras
     "projects.filterByTag": "กรองตาม tag",
