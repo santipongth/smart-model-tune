@@ -496,7 +496,6 @@ export const translations: Record<Language, Record<string, string>> = {
     "nav.models": "โมเดล",
     "nav.playground": "ทดสอบโมเดล",
     "nav.analytics": "วิเคราะห์",
-    "nav.datasets": "ชุดข้อมูล",
     "nav.calculator": "คำนวณค่าใช้จ่าย",
     "nav.apiKeys": "API Keys",
     "nav.settings": "ตั้งค่า",
@@ -504,7 +503,6 @@ export const translations: Record<Language, Record<string, string>> = {
     "nav.plan": "แผน",
     "nav.deployment": "การใช้งาน",
     "nav.leaderboard": "ลีดเดอร์บอร์ด",
-    "nav.annotate": "ติดป้ายข้อมูล",
 
     // Dashboard
     "dashboard.title": "แดชบอร์ด",
@@ -880,22 +878,6 @@ export const translations: Record<Language, Record<string, string>> = {
     "leaderboard.task": "งาน",
     "leaderboard.actions": "การดำเนินการ",
 
-    // Annotation
-    "annotate.title": "เครื่องมือติดป้ายข้อมูล",
-    "annotate.subtitle": "ติดป้ายข้อมูลสำหรับสร้างชุดข้อมูลฝึก",
-    "annotate.exportJson": "ส่งออก JSON",
-    "annotate.sample": "ตัวอย่าง",
-    "annotate.unlabeled": "ยังไม่ติดป้าย",
-    "annotate.selectLabel": "เลือกป้าย (หรือใช้ปุ่มลัด):",
-    "annotate.labeled": "ติดป้ายแล้ว",
-    "annotate.exported": "ส่งออกข้อมูลที่ติดป้ายแล้ว",
-    "annotate.distribution": "การกระจายป้าย",
-    "annotate.noLabelsYet": "ยังไม่มีป้ายที่กำหนด",
-    "annotate.shortcuts": "ปุ่มลัด",
-    "annotate.navigate": "เลื่อนหน้า",
-    "annotate.prev": "ก่อนหน้า",
-    "annotate.skip": "ข้าม",
-    "annotate.next": "ถัดไป",
 
     // Onboarding
     "onboarding.skip": "ข้ามทัวร์",
