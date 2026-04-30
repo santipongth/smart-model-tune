@@ -93,7 +93,7 @@ export function CommandPalette() {
           <CommandSeparator />
 
           <CommandGroup heading={t("command.projects")}>
-            {mockProjects.map((p) => (
+            {projects.map((p) => (
               <CommandItem key={p.id} onSelect={() => runCommand(`/projects/${p.id}`)}>
                 <FolderKanban className="mr-2 h-4 w-4" />
                 {p.name}
@@ -104,7 +104,7 @@ export function CommandPalette() {
           <CommandSeparator />
 
           <CommandGroup heading={t("command.models")}>
-            {mockModels.map((m) => (
+            {models.map((m) => (
               <CommandItem key={m.id} onSelect={() => runCommand(`/models/${m.id}`)}>
                 <Box className="mr-2 h-4 w-4" />
                 {m.name}
