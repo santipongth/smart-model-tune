@@ -166,7 +166,7 @@ export const translations: Record<Language, Record<string, string>> = {
     // Project Detail
     "projectDetail.notFound": "Project not found.",
     "projectDetail.backToProjects": "Back to Projects",
-    "projectDetail.trainingMonitor": "Training Monitor",
+    
     "projectDetail.overview": "Overview",
     "projectDetail.training": "Training",
     "projectDetail.evaluation": "Evaluation",
@@ -237,9 +237,6 @@ export const translations: Record<Language, Record<string, string>> = {
     "auth.welcome": "Welcome to TuneLab",
     "auth.accountReady": "Your account is ready.",
     "auth.signOut": "Sign out",
-
-    // Export/Import
-
 
     // Version History
     "versions.title": "Versions",
@@ -605,7 +602,7 @@ export const translations: Record<Language, Record<string, string>> = {
     // Project Detail
     "projectDetail.notFound": "ไม่พบโปรเจกต์",
     "projectDetail.backToProjects": "กลับไปยังโปรเจกต์",
-    "projectDetail.trainingMonitor": "ติดตามการฝึก",
+    
     "projectDetail.overview": "ภาพรวม",
     "projectDetail.training": "การฝึก",
     "projectDetail.evaluation": "การประเมินผล",
@@ -676,8 +673,6 @@ export const translations: Record<Language, Record<string, string>> = {
     "auth.welcome": "ยินดีต้อนรับสู่ TuneLab",
     "auth.accountReady": "บัญชีของคุณพร้อมใช้งานแล้ว",
     "auth.signOut": "ออกจากระบบ",
-
-    // Export/Import
 
     // Version History
     "versions.title": "เวอร์ชัน",
