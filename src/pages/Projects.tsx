@@ -32,41 +32,55 @@ export default function Projects() {
     <PageTransition>
       <div className="space-y-6 max-w-7xl">
         <FadeIn>
-          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-            <div>
-              <h1 className="text-2xl font-bold text-foreground">{t("projects.title")}</h1>
+          <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+            <div className="min-w-0">
+              <h1 className="text-2xl font-bold text-foreground truncate">{t("projects.title")}</h1>
               <p className="text-sm text-muted-foreground">{t("projects.total").replace("{count}", String(projects.length))}</p>
             </div>
-            <NewProjectDialog />
+            <div className="flex-shrink-0">
+              <NewProjectDialog />
+            </div>
           </div>
         </FadeIn>
 
         <FadeIn delay={0.1}>
-          <div className="flex flex-col sm:flex-row gap-3">
-            <div className="relative flex-1">
+          <div className="flex flex-col gap-3 lg:flex-row lg:items-center">
+            <div className="relative w-full lg:flex-1 lg:min-w-[260px]">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-              <Input placeholder={t("projects.searchPlaceholder")} value={search} onChange={(e) => setSearch(e.target.value)} className="pl-9" />
+              <Input
+                placeholder={t("projects.searchPlaceholder")}
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                className="pl-9"
+                aria-label={t("projects.searchPlaceholder")}
+              />
             </div>
-            <Select value={filterTask} onValueChange={setFilterTask}>
-              <SelectTrigger className="w-full sm:w-48"><SelectValue placeholder={t("projects.filterByTask")} /></SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">{t("projects.allTasks")}</SelectItem>
-                {Object.entries(taskTypeLabels).map(([key, label]) => (
-                  <SelectItem key={key} value={key}>{label}</SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-            {allTags.length > 0 && (
-              <Select value={filterTag} onValueChange={setFilterTag}>
-                <SelectTrigger className="w-full sm:w-40"><SelectValue placeholder={t("projects.filterByTag")} /></SelectTrigger>
+            <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap lg:flex-nowrap">
+              <Select value={filterTask} onValueChange={setFilterTask}>
+                <SelectTrigger className="w-full sm:w-48" aria-label={t("projects.filterByTask")}>
+                  <SelectValue placeholder={t("projects.filterByTask")} />
+                </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="all">{t("projects.allTags")}</SelectItem>
-                  {allTags.map((tag) => (
-                    <SelectItem key={tag} value={tag}>{tag}</SelectItem>
+                  <SelectItem value="all">{t("projects.allTasks")}</SelectItem>
+                  {Object.entries(taskTypeLabels).map(([key, label]) => (
+                    <SelectItem key={key} value={key}>{label}</SelectItem>
                   ))}
                 </SelectContent>
               </Select>
-            )}
+              {allTags.length > 0 && (
+                <Select value={filterTag} onValueChange={setFilterTag}>
+                  <SelectTrigger className="w-full sm:w-44" aria-label={t("projects.filterByTag")}>
+                    <SelectValue placeholder={t("projects.filterByTag")} />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">{t("projects.allTags")}</SelectItem>
+                    {allTags.map((tag) => (
+                      <SelectItem key={tag} value={tag}>{tag}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              )}
+            </div>
           </div>
         </FadeIn>
 

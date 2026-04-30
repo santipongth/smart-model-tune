@@ -13,7 +13,9 @@ function getInitialLanguage(): Language {
   try {
     const stored = localStorage.getItem("app-language");
     if (stored === "th" || stored === "en") return stored;
-  } catch {}
+  } catch {
+    // localStorage unavailable — fall through to default
+  }
   return "th";
 }
 
@@ -22,7 +24,11 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
 
   const setLanguage = useCallback((lang: Language) => {
     setLanguageState(lang);
-    try { localStorage.setItem("app-language", lang); } catch {}
+    try {
+      localStorage.setItem("app-language", lang);
+    } catch {
+      // ignore persistence failures
+    }
   }, []);
 
   const t = useCallback(
