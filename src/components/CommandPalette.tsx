@@ -10,7 +10,8 @@ import {
   CommandSeparator,
 } from "@/components/ui/command";
 import { FolderKanban, Box, LayoutDashboard, Settings, MessageSquare, Plus, Search } from "lucide-react";
-import { mockProjects, mockModels } from "@/data/mockData";
+import { useProjects } from "@/hooks/useProjects";
+import { useModels } from "@/hooks/useUserData";
 import { Button } from "@/components/ui/button";
 import { useLanguage } from "@/i18n/LanguageContext";
 
@@ -18,6 +19,8 @@ export function CommandPalette() {
   const [open, setOpen] = useState(false);
   const navigate = useNavigate();
   const { t } = useLanguage();
+  const { projects } = useProjects();
+  const { models } = useModels();
 
   useEffect(() => {
     const down = (e: KeyboardEvent) => {
