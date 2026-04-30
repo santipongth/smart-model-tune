@@ -6,7 +6,7 @@ import { Slider } from "@/components/ui/slider";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Trophy, TrendingUp, TrendingDown, Beaker, ArrowRight } from "lucide-react";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from "recharts";
-import { mockModels } from "@/data/mockData";
+import { useModels } from "@/hooks/useUserData";
 import { useLanguage } from "@/i18n/LanguageContext";
 import { useToast } from "@/hooks/use-toast";
 
@@ -23,14 +23,18 @@ const errorData = Array.from({ length: 12 }).map((_, i) => ({
 }));
 
 export function ABTestingPanel() {
-  const [variantA, setVariantA] = useState(mockModels[0].id);
-  const [variantB, setVariantB] = useState(mockModels[1].id);
+  const { models } = useModels();
+  const [variantA, setVariantA] = useState<string>("");
+  const [variantB, setVariantB] = useState<string>("");
   const [trafficSplit, setTrafficSplit] = useState(70);
   const [running, setRunning] = useState(true);
   const { t } = useLanguage();
   const { toast } = useToast();
 
-  const getName = (id: string) => mockModels.find((m) => m.id === id)?.name || id;
+  if (models.length > 0 && !variantA) setVariantA(models[0].id);
+  if (models.length > 1 && !variantB) setVariantB(models[1].id);
+
+  const getName = (id: string) => models.find((m) => m.id === id)?.name || id;
 
   const winner = "B";
   const handlePromote = (variant: "A" | "B") => {
@@ -66,7 +70,7 @@ export function ABTestingPanel() {
               <Select value={variantA} onValueChange={setVariantA}>
                 <SelectTrigger><SelectValue /></SelectTrigger>
                 <SelectContent>
-                  {mockModels.map((m) => (
+                  {models.map((m) => (
                     <SelectItem key={m.id} value={m.id}>{m.name}</SelectItem>
                   ))}
                 </SelectContent>
@@ -79,7 +83,7 @@ export function ABTestingPanel() {
               <Select value={variantB} onValueChange={setVariantB}>
                 <SelectTrigger><SelectValue /></SelectTrigger>
                 <SelectContent>
-                  {mockModels.map((m) => (
+                  {models.map((m) => (
                     <SelectItem key={m.id} value={m.id}>{m.name}</SelectItem>
                   ))}
                 </SelectContent>

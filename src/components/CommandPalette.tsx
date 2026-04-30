@@ -10,7 +10,8 @@ import {
   CommandSeparator,
 } from "@/components/ui/command";
 import { FolderKanban, Box, LayoutDashboard, Settings, MessageSquare, Plus, Search } from "lucide-react";
-import { mockProjects, mockModels } from "@/data/mockData";
+import { useProjects } from "@/hooks/useProjects";
+import { useModels } from "@/hooks/useUserData";
 import { Button } from "@/components/ui/button";
 import { useLanguage } from "@/i18n/LanguageContext";
 
@@ -18,6 +19,8 @@ export function CommandPalette() {
   const [open, setOpen] = useState(false);
   const navigate = useNavigate();
   const { t } = useLanguage();
+  const { projects } = useProjects();
+  const { models } = useModels();
 
   useEffect(() => {
     const down = (e: KeyboardEvent) => {
@@ -90,7 +93,7 @@ export function CommandPalette() {
           <CommandSeparator />
 
           <CommandGroup heading={t("command.projects")}>
-            {mockProjects.map((p) => (
+            {projects.map((p) => (
               <CommandItem key={p.id} onSelect={() => runCommand(`/projects/${p.id}`)}>
                 <FolderKanban className="mr-2 h-4 w-4" />
                 {p.name}
@@ -101,7 +104,7 @@ export function CommandPalette() {
           <CommandSeparator />
 
           <CommandGroup heading={t("command.models")}>
-            {mockModels.map((m) => (
+            {models.map((m) => (
               <CommandItem key={m.id} onSelect={() => runCommand(`/models/${m.id}`)}>
                 <Box className="mr-2 h-4 w-4" />
                 {m.name}

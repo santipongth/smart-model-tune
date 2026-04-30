@@ -5,24 +5,36 @@ import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { PageTransition, FadeIn } from "@/components/motion";
 import { GitCompare, Trophy, Rocket } from "lucide-react";
-import { mockModels } from "@/data/mockData";
+import { useModels } from "@/hooks/useUserData";
 import {
   RadarChart, Radar, PolarGrid, PolarAngleAxis, PolarRadiusAxis, ResponsiveContainer,
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip,
 } from "recharts";
 import { useLanguage } from "@/i18n/LanguageContext";
 
-const modelMetrics: Record<string, { accuracy: number; f1: number; precision: number; recall: number; latency: number; size: string }> = {
-  "model-1": { accuracy: 94.2, f1: 93.8, precision: 95.1, recall: 92.5, latency: 3.8, size: "1.2 GB" },
-  "model-2": { accuracy: 91.5, f1: 90.2, precision: 92.8, recall: 87.6, latency: 2.1, size: "0.8 GB" },
-  "model-3": { accuracy: 96.1, f1: 95.7, precision: 96.4, recall: 95.0, latency: 5.2, size: "2.1 GB" },
-};
-
 const COLORS = ["hsl(var(--primary))", "hsl(var(--warning))", "hsl(var(--destructive))"];
 
 export default function ModelComparison() {
-  const [selected, setSelected] = useState<string[]>([mockModels[0].id, mockModels[1].id]);
+  const { models } = useModels();
+  const [selected, setSelected] = useState<string[]>([]);
   const { t } = useLanguage();
+
+  if (models.length >= 2 && selected.length === 0) {
+    setSelected([models[0].id, models[1].id]);
+  }
+
+  const modelMetrics: Record<string, { accuracy: number; f1: number; precision: number; recall: number; latency: number; size: string }> = {};
+  models.forEach((m) => {
+    modelMetrics[m.id] = {
+      accuracy: m.accuracy,
+      f1: m.f1Score,
+      precision: m.precision,
+      recall: m.recall,
+      latency: m.latencyMs / 1000,
+      size: m.fileSize,
+    };
+  });
+
 
   const handleSelect = (index: number, value: string) => {
     const next = [...selected];
@@ -32,7 +44,7 @@ export default function ModelComparison() {
 
   const addSlot = () => {
     if (selected.length < 3) {
-      const unused = mockModels.find((m) => !selected.includes(m.id));
+      const unused = models.find((m) => !selected.includes(m.id));
       if (unused) setSelected([...selected, unused.id]);
     }
   };
@@ -51,7 +63,7 @@ export default function ModelComparison() {
   });
 
   const latencyData = selected.map((id, i) => ({
-    name: mockModels.find((m) => m.id === id)?.name || id,
+    name: models.find((m) => m.id === id)?.name || id,
     latency: modelMetrics[id]?.latency || 0,
     fill: COLORS[i],
   }));
@@ -93,7 +105,7 @@ export default function ModelComparison() {
                   <Select value={id} onValueChange={(v) => handleSelect(i, v)}>
                     <SelectTrigger className="flex-1"><SelectValue /></SelectTrigger>
                     <SelectContent>
-                      {mockModels.map((m) => (
+                      {models.map((m) => (
                         <SelectItem key={m.id} value={m.id}>
                           <span className="font-mono text-sm">{m.name}</span>
                         </SelectItem>
@@ -122,7 +134,7 @@ export default function ModelComparison() {
                         <th key={id} className="text-right py-2 text-muted-foreground font-medium">
                           <div className="flex items-center justify-end gap-1.5">
                             <div className="h-2.5 w-2.5 rounded-full" style={{ background: COLORS[i] }} />
-                            {mockModels.find((m) => m.id === id)?.name}
+                            {models.find((m) => m.id === id)?.name}
                           </div>
                         </th>
                       ))}

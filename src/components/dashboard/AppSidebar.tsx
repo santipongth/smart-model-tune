@@ -29,10 +29,10 @@ import {
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { LogOut } from "lucide-react";
-import { mockUsageStats } from "@/data/mockData";
 import { useLanguage } from "@/i18n/LanguageContext";
 import { useAuth } from "@/contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
+import { useProjects } from "@/hooks/useProjects";
 
 const navItems = [
   { titleKey: "nav.dashboard", url: "/dashboard", icon: LayoutDashboard },
@@ -51,7 +51,11 @@ const navItems = [
 ];
 
 export function AppSidebar() {
-  const { creditsRemaining, creditsTotal, planTier } = mockUsageStats;
+  const { projects } = useProjects();
+  const creditsTotal = 1000;
+  const creditsUsed = projects.reduce((s, p) => s + p.creditsCost, 0);
+  const creditsRemaining = Math.max(0, creditsTotal - creditsUsed);
+  const planTier = "Pro";
   const creditPercent = (creditsRemaining / creditsTotal) * 100;
   const { t } = useLanguage();
   const { user, profile, signOut } = useAuth();

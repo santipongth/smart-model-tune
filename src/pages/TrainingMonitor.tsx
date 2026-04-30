@@ -12,14 +12,15 @@ import { TrainingLog } from "@/components/training/TrainingLog";
 import { LossCurveChart } from "@/components/training/LossCurveChart";
 import { EvaluationViewer } from "@/components/training/EvaluationViewer";
 import { mockPipelineSteps, mockTrainingLog, mockLossCurve, mockComparisonResults } from "@/data/trainingMockData";
-import { mockProjects, baseModelLabels, taskTypeLabels } from "@/data/mockData";
+import { baseModelLabels, taskTypeLabels } from "@/data/mockData";
 import { TrainingMonitorSkeleton } from "@/components/skeletons/TrainingMonitorSkeleton";
 import { DiagnosticPanel } from "@/components/training/DiagnosticPanel";
 import { useLanguage } from "@/i18n/LanguageContext";
+import { useProject } from "@/hooks/useProjects";
 
 export default function TrainingMonitor() {
   const { id } = useParams<{ id: string }>();
-  const project = mockProjects.find((p) => p.id === id);
+  const { project } = useProject(id);
   const [loading, setLoading] = useState(true);
   const { t } = useLanguage();
 

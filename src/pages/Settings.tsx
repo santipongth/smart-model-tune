@@ -19,20 +19,8 @@ import { useLanguage } from "@/i18n/LanguageContext";
 import { restartOnboarding } from "@/components/OnboardingTour";
 
 // --- API Keys Tab ---
-interface ApiKey {
-  id: string;
-  name: string;
-  key: string;
-  created: string;
-  lastUsed: string;
-  status: "active" | "revoked";
-}
-
-const mockApiKeys: ApiKey[] = [
-  { id: "1", name: "Production", key: "sk-slm-prod-a8f3...x9k2", created: "2024-01-15", lastUsed: "2 hours ago", status: "active" },
-  { id: "2", name: "Development", key: "sk-slm-dev-b2c7...m4p1", created: "2024-02-20", lastUsed: "5 min ago", status: "active" },
-  { id: "3", name: "Staging (old)", key: "sk-slm-stg-z1d9...q7w3", created: "2023-11-01", lastUsed: "30 days ago", status: "revoked" },
-];
+import { useApiKeys } from "@/hooks/useUserData";
+import { createApiKey, revokeApiKey } from "@/lib/apiKeysApi";
 
 const codeExamples = {
   python: `import openai
@@ -73,7 +61,7 @@ console.log(data.choices[0].message.content);`,
 };
 
 function ApiKeysTab() {
-  const [keys, setKeys] = useState(mockApiKeys);
+  const { keys, refresh } = useApiKeys();
   const [showKey, setShowKey] = useState<Record<string, boolean>>({});
   const [newKeyName, setNewKeyName] = useState("");
   const [codeLang, setCodeLang] = useState<"python" | "curl" | "javascript">("python");
@@ -84,23 +72,21 @@ function ApiKeysTab() {
     toast({ title: "Copied to clipboard" });
   };
 
-  const handleCreateKey = () => {
+  const handleCreateKey = async () => {
     if (!newKeyName.trim()) return;
-    const newKey: ApiKey = {
-      id: Date.now().toString(),
-      name: newKeyName,
-      key: `sk-slm-${newKeyName.toLowerCase().slice(0, 4)}-${Math.random().toString(36).slice(2, 6)}...${Math.random().toString(36).slice(2, 6)}`,
-      created: new Date().toISOString().split("T")[0],
-      lastUsed: "Never",
-      status: "active",
-    };
-    setKeys([newKey, ...keys]);
-    setNewKeyName("");
-    toast({ title: "API key created", description: `Key "${newKeyName}" has been generated.` });
+    try {
+      await createApiKey(newKeyName);
+      setNewKeyName("");
+      await refresh();
+      toast({ title: "API key created", description: `Key "${newKeyName}" has been generated.` });
+    } catch (e) {
+      toast({ title: "Failed to create key", description: (e as Error).message, variant: "destructive" });
+    }
   };
 
-  const handleRevoke = (id: string) => {
-    setKeys(keys.map((k) => (k.id === id ? { ...k, status: "revoked" as const } : k)));
+  const handleRevoke = async (id: string) => {
+    await revokeApiKey(id);
+    await refresh();
     toast({ title: "API key revoked", variant: "destructive" });
   };
 
@@ -150,17 +136,17 @@ function ApiKeysTab() {
                     </div>
                     <div className="flex items-center gap-2 mt-0.5">
                       <code className="text-xs text-muted-foreground font-mono">
-                        {showKey[k.id] ? k.key.replace("...", "abcdef1234") : k.key}
+                        {showKey[k.id] ? `${k.keyPrefix}-${k.keySuffix}xxxxxxxx` : `${k.keyPrefix}...${k.keySuffix}`}
                       </code>
                       <button onClick={() => setShowKey({ ...showKey, [k.id]: !showKey[k.id] })} className="text-muted-foreground hover:text-foreground">
                         {showKey[k.id] ? <EyeOff className="h-3 w-3" /> : <Eye className="h-3 w-3" />}
                       </button>
-                      <button onClick={() => handleCopy(k.key)} className="text-muted-foreground hover:text-foreground">
+                      <button onClick={() => handleCopy(`${k.keyPrefix}...${k.keySuffix}`)} className="text-muted-foreground hover:text-foreground">
                         <Copy className="h-3 w-3" />
                       </button>
                     </div>
                     <p className="text-[11px] text-muted-foreground mt-0.5">
-                      Created {k.created} · Last used {k.lastUsed}
+                      Created {new Date(k.createdAt).toLocaleDateString()} · {k.lastUsedAt ? `Last used ${new Date(k.lastUsedAt).toLocaleDateString()}` : "Never used"}
                     </p>
                   </div>
                 </div>

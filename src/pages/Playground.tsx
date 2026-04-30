@@ -9,7 +9,7 @@ import { Label } from "@/components/ui/label";
 import { Columns2, MessageSquare } from "lucide-react";
 import { ChatPanel } from "@/components/playground/ChatPanel";
 import { PromptOptimizer } from "@/components/playground/PromptOptimizer";
-import { mockModels } from "@/data/mockData";
+import { useModels } from "@/hooks/useUserData";
 import { useLanguage } from "@/i18n/LanguageContext";
 
 const samplePrompts = [
@@ -20,12 +20,16 @@ const samplePrompts = [
 ];
 
 export default function Playground() {
-  const [modelA, setModelA] = useState(mockModels[0].id);
-  const [modelB, setModelB] = useState(mockModels[1].id);
+  const { models } = useModels();
+  const [modelA, setModelA] = useState<string>("");
+  const [modelB, setModelB] = useState<string>("");
   const [abMode, setAbMode] = useState(false);
   const { t } = useLanguage();
 
-  const getModelName = (id: string) => mockModels.find((m) => m.id === id)?.name || id;
+  if (models.length > 0 && !modelA) setModelA(models[0].id);
+  if (models.length > 1 && !modelB) setModelB(models[1].id);
+
+  const getModelName = (id: string) => models.find((m) => m.id === id)?.name || id;
 
   return (
     <PageTransition>
@@ -56,7 +60,7 @@ export default function Playground() {
               <Select value={modelA} onValueChange={setModelA}>
                 <SelectTrigger><SelectValue /></SelectTrigger>
                 <SelectContent>
-                  {mockModels.map((m) => (
+                  {models.map((m) => (
                     <SelectItem key={m.id} value={m.id}>
                       <div className="flex items-center gap-2">
                         <span className="font-mono text-sm">{m.name}</span>
@@ -73,7 +77,7 @@ export default function Playground() {
                 <Select value={modelB} onValueChange={setModelB}>
                   <SelectTrigger><SelectValue /></SelectTrigger>
                   <SelectContent>
-                    {mockModels.map((m) => (
+                    {models.map((m) => (
                       <SelectItem key={m.id} value={m.id}>
                         <div className="flex items-center gap-2">
                           <span className="font-mono text-sm">{m.name}</span>

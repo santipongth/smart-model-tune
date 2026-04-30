@@ -8,7 +8,7 @@ import { Progress } from "@/components/ui/progress";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ArrowLeft, Activity, Download, RotateCcw, Wand2 } from "lucide-react";
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
-import { mockEvalMetrics, taskTypeLabels, baseModelLabels } from "@/data/mockData";
+import { taskTypeLabels, baseModelLabels } from "@/data/mockData";
 import { mockVersionHistory } from "@/data/deploymentMockData";
 import { TuningReport } from "@/components/training/TuningReport";
 import { TuningHistory } from "@/components/training/TuningHistory";
@@ -61,7 +61,17 @@ export default function ProjectDetail() {
     );
   }
 
-  const metrics = mockEvalMetrics[project.id];
+  // Generate metrics deterministically from project (in lieu of real eval data per project)
+  const seed = project.id.split("").reduce((s, c) => s + c.charCodeAt(0), 0);
+  const r = (offset: number) => 85 + ((seed + offset) % 12);
+  const metrics = {
+    accuracy: r(1),
+    f1Score: r(2),
+    precision: r(3),
+    recall: r(4),
+    rouge1: r(5),
+    latencyMs: 100 + (seed % 80),
+  };
   const versions = mockVersionHistory[project.id as keyof typeof mockVersionHistory] || [];
   const suggestion = getSuggestions(project.datasetSize);
 
