@@ -136,17 +136,17 @@ function ApiKeysTab() {
                     </div>
                     <div className="flex items-center gap-2 mt-0.5">
                       <code className="text-xs text-muted-foreground font-mono">
-                        {showKey[k.id] ? k.key.replace("...", "abcdef1234") : k.key}
+                        {showKey[k.id] ? `${k.keyPrefix}-${k.keySuffix}xxxxxxxx` : `${k.keyPrefix}...${k.keySuffix}`}
                       </code>
                       <button onClick={() => setShowKey({ ...showKey, [k.id]: !showKey[k.id] })} className="text-muted-foreground hover:text-foreground">
                         {showKey[k.id] ? <EyeOff className="h-3 w-3" /> : <Eye className="h-3 w-3" />}
                       </button>
-                      <button onClick={() => handleCopy(k.key)} className="text-muted-foreground hover:text-foreground">
+                      <button onClick={() => handleCopy(`${k.keyPrefix}...${k.keySuffix}`)} className="text-muted-foreground hover:text-foreground">
                         <Copy className="h-3 w-3" />
                       </button>
                     </div>
                     <p className="text-[11px] text-muted-foreground mt-0.5">
-                      Created {k.created} · Last used {k.lastUsed}
+                      Created {new Date(k.createdAt).toLocaleDateString()} · {k.lastUsedAt ? `Last used ${new Date(k.lastUsedAt).toLocaleDateString()}` : "Never used"}
                     </p>
                   </div>
                 </div>
