@@ -1,4 +1,4 @@
-import type { ProjectStatus } from "@/types";
+
 
 export interface PipelineStep {
   id: string;
