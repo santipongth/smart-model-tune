@@ -112,14 +112,6 @@ export default function ProjectDetail() {
           </div>
           <p className="text-sm text-muted-foreground mt-0.5">{project.description}</p>
         </div>
-        <Button variant="outline" size="sm" className="gap-2" onClick={handleExport}>
-          <Download className="h-3.5 w-3.5" /> {t("export.exportJson")}
-        </Button>
-        <Button variant="outline" size="sm" className="gap-2" asChild>
-          <Link to={`/projects/${project.id}/training`}>
-            <Activity className="h-3.5 w-3.5" /> {t("projectDetail.trainingMonitor")}
-          </Link>
-        </Button>
       </div>
 
       <Tabs defaultValue="overview">
