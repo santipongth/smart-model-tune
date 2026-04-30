@@ -19,10 +19,6 @@ export const translations: Record<Language, Record<string, string>> = {
     // Dashboard
     "dashboard.title": "Dashboard",
     "dashboard.subtitle": "Overview of your fine-tuning workspace",
-    "dashboard.quickActions": "Quick Actions",
-    "dashboard.browseProjects": "Browse Projects",
-    "dashboard.browseModels": "Browse Models",
-    "dashboard.openPlayground": "Open Playground",
 
     // Landing Hero
     "hero.badge": "Prompt-driven fine-tuning for SLMs",
@@ -467,10 +463,6 @@ export const translations: Record<Language, Record<string, string>> = {
     // Dashboard
     "dashboard.title": "แดชบอร์ด",
     "dashboard.subtitle": "ภาพรวมพื้นที่ Fine-tuning ของคุณ",
-    "dashboard.quickActions": "การดำเนินการด่วน",
-    "dashboard.browseProjects": "ดูโปรเจกต์",
-    "dashboard.browseModels": "ดูโมเดล",
-    "dashboard.openPlayground": "เปิด Playground",
 
     // Landing Hero
     "hero.badge": "Fine-tuning ด้วย Prompt สำหรับ SLMs",
