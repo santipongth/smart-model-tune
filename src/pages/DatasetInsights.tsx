@@ -10,10 +10,10 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { useState } from "react";
 import { ArrowLeft, Database, CheckCircle2, AlertTriangle, Tag, Activity, FileText } from "lucide-react";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell, PieChart, Pie } from "recharts";
-import { mockProjects } from "@/data/mockData";
 import { mockDatasets } from "@/data/datasetMockData";
 import { computeQualityReport } from "@/lib/qualityCalculator";
 import { useLanguage } from "@/i18n/LanguageContext";
+import { useProject } from "@/hooks/useProjects";
 
 const READINESS_BANDS = (score: number, t: (k: string) => string) => {
   if (score >= 85) return { label: t("insights.readyToTrain"), color: "text-emerald-500", icon: CheckCircle2 };
@@ -25,7 +25,7 @@ const PIE_COLORS = ["hsl(var(--primary))", "hsl(var(--primary)/0.85)", "hsl(var(
 
 export default function DatasetInsights() {
   const { id } = useParams<{ id: string }>();
-  const project = mockProjects.find((p) => p.id === id);
+  const { project } = useProject(id);
   const { t } = useLanguage();
   const [selectedDataset, setSelectedDataset] = useState(mockDatasets[0].id);
 
