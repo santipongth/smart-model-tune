@@ -67,5 +67,5 @@ export function useProject(id: string | undefined) {
       .finally(() => setLoading(false));
   }, [id]);
 
-  return { project, loading };
+  return { project, loading, setProject };
 }

@@ -1,11 +1,12 @@
 import { useParams, Link } from "react-router-dom";
+import { useEffect, useRef } from "react";
 import { PageTransition } from "@/components/motion";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { ArrowLeft, RotateCcw, Wand2, Loader2 } from "lucide-react";
+import { ArrowLeft, RotateCcw, Wand2, Loader2, CheckCircle2, AlertCircle, Activity } from "lucide-react";
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
 import { taskTypeLabels, baseModelLabels } from "@/data/mockData";
 import { mockVersionHistory } from "@/data/deploymentMockData";
@@ -13,6 +14,7 @@ import { TuningReport } from "@/components/training/TuningReport";
 import { TuningHistory } from "@/components/training/TuningHistory";
 import { getLatestTuningRun } from "@/lib/tuningGenerator";
 import { useProject } from "@/hooks/useProjects";
+import { useTrainingSimulator } from "@/hooks/useTrainingSimulator";
 import type { ProjectStatus } from "@/types";
 import { useLanguage } from "@/i18n/LanguageContext";
 import { useToast } from "@/hooks/use-toast";
@@ -38,9 +40,21 @@ function getSuggestions(datasetSize: number) {
 
 export default function ProjectDetail() {
   const { id } = useParams<{ id: string }>();
-  const { project, loading } = useProject(id);
+  const { project, loading, setProject } = useProject(id);
   const { t } = useLanguage();
   const { toast } = useToast();
+  const completionToastedRef = useRef(false);
+
+  // Live training simulator — drives status & progress for prototype projects
+  useTrainingSimulator(project, setProject);
+
+  // Notify once when training completes
+  useEffect(() => {
+    if (project?.status === "completed" && !completionToastedRef.current) {
+      completionToastedRef.current = true;
+      toast({ title: t("training.completedTitle"), description: project.name });
+    }
+  }, [project?.status, project?.name, toast, t]);
 
   if (loading) {
     return (
@@ -92,6 +106,11 @@ export default function ProjectDetail() {
           <p className="text-sm text-muted-foreground mt-0.5">{project.description}</p>
         </div>
       </div>
+
+      {/* Live training status banner — visible on every tab while job runs */}
+      {(project.status === "queued" || project.status === "training" || project.status === "completed" || project.status === "failed") && (
+        <LiveStatusBanner project={project} />
+      )}
 
       <Tabs defaultValue="overview">
         <TabsList>
@@ -303,5 +322,77 @@ export default function ProjectDetail() {
       </Tabs>
     </div>
     </PageTransition>
+  );
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// LiveStatusBanner — shows queued / training (with progress + eta + epoch) /
+// completed / failed states. Auto-updates as the simulator pushes new state.
+// ─────────────────────────────────────────────────────────────────────────────
+function LiveStatusBanner({ project }: { project: import("@/types").Project }) {
+  const { t } = useLanguage();
+  const status = project.status;
+
+  if (status === "completed") {
+    return (
+      <Card className="border-primary/30 bg-primary/5">
+        <CardContent className="p-4 flex items-center gap-3">
+          <CheckCircle2 className="h-5 w-5 text-primary shrink-0" />
+          <div className="flex-1 min-w-0">
+            <p className="text-sm font-medium text-foreground">{t("training.completedTitle")}</p>
+            <p className="text-xs text-muted-foreground">{t("training.completedDesc")}</p>
+          </div>
+        </CardContent>
+      </Card>
+    );
+  }
+
+  if (status === "failed") {
+    return (
+      <Card className="border-destructive/30 bg-destructive/5">
+        <CardContent className="p-4 flex items-center gap-3">
+          <AlertCircle className="h-5 w-5 text-destructive shrink-0" />
+          <div className="flex-1 min-w-0">
+            <p className="text-sm font-medium text-foreground">{t("training.failedTitle")}</p>
+            <p className="text-xs text-muted-foreground">{t("training.failedDesc")}</p>
+          </div>
+        </CardContent>
+      </Card>
+    );
+  }
+
+  // queued or training
+  const isQueued = status === "queued";
+  const progress = isQueued ? 0 : project.progress;
+  const currentEpoch = Math.max(1, Math.ceil((progress / 100) * project.epochs));
+  const remainingPct = Math.max(0, 100 - progress);
+  // Heuristic ETA: simulator advances ~5%/2s → ~24s/100% baseline scaled by epochs
+  const etaSeconds = Math.round((remainingPct / 5) * 2 * Math.max(1, project.epochs / 5));
+  const etaLabel = etaSeconds > 60 ? `~${Math.ceil(etaSeconds / 60)}m` : `~${etaSeconds}s`;
+
+  return (
+    <Card className="border-primary/30 bg-primary/5">
+      <CardContent className="p-4 space-y-3">
+        <div className="flex items-center gap-3">
+          {isQueued ? (
+            <Loader2 className="h-5 w-5 text-primary animate-spin shrink-0" />
+          ) : (
+            <Activity className="h-5 w-5 text-primary shrink-0 animate-pulse" />
+          )}
+          <div className="flex-1 min-w-0">
+            <p className="text-sm font-medium text-foreground">
+              {isQueued ? t("training.queuedTitle") : t("training.runningTitle")}
+            </p>
+            <p className="text-xs text-muted-foreground">
+              {isQueued
+                ? t("training.queuedDesc")
+                : `${t("training.epoch")} ${currentEpoch}/${project.epochs} · ${t("training.eta")} ${etaLabel}`}
+            </p>
+          </div>
+          <span className="text-sm font-semibold text-foreground tabular-nums shrink-0">{progress}%</span>
+        </div>
+        <Progress value={progress} className="h-2" />
+      </CardContent>
+    </Card>
   );
 }
