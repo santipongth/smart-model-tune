@@ -21,7 +21,7 @@ const modelMetrics: Record<string, { accuracy: number; f1: number; precision: nu
 const COLORS = ["hsl(var(--primary))", "hsl(var(--warning))", "hsl(var(--destructive))"];
 
 export default function ModelComparison() {
-  const [selected, setSelected] = useState<string[]>([mockModels[0].id, mockModels[1].id]);
+  const [selected, setSelected] = useState<string[]>([models[0].id, models[1].id]);
   const { t } = useLanguage();
 
   const handleSelect = (index: number, value: string) => {
@@ -32,7 +32,7 @@ export default function ModelComparison() {
 
   const addSlot = () => {
     if (selected.length < 3) {
-      const unused = mockModels.find((m) => !selected.includes(m.id));
+      const unused = models.find((m) => !selected.includes(m.id));
       if (unused) setSelected([...selected, unused.id]);
     }
   };
@@ -51,7 +51,7 @@ export default function ModelComparison() {
   });
 
   const latencyData = selected.map((id, i) => ({
-    name: mockModels.find((m) => m.id === id)?.name || id,
+    name: models.find((m) => m.id === id)?.name || id,
     latency: modelMetrics[id]?.latency || 0,
     fill: COLORS[i],
   }));
@@ -93,7 +93,7 @@ export default function ModelComparison() {
                   <Select value={id} onValueChange={(v) => handleSelect(i, v)}>
                     <SelectTrigger className="flex-1"><SelectValue /></SelectTrigger>
                     <SelectContent>
-                      {mockModels.map((m) => (
+                      {models.map((m) => (
                         <SelectItem key={m.id} value={m.id}>
                           <span className="font-mono text-sm">{m.name}</span>
                         </SelectItem>
@@ -122,7 +122,7 @@ export default function ModelComparison() {
                         <th key={id} className="text-right py-2 text-muted-foreground font-medium">
                           <div className="flex items-center justify-end gap-1.5">
                             <div className="h-2.5 w-2.5 rounded-full" style={{ background: COLORS[i] }} />
-                            {mockModels.find((m) => m.id === id)?.name}
+                            {models.find((m) => m.id === id)?.name}
                           </div>
                         </th>
                       ))}

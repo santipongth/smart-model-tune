@@ -60,7 +60,7 @@ export default function Playground() {
               <Select value={modelA} onValueChange={setModelA}>
                 <SelectTrigger><SelectValue /></SelectTrigger>
                 <SelectContent>
-                  {mockModels.map((m) => (
+                  {models.map((m) => (
                     <SelectItem key={m.id} value={m.id}>
                       <div className="flex items-center gap-2">
                         <span className="font-mono text-sm">{m.name}</span>
@@ -77,7 +77,7 @@ export default function Playground() {
                 <Select value={modelB} onValueChange={setModelB}>
                   <SelectTrigger><SelectValue /></SelectTrigger>
                   <SelectContent>
-                    {mockModels.map((m) => (
+                    {models.map((m) => (
                       <SelectItem key={m.id} value={m.id}>
                         <div className="flex items-center gap-2">
                           <span className="font-mono text-sm">{m.name}</span>

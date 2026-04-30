@@ -23,14 +23,14 @@ const errorData = Array.from({ length: 12 }).map((_, i) => ({
 }));
 
 export function ABTestingPanel() {
-  const [variantA, setVariantA] = useState(mockModels[0].id);
-  const [variantB, setVariantB] = useState(mockModels[1].id);
+  const [variantA, setVariantA] = useState(models[0].id);
+  const [variantB, setVariantB] = useState(models[1].id);
   const [trafficSplit, setTrafficSplit] = useState(70);
   const [running, setRunning] = useState(true);
   const { t } = useLanguage();
   const { toast } = useToast();
 
-  const getName = (id: string) => mockModels.find((m) => m.id === id)?.name || id;
+  const getName = (id: string) => models.find((m) => m.id === id)?.name || id;
 
   const winner = "B";
   const handlePromote = (variant: "A" | "B") => {
@@ -66,7 +66,7 @@ export function ABTestingPanel() {
               <Select value={variantA} onValueChange={setVariantA}>
                 <SelectTrigger><SelectValue /></SelectTrigger>
                 <SelectContent>
-                  {mockModels.map((m) => (
+                  {models.map((m) => (
                     <SelectItem key={m.id} value={m.id}>{m.name}</SelectItem>
                   ))}
                 </SelectContent>
@@ -79,7 +79,7 @@ export function ABTestingPanel() {
               <Select value={variantB} onValueChange={setVariantB}>
                 <SelectTrigger><SelectValue /></SelectTrigger>
                 <SelectContent>
-                  {mockModels.map((m) => (
+                  {models.map((m) => (
                     <SelectItem key={m.id} value={m.id}>{m.name}</SelectItem>
                   ))}
                 </SelectContent>
