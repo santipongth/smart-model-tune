@@ -239,12 +239,7 @@ export const translations: Record<Language, Record<string, string>> = {
     "auth.signOut": "Sign out",
 
     // Export/Import
-    "export.exportJson": "Export JSON",
-    "export.exported": "Project exported successfully",
-    "import.importJson": "Import Project",
-    "import.success": "Project imported successfully",
-    "import.invalidFormat": "Invalid project format — missing required fields",
-    "import.invalidJson": "Invalid JSON file",
+
 
     // Version History
     "versions.title": "Versions",
