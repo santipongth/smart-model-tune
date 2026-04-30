@@ -47,14 +47,7 @@ export function TuningHistory({ project }: TuningHistoryProps) {
             ← {t("tuningHistory.backToHistory")}
           </Button>
         </div>
-        <TuningReport
-          report={viewing.report}
-          applyLabel={viewing.applied ? t("tuningHistory.alreadyApplied") : t("tuningHistory.restoreThisRun")}
-          onApply={() => {
-            handleRestore(viewing);
-            setViewing(null);
-          }}
-        />
+        <TuningReport report={viewing.report} />
       </div>
     );
   }

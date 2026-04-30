@@ -321,15 +321,7 @@ export default function ProjectDetail() {
                     </div>
                   );
                 }
-                return (
-                  <TuningReport
-                    report={latest.report}
-                    onApply={() => {
-                      setAppliedRun(project.id, latest.runId);
-                      toast({ title: t("tuningReport.applied"), description: t("tuningReport.appliedDesc") });
-                    }}
-                  />
-                );
+                return <TuningReport report={latest.report} />;
               })()}
             </TabsContent>
             <TabsContent value="history" className="mt-4">
