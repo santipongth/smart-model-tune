@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { ArrowLeft, Activity, Download, RotateCcw, Wand2 } from "lucide-react";
+import { ArrowLeft, RotateCcw, Wand2 } from "lucide-react";
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
 import { taskTypeLabels, baseModelLabels } from "@/data/mockData";
 import { mockVersionHistory } from "@/data/deploymentMockData";
@@ -74,26 +74,6 @@ export default function ProjectDetail() {
   const versions = mockVersionHistory[project.id as keyof typeof mockVersionHistory] || [];
   const suggestion = getSuggestions(project.datasetSize);
 
-  const handleExport = () => {
-    const config = {
-      name: project.name,
-      description: project.description,
-      taskType: project.taskType,
-      baseModel: project.baseModel,
-      epochs: project.epochs,
-      learningRate: project.learningRate,
-      datasetSize: project.datasetSize,
-    };
-    const blob = new Blob([JSON.stringify(config, null, 2)], { type: "application/json" });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = `${project.name.replace(/\s+/g, "-").toLowerCase()}.json`;
-    a.click();
-    URL.revokeObjectURL(url);
-    toast({ title: t("export.exported") });
-  };
-
   const handleRollback = (version: string) => {
     toast({ title: t("versions.rolledBack"), description: `→ ${version}` });
   };
@@ -112,14 +92,6 @@ export default function ProjectDetail() {
           </div>
           <p className="text-sm text-muted-foreground mt-0.5">{project.description}</p>
         </div>
-        <Button variant="outline" size="sm" className="gap-2" onClick={handleExport}>
-          <Download className="h-3.5 w-3.5" /> {t("export.exportJson")}
-        </Button>
-        <Button variant="outline" size="sm" className="gap-2" asChild>
-          <Link to={`/projects/${project.id}/training`}>
-            <Activity className="h-3.5 w-3.5" /> {t("projectDetail.trainingMonitor")}
-          </Link>
-        </Button>
       </div>
 
       <Tabs defaultValue="overview">
