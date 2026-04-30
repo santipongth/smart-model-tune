@@ -29,7 +29,7 @@ import { LogOut } from "lucide-react";
 import { useLanguage } from "@/i18n/LanguageContext";
 import { useAuth } from "@/contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
-import { useProjects } from "@/hooks/useProjects";
+
 
 const navItems = [
   { titleKey: "nav.dashboard", url: "/dashboard", icon: LayoutDashboard },
