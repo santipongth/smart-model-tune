@@ -448,6 +448,18 @@ export const translations: Record<Language, Record<string, string>> = {
     "templates.gradAccum": "Grad Accumulation",
     "templates.precision": "Precision",
     "templates.tagsLabel": "Tags",
+    "templates.examplePrompts": "Example Prompts",
+    "templates.examplePromptsHint": "Sample input/output pairs the model will learn from.",
+    "templates.exampleInput": "Input",
+    "templates.exampleOutput": "Output",
+    "templates.datasetConfig": "Dataset Configuration",
+    "templates.totalSamples": "Total samples",
+    "templates.trainSplit": "Train",
+    "templates.valSplit": "Validation",
+    "templates.testSplit": "Test",
+    "templates.dataFormat": "Format",
+    "templates.augmentation": "Augmentation",
+    "templates.tokenRange": "Token range",
 
     // Projects extras
     "projects.filterByTag": "Filter by tag",
