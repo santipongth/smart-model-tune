@@ -438,6 +438,16 @@ export const translations: Record<Language, Record<string, string>> = {
     "templates.sortRating": "Highest Rated",
     "templates.sortForks": "Most Forked",
     "templates.sortNewest": "Newest",
+    "templates.fullHyperparams": "Full Training Hyperparameters",
+    "templates.batchSize": "Batch Size",
+    "templates.warmupRatio": "Warmup Ratio",
+    "templates.weightDecay": "Weight Decay",
+    "templates.scheduler": "LR Scheduler",
+    "templates.optimizer": "Optimizer",
+    "templates.maxSeqLen": "Max Seq Length",
+    "templates.gradAccum": "Grad Accumulation",
+    "templates.precision": "Precision",
+    "templates.tagsLabel": "Tags",
 
     // Projects extras
     "projects.filterByTag": "Filter by tag",
