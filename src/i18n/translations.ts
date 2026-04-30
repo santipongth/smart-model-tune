@@ -8,7 +8,7 @@ export const translations: Record<Language, Record<string, string>> = {
     "nav.models": "Models",
     "nav.playground": "Playground",
     "nav.analytics": "Analytics",
-    "nav.calculator": "Cost Calculator",
+    
     "nav.apiKeys": "API Keys",
     "nav.settings": "Settings",
     "nav.credits": "Credits",
@@ -64,13 +64,11 @@ export const translations: Record<Language, Record<string, string>> = {
 
     // Settings
     "settings.title": "Settings",
-    "settings.subtitle": "Manage your account, API keys, and billing",
+    "settings.subtitle": "Manage your account and API keys",
     "settings.apiKeys": "API Keys",
-    "settings.team": "Team",
     "settings.notifications": "Notifications",
     "settings.webhooks": "Webhooks",
     "settings.account": "Account",
-    "settings.billing": "Billing",
 
     // Command Palette
     "command.search": "Search...",
@@ -135,23 +133,6 @@ export const translations: Record<Language, Record<string, string>> = {
     "dataset.firstRows": "First {count} rows from the dataset",
     "dataset.columnStats": "Column Statistics",
 
-    // Cost Calculator
-    "calc.title": "Cost Calculator",
-    "calc.subtitle": "Estimate credits needed for your fine-tuning job",
-    "calc.configuration": "Configuration",
-    "calc.configDesc": "Adjust parameters to estimate costs",
-    "calc.baseModel": "Base Model",
-    "calc.datasetSize": "Dataset Size",
-    "calc.epochs": "Epochs",
-    "calc.loraRank": "LoRA Rank",
-    "calc.creditEstimate": "Credit Estimate",
-    "calc.dataGeneration": "Data Generation",
-    "calc.trainingCompute": "Training Compute",
-    "calc.evaluation": "Evaluation",
-    "calc.estimatedCost": "Estimated cost per plan:",
-    "calc.fits": "Fits",
-    "calc.included": "Included",
-    "calc.startProject": "Start Project with This Config",
     "calc.samples": "samples",
     "calc.credits": "credits",
 
@@ -536,7 +517,7 @@ export const translations: Record<Language, Record<string, string>> = {
     "nav.models": "โมเดล",
     "nav.playground": "ทดสอบโมเดล",
     "nav.analytics": "วิเคราะห์",
-    "nav.calculator": "คำนวณค่าใช้จ่าย",
+    
     "nav.apiKeys": "API Keys",
     "nav.settings": "ตั้งค่า",
     "nav.credits": "เครดิต",
@@ -592,13 +573,11 @@ export const translations: Record<Language, Record<string, string>> = {
 
     // Settings
     "settings.title": "ตั้งค่า",
-    "settings.subtitle": "จัดการบัญชี, API keys และการเรียกเก็บเงิน",
+    "settings.subtitle": "จัดการบัญชีและ API keys",
     "settings.apiKeys": "API Keys",
-    "settings.team": "ทีม",
     "settings.notifications": "การแจ้งเตือน",
     "settings.webhooks": "Webhooks",
     "settings.account": "บัญชี",
-    "settings.billing": "การเรียกเก็บเงิน",
 
     // Command Palette
     "command.search": "ค้นหา...",
@@ -663,23 +642,6 @@ export const translations: Record<Language, Record<string, string>> = {
     "dataset.firstRows": "{count} แถวแรกจากชุดข้อมูล",
     "dataset.columnStats": "สถิติคอลัมน์",
 
-    // Cost Calculator
-    "calc.title": "คำนวณค่าใช้จ่าย",
-    "calc.subtitle": "ประมาณเครดิตที่ต้องใช้สำหรับงาน Fine-tuning",
-    "calc.configuration": "การตั้งค่า",
-    "calc.configDesc": "ปรับพารามิเตอร์เพื่อประมาณค่าใช้จ่าย",
-    "calc.baseModel": "โมเดลพื้นฐาน",
-    "calc.datasetSize": "ขนาดชุดข้อมูล",
-    "calc.epochs": "Epochs",
-    "calc.loraRank": "LoRA Rank",
-    "calc.creditEstimate": "ประมาณเครดิต",
-    "calc.dataGeneration": "สร้างข้อมูล",
-    "calc.trainingCompute": "การฝึก Compute",
-    "calc.evaluation": "การประเมินผล",
-    "calc.estimatedCost": "ค่าใช้จ่ายโดยประมาณต่อแผน:",
-    "calc.fits": "พอดี",
-    "calc.included": "รวมอยู่แล้ว",
-    "calc.startProject": "เริ่มโปรเจกต์ด้วยการตั้งค่านี้",
     "calc.samples": "ตัวอย่าง",
     "calc.credits": "เครดิต",
 

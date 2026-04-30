@@ -22,7 +22,6 @@ import Playground from "./pages/Playground";
 import ModelDetail from "./pages/ModelDetail";
 import Settings from "./pages/Settings";
 import Analytics from "./pages/Analytics";
-import CostCalculator from "./pages/CostCalculator";
 import ModelComparison from "./pages/ModelComparison";
 import Deployment from "./pages/Deployment";
 import Leaderboard from "./pages/Leaderboard";
@@ -56,7 +55,6 @@ const App = () => (
                   <Route path="/models/compare" element={<ModelComparison />} />
                   <Route path="/playground" element={<Playground />} />
                   <Route path="/analytics" element={<Analytics />} />
-                  <Route path="/calculator" element={<CostCalculator />} />
                   <Route path="/deployment" element={<Deployment />} />
                   <Route path="/leaderboard" element={<Leaderboard />} />
                   <Route path="/templates" element={<Templates />} />
