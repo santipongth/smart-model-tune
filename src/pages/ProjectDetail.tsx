@@ -1,6 +1,5 @@
-import { useState, useRef } from "react";
 import { useParams, Link } from "react-router-dom";
-import { PageTransition, FadeIn } from "@/components/motion";
+import { PageTransition } from "@/components/motion";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
