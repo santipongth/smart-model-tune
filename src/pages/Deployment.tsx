@@ -9,26 +9,31 @@ import { PageTransition, FadeIn } from "@/components/motion";
 import { Rocket, Copy, Power, PowerOff, Activity, Clock, AlertTriangle, Shield, Beaker } from "lucide-react";
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { mockDeployedEndpoints, mockUsageTimeline } from "@/data/deploymentMockData";
-import type { DeployedEndpoint } from "@/data/deploymentMockData";
+import { mockUsageTimeline } from "@/data/deploymentMockData";
 import { ABTestingPanel } from "@/components/deployment/ABTestingPanel";
 import { useToast } from "@/hooks/use-toast";
 import { useLanguage } from "@/i18n/LanguageContext";
+import { useEndpoints } from "@/hooks/useUserData";
+import { setEndpointStatus, type DeployedEndpoint } from "@/lib/deploymentsApi";
 
 export default function Deployment() {
-  const [endpoints, setEndpoints] = useState(mockDeployedEndpoints);
-  const [selected, setSelected] = useState<DeployedEndpoint | null>(endpoints[0]);
+  const { endpoints, setEndpoints } = useEndpoints();
+  const [selected, setSelected] = useState<DeployedEndpoint | null>(null);
   const { toast } = useToast();
   const { t } = useLanguage();
 
-  const handleToggle = (id: string) => {
-    setEndpoints((prev) =>
-      prev.map((ep) =>
-        ep.id === id
-          ? { ...ep, status: ep.status === "active" ? "inactive" as const : "active" as const }
-          : ep
-      )
-    );
+  // Auto-select first endpoint when loaded
+  if (!selected && endpoints.length > 0) {
+    setSelected(endpoints[0]);
+  }
+
+  const handleToggle = async (id: string) => {
+    const current = endpoints.find((e) => e.id === id);
+    if (!current) return;
+    const newStatus = current.status === "active" ? "inactive" : "active";
+    await setEndpointStatus(id, newStatus);
+    setEndpoints((prev) => prev.map((ep) => (ep.id === id ? { ...ep, status: newStatus } : ep)));
+    if (selected?.id === id) setSelected({ ...current, status: newStatus });
     toast({ title: t("deploy.statusUpdated") });
   };
 
