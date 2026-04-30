@@ -7,7 +7,6 @@ import { TaskPromptStep } from "@/components/new-project/TaskPromptStep";
 import { TaskSelectionStep } from "@/components/new-project/TaskSelectionStep";
 import { DataUploadStep } from "@/components/new-project/DataUploadStep";
 import { ModelSelectionStep } from "@/components/new-project/ModelSelectionStep";
-import { ConfigurationStep } from "@/components/new-project/ConfigurationStep";
 import { TemplateLibrary } from "@/components/new-project/TemplateLibrary";
 import type { TaskType, BaseModel } from "@/types";
 import { useLanguage } from "@/i18n/LanguageContext";
@@ -20,9 +19,6 @@ export interface ProjectFormData {
   taskType: TaskType | null;
   baseModel: BaseModel | null;
   files: File[];
-  epochs: number;
-  learningRate: number;
-  batchSize: number;
 }
 
 const initialFormData: ProjectFormData = {
@@ -31,10 +27,14 @@ const initialFormData: ProjectFormData = {
   taskType: null,
   baseModel: null,
   files: [],
-  epochs: 5,
-  learningRate: 2e-4,
-  batchSize: 16,
 };
+
+// Auto-tuning heuristic based on dataset size (rows)
+function autoTuneParams(datasetRows: number) {
+  if (datasetRows < 1000) return { epochs: 10, learningRate: 1e-4, batchSize: 8 };
+  if (datasetRows <= 5000) return { epochs: 5, learningRate: 2e-4, batchSize: 16 };
+  return { epochs: 3, learningRate: 3e-4, batchSize: 32 };
+}
 
 export default function NewProject() {
   const [currentStep, setCurrentStep] = useState(0);
@@ -46,17 +46,19 @@ export default function NewProject() {
   const navigate = useNavigate();
 
   const handleLaunch = async () => {
-    if (!formData.taskType || !formData.baseModel) return;
+    if (!formData.taskType || !formData.baseModel || launching) return;
     setLaunching(true);
     try {
+      const datasetRows = Math.max(formData.files.length * 500, 100);
+      const tuned = autoTuneParams(datasetRows);
       const created = await createProject({
         name: formData.projectName.trim() || formData.taskPrompt.slice(0, 60) || "Untitled Project",
         description: formData.taskPrompt,
         taskType: formData.taskType,
         baseModel: formData.baseModel,
-        epochs: formData.epochs,
-        learningRate: formData.learningRate,
-        datasetSize: formData.files.length * 100,
+        epochs: tuned.epochs,
+        learningRate: tuned.learningRate,
+        datasetSize: datasetRows,
       });
       toast({ title: t("newProject.launched"), description: created.name });
       navigate(`/projects/${created.id}`);
@@ -81,12 +83,10 @@ export default function NewProject() {
           taskPrompt: tpl.prompt ?? p.taskPrompt,
           taskType: tpl.taskType ?? p.taskType,
           baseModel: tpl.baseModel ?? p.baseModel,
-          epochs: tpl.epochs ?? p.epochs,
-          learningRate: tpl.learningRate ?? p.learningRate,
         }));
         sessionStorage.removeItem("template-prefill");
       } catch {
-        // ignore
+        // ignore malformed prefill
       }
     }
   }, []);
@@ -96,7 +96,6 @@ export default function NewProject() {
     { id: "task", label: t("newProject.taskType") },
     { id: "data", label: t("newProject.uploadData") },
     { id: "model", label: t("newProject.baseModel") },
-    { id: "config", label: t("newProject.configuration") },
   ];
 
   const updateForm = (partial: Partial<ProjectFormData>) => {
@@ -109,7 +108,6 @@ export default function NewProject() {
       case 1: return formData.taskType !== null;
       case 2: return true;
       case 3: return formData.baseModel !== null;
-      case 4: return true;
       default: return false;
     }
   };
@@ -126,12 +124,14 @@ export default function NewProject() {
     setCurrentStep(2);
   };
 
+  const isLastStep = currentStep === steps.length - 1;
+
   return (
     <div className="max-w-4xl mx-auto space-y-6">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
           <Button variant="ghost" size="icon" asChild>
-            <Link to="/projects"><ArrowLeft className="h-4 w-4" /></Link>
+            <Link to="/projects" aria-label={t("common.back")}><ArrowLeft className="h-4 w-4" /></Link>
           </Button>
           <div>
             <h1 className="text-xl font-bold text-foreground">{t("newProject.title")}</h1>
@@ -175,7 +175,6 @@ export default function NewProject() {
           {currentStep === 1 && <TaskSelectionStep formData={formData} updateForm={updateForm} />}
           {currentStep === 2 && <DataUploadStep formData={formData} updateForm={updateForm} />}
           {currentStep === 3 && <ModelSelectionStep formData={formData} updateForm={updateForm} />}
-          {currentStep === 4 && <ConfigurationStep formData={formData} updateForm={updateForm} />}
         </CardContent>
       </Card>
 
@@ -183,17 +182,22 @@ export default function NewProject() {
         <Button
           variant="outline"
           onClick={() => setCurrentStep((s) => s - 1)}
-          disabled={currentStep === 0}
+          disabled={currentStep === 0 || launching}
           className="gap-2"
         >
           <ArrowLeft className="h-4 w-4" /> {t("common.back")}
         </Button>
-        {currentStep < steps.length - 1 ? (
+        {!isLastStep ? (
           <Button onClick={() => setCurrentStep((s) => s + 1)} disabled={!canProceed()} className="gap-2">
             {t("common.next")} <ArrowRight className="h-4 w-4" />
           </Button>
         ) : (
-          <Button className="gap-2" onClick={handleLaunch} disabled={launching || !formData.taskType || !formData.baseModel}>
+          <Button
+            className="gap-2"
+            onClick={handleLaunch}
+            disabled={launching || !canProceed()}
+            aria-label={t("newProject.launchTraining")}
+          >
             {launching ? <Loader2 className="h-4 w-4 animate-spin" /> : <Sparkles className="h-4 w-4" />}
             {t("newProject.launchTraining")}
           </Button>

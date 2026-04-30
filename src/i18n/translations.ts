@@ -226,7 +226,7 @@ export const translations: Record<Language, Record<string, string>> = {
     "newProject.taskType": "Task Type",
     "newProject.uploadData": "Upload Data",
     "newProject.baseModel": "Base Model",
-    "newProject.configuration": "Configuration",
+    
     "newProject.launchTraining": "Launch Training",
     "newProject.launched": "Project Created",
     "newProject.launchFailed": "Could not create project",
@@ -247,7 +247,7 @@ export const translations: Record<Language, Record<string, string>> = {
 
     // Hyperparameter Tuning
     "tuning.suggestions": "Auto-Tuning Suggestions",
-    "tuning.apply": "Apply",
+    
     "tuning.datasetLabel": "Dataset size category",
     "tuning.current": "Current",
 
@@ -684,7 +684,7 @@ export const translations: Record<Language, Record<string, string>> = {
     "newProject.taskType": "ประเภทงาน",
     "newProject.uploadData": "อัปโหลดข้อมูล",
     "newProject.baseModel": "โมเดลพื้นฐาน",
-    "newProject.configuration": "การตั้งค่า",
+    
     "newProject.launchTraining": "เริ่มการฝึก",
     "newProject.launched": "สร้างโปรเจกต์แล้ว",
     "newProject.launchFailed": "สร้างโปรเจกต์ไม่สำเร็จ",
@@ -705,7 +705,7 @@ export const translations: Record<Language, Record<string, string>> = {
 
     // Hyperparameter Tuning
     "tuning.suggestions": "แนะนำค่าอัตโนมัติ",
-    "tuning.apply": "ใช้ค่าแนะนำ",
+    
     "tuning.datasetLabel": "ขนาดชุดข้อมูล",
     "tuning.current": "ปัจจุบัน",
 
