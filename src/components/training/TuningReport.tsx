@@ -120,42 +120,6 @@ export function TuningReport({ report, onApply, applyLabel }: TuningReportProps)
         </CardContent>
       </Card>
 
-      {/* Recommendations */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-sm flex items-center gap-2">
-            <TrendingUp className="h-4 w-4 text-primary" /> {t("tuningReport.recommendations")}
-          </CardTitle>
-          <CardDescription className="text-xs">{t("tuningReport.recommendationsDesc")}</CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-2">
-          {r.recommendations.map((rec) => (
-            <div key={rec.param} className="p-3 rounded-lg border border-border space-y-2">
-              <div className="flex items-start justify-between gap-2">
-                <div>
-                  <p className="text-sm font-semibold text-foreground">{rec.param}</p>
-                  <div className="flex items-center gap-2 text-xs mt-0.5">
-                    <span className="font-mono text-muted-foreground">{rec.baseline}</span>
-                    <ArrowRight className="h-3 w-3 text-muted-foreground" />
-                    <span className="font-mono font-bold text-primary">{rec.recommended}</span>
-                    <Badge variant="outline" className="text-[9px]">{rec.delta}</Badge>
-                  </div>
-                </div>
-                <div className="text-right shrink-0">
-                  <p className="text-[10px] text-muted-foreground">{t("tuningReport.confidence")}</p>
-                  <p className="text-sm font-bold text-foreground">{rec.confidence}%</p>
-                </div>
-              </div>
-              <p className="text-xs text-muted-foreground">{rec.reason}</p>
-              <Progress value={rec.confidence} className="h-1" />
-            </div>
-          ))}
-          <Button onClick={handleApply} className="w-full gap-2 mt-2">
-            <CheckCircle2 className="h-4 w-4" /> {applyLabel ?? t("tuningReport.applyAll")}
-          </Button>
-        </CardContent>
-      </Card>
-
       {/* Charts */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
         <Card>
@@ -269,22 +233,6 @@ export function TuningReport({ report, onApply, applyLabel }: TuningReportProps)
         </CardContent>
       </Card>
 
-      {/* Search Space */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-sm">{t("tuningReport.searchSpace")}</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
-            {r.searchSpace.map((s) => (
-              <div key={s.param} className="flex justify-between text-xs p-2 rounded bg-muted/40">
-                <span className="text-muted-foreground">{s.param}</span>
-                <span className="font-mono text-foreground">{s.range}</span>
-              </div>
-            ))}
-          </div>
-        </CardContent>
-      </Card>
     </div>
   );
 }
