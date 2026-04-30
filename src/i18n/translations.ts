@@ -238,9 +238,6 @@ export const translations: Record<Language, Record<string, string>> = {
     "auth.accountReady": "Your account is ready.",
     "auth.signOut": "Sign out",
 
-    // Export/Import
-
-
     // Version History
     "versions.title": "Versions",
     "versions.current": "Current",
@@ -676,8 +673,6 @@ export const translations: Record<Language, Record<string, string>> = {
     "auth.welcome": "ยินดีต้อนรับสู่ TuneLab",
     "auth.accountReady": "บัญชีของคุณพร้อมใช้งานแล้ว",
     "auth.signOut": "ออกจากระบบ",
-
-    // Export/Import
 
     // Version History
     "versions.title": "เวอร์ชัน",
