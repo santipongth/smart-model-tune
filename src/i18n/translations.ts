@@ -472,7 +472,6 @@ export const translations: Record<Language, Record<string, string>> = {
     "diagnostic.similarCases": "{n} similar cases resolved with these fixes",
     "diagnostic.retryWithFix": "Retry with fix",
 
-    // Prompt Optimizer
     // A/B Testing
     "ab.tabTitle": "A/B Testing",
     "ab.title": "Live A/B Test",
