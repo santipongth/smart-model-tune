@@ -1,25 +1,20 @@
-import { useState, useRef } from "react";
+import { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Button } from "@/components/ui/button";
 import { ProjectCard } from "@/components/dashboard/ProjectCard";
 import { NewProjectDialog } from "@/components/dashboard/NewProjectDialog";
 import { taskTypeLabels } from "@/data/mockData";
-import { Search, Upload } from "lucide-react";
+import { Search } from "lucide-react";
 import { PageTransition, FadeIn, StaggerContainer, MotionCard } from "@/components/motion";
 import { ProjectCardSkeleton } from "@/components/skeletons/ProjectCardSkeleton";
 import { useLanguage } from "@/i18n/LanguageContext";
-import { useToast } from "@/hooks/use-toast";
 import { useProjects } from "@/hooks/useProjects";
-import type { TaskType, BaseModel } from "@/types";
 
 export default function Projects() {
   const [search, setSearch] = useState("");
   const [filterTask, setFilterTask] = useState("all");
   const { t } = useLanguage();
-  const { toast } = useToast();
-  const fileRef = useRef<HTMLInputElement>(null);
-  const { projects, loading, create } = useProjects();
+  const { projects, loading } = useProjects();
 
   const allTags = Array.from(new Set(projects.flatMap((p) => p.tags ?? [])));
   const [filterTag, setFilterTag] = useState("all");
@@ -33,36 +28,6 @@ export default function Projects() {
     })
     .sort((a, b) => Number(!!b.pinned) - Number(!!a.pinned));
 
-  const handleImport = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-    const reader = new FileReader();
-    reader.onload = async (ev) => {
-      try {
-        const data = JSON.parse(ev.target?.result as string);
-        if (!data.name || !data.taskType || !data.baseModel) {
-          toast({ title: t("import.invalidFormat"), variant: "destructive" });
-          return;
-        }
-        await create({
-          name: data.name,
-          description: data.description || "",
-          taskType: data.taskType as TaskType,
-          baseModel: data.baseModel as BaseModel,
-          epochs: data.epochs || 3,
-          learningRate: data.learningRate || 2e-4,
-          datasetSize: data.datasetSize || 0,
-          tags: data.tags ?? [],
-        });
-        toast({ title: t("import.success"), description: data.name });
-      } catch {
-        toast({ title: t("import.invalidJson"), variant: "destructive" });
-      }
-    };
-    reader.readAsText(file);
-    if (fileRef.current) fileRef.current.value = "";
-  };
-
   return (
     <PageTransition>
       <div className="space-y-6 max-w-7xl">
@@ -73,10 +38,6 @@ export default function Projects() {
               <p className="text-sm text-muted-foreground">{t("projects.total").replace("{count}", String(projects.length))}</p>
             </div>
             <div className="flex gap-2">
-              <input ref={fileRef} type="file" accept=".json" className="hidden" onChange={handleImport} />
-              <Button variant="outline" size="sm" className="gap-2" onClick={() => fileRef.current?.click()}>
-                <Upload className="h-3.5 w-3.5" /> {t("import.importJson")}
-              </Button>
               <NewProjectDialog />
             </div>
           </div>
