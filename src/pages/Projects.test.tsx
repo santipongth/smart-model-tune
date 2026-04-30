@@ -70,7 +70,7 @@ describe("Projects page", () => {
     expect(searchInputs.length).toBeGreaterThan(0);
 
     // New Project link points to /projects/new
-    const newLink = screen.getByRole("link");
+    const newLink = screen.getByRole("link", { name: /โปรเจกต์ใหม่|new project/i });
     expect(newLink).toHaveAttribute("href", "/projects/new");
   });
 
