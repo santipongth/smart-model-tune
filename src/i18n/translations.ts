@@ -8,7 +8,6 @@ export const translations: Record<Language, Record<string, string>> = {
     "nav.models": "Models",
     "nav.playground": "Playground",
     "nav.analytics": "Analytics",
-    "nav.datasets": "Datasets",
     "nav.calculator": "Cost Calculator",
     "nav.apiKeys": "API Keys",
     "nav.settings": "Settings",
@@ -16,7 +15,6 @@ export const translations: Record<Language, Record<string, string>> = {
     "nav.plan": "Plan",
     "nav.deployment": "Deployment",
     "nav.leaderboard": "Leaderboard",
-    "nav.annotate": "Annotate",
 
     // Dashboard
     "dashboard.title": "Dashboard",
@@ -392,22 +390,6 @@ export const translations: Record<Language, Record<string, string>> = {
     "leaderboard.task": "Task",
     "leaderboard.actions": "Actions",
 
-    // Annotation
-    "annotate.title": "Annotation Tool",
-    "annotate.subtitle": "Label data for training datasets",
-    "annotate.exportJson": "Export JSON",
-    "annotate.sample": "Sample",
-    "annotate.unlabeled": "Unlabeled",
-    "annotate.selectLabel": "Select a label (or use keyboard shortcuts):",
-    "annotate.labeled": "Labeled",
-    "annotate.exported": "Annotations exported",
-    "annotate.distribution": "Label Distribution",
-    "annotate.noLabelsYet": "No labels assigned yet",
-    "annotate.shortcuts": "Shortcuts",
-    "annotate.navigate": "Navigate",
-    "annotate.prev": "Previous",
-    "annotate.skip": "Skip",
-    "annotate.next": "Next",
 
     // Onboarding
     "onboarding.skip": "Skip Tour",
