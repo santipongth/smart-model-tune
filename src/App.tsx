@@ -22,12 +22,10 @@ import Playground from "./pages/Playground";
 import ModelDetail from "./pages/ModelDetail";
 import Settings from "./pages/Settings";
 import Analytics from "./pages/Analytics";
-import DatasetExplorer from "./pages/DatasetExplorer";
 import CostCalculator from "./pages/CostCalculator";
 import ModelComparison from "./pages/ModelComparison";
 import Deployment from "./pages/Deployment";
 import Leaderboard from "./pages/Leaderboard";
-import AnnotationTool from "./pages/AnnotationTool";
 import Templates from "./pages/Templates";
 import DatasetInsights from "./pages/DatasetInsights";
 
@@ -58,11 +56,9 @@ const App = () => (
                   <Route path="/models/compare" element={<ModelComparison />} />
                   <Route path="/playground" element={<Playground />} />
                   <Route path="/analytics" element={<Analytics />} />
-                  <Route path="/datasets" element={<DatasetExplorer />} />
                   <Route path="/calculator" element={<CostCalculator />} />
                   <Route path="/deployment" element={<Deployment />} />
                   <Route path="/leaderboard" element={<Leaderboard />} />
-                  <Route path="/annotate" element={<AnnotationTool />} />
                   <Route path="/templates" element={<Templates />} />
                   <Route path="/settings" element={<Settings />} />
                   <Route path="/api-keys" element={<Settings />} />
