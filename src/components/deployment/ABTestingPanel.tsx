@@ -6,7 +6,7 @@ import { Slider } from "@/components/ui/slider";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Trophy, TrendingUp, TrendingDown, Beaker, ArrowRight } from "lucide-react";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from "recharts";
-import { mockModels } from "@/data/mockData";
+import { useModels } from "@/hooks/useUserData";
 import { useLanguage } from "@/i18n/LanguageContext";
 import { useToast } from "@/hooks/use-toast";
 
@@ -23,12 +23,16 @@ const errorData = Array.from({ length: 12 }).map((_, i) => ({
 }));
 
 export function ABTestingPanel() {
-  const [variantA, setVariantA] = useState(models[0].id);
-  const [variantB, setVariantB] = useState(models[1].id);
+  const { models } = useModels();
+  const [variantA, setVariantA] = useState<string>("");
+  const [variantB, setVariantB] = useState<string>("");
   const [trafficSplit, setTrafficSplit] = useState(70);
   const [running, setRunning] = useState(true);
   const { t } = useLanguage();
   const { toast } = useToast();
+
+  if (models.length > 0 && !variantA) setVariantA(models[0].id);
+  if (models.length > 1 && !variantB) setVariantB(models[1].id);
 
   const getName = (id: string) => models.find((m) => m.id === id)?.name || id;
 
