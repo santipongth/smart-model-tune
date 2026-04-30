@@ -46,12 +46,26 @@ walk(SRC);
 
 const haystack = files.map((f) => readFileSync(f, "utf8")).join("\n");
 
-// 3. Find unused keys (key must appear as a quoted literal somewhere).
+// 3a. Detect dynamic prefixes from template literals like t(`onboarding.${x}.title`)
+//     — collect prefix + suffix pairs and treat any key matching them as used.
+const dynamicRe = /t\(`([a-zA-Z0-9_.\-]*)\$\{[^}]+\}([a-zA-Z0-9_.\-]*)`\)/g;
+const dynamicPatterns = [];
+let dm;
+while ((dm = dynamicRe.exec(haystack))) {
+  dynamicPatterns.push({ prefix: dm[1], suffix: dm[2] });
+}
+
+// 3b. Find unused keys (key must appear as a quoted literal or match a dynamic pattern).
 const unused = [];
 for (const k of keys) {
   const escaped = k.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
   const re = new RegExp(`["'\`]${escaped}["'\`]`);
-  if (!re.test(haystack)) unused.push(k);
+  if (re.test(haystack)) continue;
+  const dynMatch = dynamicPatterns.some(
+    (p) => k.startsWith(p.prefix) && k.endsWith(p.suffix) && k.length > p.prefix.length + p.suffix.length,
+  );
+  if (dynMatch) continue;
+  unused.push(k);
 }
 
 console.log(`\ni18n key scan`);
