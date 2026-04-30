@@ -239,12 +239,7 @@ export const translations: Record<Language, Record<string, string>> = {
     "auth.signOut": "Sign out",
 
     // Export/Import
-    "export.exportJson": "Export JSON",
-    "export.exported": "Project exported successfully",
-    "import.importJson": "Import Project",
-    "import.success": "Project imported successfully",
-    "import.invalidFormat": "Invalid project format — missing required fields",
-    "import.invalidJson": "Invalid JSON file",
+
 
     // Version History
     "versions.title": "Versions",
@@ -683,12 +678,6 @@ export const translations: Record<Language, Record<string, string>> = {
     "auth.signOut": "ออกจากระบบ",
 
     // Export/Import
-    "export.exportJson": "ส่งออก JSON",
-    "export.exported": "ส่งออกโปรเจกต์สำเร็จ",
-    "import.importJson": "นำเข้าโปรเจกต์",
-    "import.success": "นำเข้าโปรเจกต์สำเร็จ",
-    "import.invalidFormat": "รูปแบบโปรเจกต์ไม่ถูกต้อง — ขาดฟิลด์ที่จำเป็น",
-    "import.invalidJson": "ไฟล์ JSON ไม่ถูกต้อง",
 
     // Version History
     "versions.title": "เวอร์ชัน",
