@@ -1,11 +1,12 @@
 import { useParams, Link } from "react-router-dom";
+import { useEffect, useRef } from "react";
 import { PageTransition } from "@/components/motion";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { ArrowLeft, RotateCcw, Wand2, Loader2 } from "lucide-react";
+import { ArrowLeft, RotateCcw, Wand2, Loader2, CheckCircle2, AlertCircle, Activity } from "lucide-react";
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
 import { taskTypeLabels, baseModelLabels } from "@/data/mockData";
 import { mockVersionHistory } from "@/data/deploymentMockData";
@@ -13,6 +14,7 @@ import { TuningReport } from "@/components/training/TuningReport";
 import { TuningHistory } from "@/components/training/TuningHistory";
 import { getLatestTuningRun } from "@/lib/tuningGenerator";
 import { useProject } from "@/hooks/useProjects";
+import { useTrainingSimulator } from "@/hooks/useTrainingSimulator";
 import type { ProjectStatus } from "@/types";
 import { useLanguage } from "@/i18n/LanguageContext";
 import { useToast } from "@/hooks/use-toast";
@@ -38,9 +40,21 @@ function getSuggestions(datasetSize: number) {
 
 export default function ProjectDetail() {
   const { id } = useParams<{ id: string }>();
-  const { project, loading } = useProject(id);
+  const { project, loading, setProject } = useProject(id);
   const { t } = useLanguage();
   const { toast } = useToast();
+  const completionToastedRef = useRef(false);
+
+  // Live training simulator — drives status & progress for prototype projects
+  useTrainingSimulator(project, setProject);
+
+  // Notify once when training completes
+  useEffect(() => {
+    if (project?.status === "completed" && !completionToastedRef.current) {
+      completionToastedRef.current = true;
+      toast({ title: t("training.completedTitle"), description: project.name });
+    }
+  }, [project?.status, project?.name, toast, t]);
 
   if (loading) {
     return (
