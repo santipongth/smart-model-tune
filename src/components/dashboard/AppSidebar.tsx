@@ -45,12 +45,6 @@ const navItems = [
 ];
 
 export function AppSidebar() {
-  const { projects } = useProjects();
-  const creditsTotal = 1000;
-  const creditsUsed = projects.reduce((s, p) => s + p.creditsCost, 0);
-  const creditsRemaining = Math.max(0, creditsTotal - creditsUsed);
-  const planTier = "Pro";
-  const creditPercent = (creditsRemaining / creditsTotal) * 100;
   const { t } = useLanguage();
   const { user, profile, signOut } = useAuth();
   const navigate = useNavigate();
