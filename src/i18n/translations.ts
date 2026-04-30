@@ -472,20 +472,6 @@ export const translations: Record<Language, Record<string, string>> = {
     "diagnostic.similarCases": "{n} similar cases resolved with these fixes",
     "diagnostic.retryWithFix": "Retry with fix",
 
-    // Prompt Optimizer
-    "optimizer.button": "Optimize Prompt",
-    "optimizer.title": "Smart Prompt Optimizer",
-    "optimizer.subtitle": "Let AI improve your system prompt for better accuracy and clarity.",
-    "optimizer.yourPrompt": "Your current prompt",
-    "optimizer.placeholder": "Paste your system prompt here...",
-    "optimizer.optimize": "Optimize with AI",
-    "optimizer.analyzing": "Analyzing prompt...",
-    "optimizer.optimized": "Optimized",
-    "optimizer.improvements": "Predicted Improvements",
-    "optimizer.apply": "Apply optimized prompt",
-    "optimizer.applied": "Prompt applied",
-    "optimizer.copiedToClipboard": "Copied to clipboard",
-
     // A/B Testing
     "ab.tabTitle": "A/B Testing",
     "ab.title": "Live A/B Test",
@@ -985,21 +971,6 @@ export const translations: Record<Language, Record<string, string>> = {
     "diagnostic.recommended": "แนะนำ",
     "diagnostic.similarCases": "เคสคล้ายกัน {n} ครั้งแก้ได้ด้วยวิธีนี้",
     "diagnostic.retryWithFix": "ลองใหม่ด้วยวิธีนี้",
-
-    // Prompt Optimizer
-    "optimizer.button": "ปรับ Prompt อัตโนมัติ",
-    "optimizer.title": "Smart Prompt Optimizer",
-    "optimizer.subtitle": "ให้ AI ช่วยปรับ system prompt ให้แม่นยำและชัดเจนขึ้น",
-    "optimizer.yourPrompt": "Prompt ปัจจุบันของคุณ",
-    "optimizer.placeholder": "วาง system prompt ที่นี่...",
-    "optimizer.optimize": "ปรับด้วย AI",
-    "optimizer.analyzing": "กำลังวิเคราะห์...",
-    "optimizer.optimized": "ปรับแล้ว",
-    "optimizer.improvements": "การปรับปรุงที่คาดการณ์",
-    "optimizer.apply": "ใช้ Prompt ที่ปรับแล้ว",
-    "optimizer.applied": "ใช้ Prompt แล้ว",
-    "optimizer.copiedToClipboard": "คัดลอกไปยังคลิปบอร์ดแล้ว",
-
     // A/B Testing
     "ab.tabTitle": "A/B Testing",
     "ab.title": "A/B Test แบบเรียลไทม์",

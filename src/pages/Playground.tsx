@@ -1,23 +1,15 @@
 import { useState } from "react";
 import { PageTransition } from "@/components/motion";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
+
 import { Card, CardContent } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import { Columns2, MessageSquare } from "lucide-react";
 import { ChatPanel } from "@/components/playground/ChatPanel";
-import { PromptOptimizer } from "@/components/playground/PromptOptimizer";
 import { useModels } from "@/hooks/useUserData";
 import { useLanguage } from "@/i18n/LanguageContext";
-
-const samplePrompts = [
-  "My internet connection keeps dropping every few minutes",
-  "นายสมชาย เดินทางไปประชุมที่ธนาคารกสิกร สาขาสีลม",
-  "What is your return policy for electronics?",
-  "Book a flight from Bangkok to Tokyo next Friday",
-];
 
 export default function Playground() {
   const { models } = useModels();
@@ -40,7 +32,6 @@ export default function Playground() {
           <p className="text-sm text-muted-foreground">{t("playground.subtitle")}</p>
         </div>
         <div className="flex items-center gap-3">
-          <PromptOptimizer />
           <div className="flex items-center gap-2">
             <MessageSquare className="h-4 w-4 text-muted-foreground" />
             <Label htmlFor="ab-toggle" className="text-sm text-muted-foreground cursor-pointer">{t("playground.single")}</Label>
@@ -92,17 +83,6 @@ export default function Playground() {
           </div>
         </CardContent>
       </Card>
-
-      <div>
-        <p className="text-xs text-muted-foreground mb-2">{t("playground.samplePrompts")}</p>
-        <div className="flex flex-wrap gap-2">
-          {samplePrompts.map((prompt) => (
-            <Button key={prompt} variant="outline" size="sm" className="text-xs h-7" onClick={() => navigator.clipboard.writeText(prompt)}>
-              {prompt.length > 50 ? prompt.slice(0, 50) + "..." : prompt}
-            </Button>
-          ))}
-        </div>
-      </div>
 
       <div className={`grid gap-4 ${abMode ? "grid-cols-1 lg:grid-cols-2" : "grid-cols-1"}`}>
         <ChatPanel key={`a-${modelA}`} modelName={getModelName(modelA)} className="h-full" />
