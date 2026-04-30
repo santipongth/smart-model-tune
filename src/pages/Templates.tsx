@@ -455,6 +455,42 @@ export default function Templates() {
                     </div>
                   </div>
 
+                  {(() => {
+                    const hp = deriveFullHyperparams(preview);
+                    const rows: { label: string; value: React.ReactNode }[] = [
+                      { label: t("templates.epochs"), value: preview.epochs },
+                      { label: t("templates.learningRate"), value: preview.learningRate.toExponential(1) },
+                      { label: t("templates.batchSize"), value: hp.batchSize },
+                      { label: t("templates.gradAccum"), value: hp.gradAccum },
+                      { label: t("templates.warmupRatio"), value: hp.warmupRatio },
+                      { label: t("templates.weightDecay"), value: hp.weightDecay },
+                      { label: t("templates.scheduler"), value: hp.scheduler },
+                      { label: t("templates.optimizer"), value: hp.optimizer },
+                      { label: t("templates.maxSeqLen"), value: hp.maxSeqLen },
+                      { label: t("templates.precision"), value: hp.precision },
+                      { label: t("templates.datasetSize"), value: preview.datasetSize.toLocaleString() },
+                      { label: t("templates.estTime"), value: `~${estimateTrainingMinutes(preview)}m` },
+                    ];
+                    return (
+                      <div>
+                        <p className="text-xs font-medium text-muted-foreground mb-1.5">
+                          {t("templates.fullHyperparams")}
+                        </p>
+                        <div className="rounded-md border border-border divide-y divide-border overflow-hidden">
+                          {rows.map((r) => (
+                            <div
+                              key={r.label}
+                              className="flex items-center justify-between px-3 py-1.5 text-xs"
+                            >
+                              <span className="text-muted-foreground">{r.label}</span>
+                              <span className="font-mono font-medium text-foreground">{r.value}</span>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    );
+                  })()}
+
                   <div className="p-3 rounded-md bg-primary/5 border border-primary/20 flex items-start gap-2">
                     <Coins className="h-4 w-4 text-primary mt-0.5 shrink-0" />
                     <div className="text-xs">
