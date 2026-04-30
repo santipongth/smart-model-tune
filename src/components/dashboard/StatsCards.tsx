@@ -3,12 +3,11 @@ import { Card, CardContent } from "@/components/ui/card";
 import { StaggerContainer, StaggerItem } from "@/components/motion";
 import { motion } from "framer-motion";
 import { useProjects } from "@/hooks/useProjects";
-import { useModels, useCallEvents } from "@/hooks/useUserData";
+import { useModels } from "@/hooks/useUserData";
 
 export function StatsCards() {
   const { projects } = useProjects();
   const { models } = useModels();
-  const { events } = useCallEvents("30d");
 
   const totalProjects = projects.length;
   const modelsTrained = models.length;
