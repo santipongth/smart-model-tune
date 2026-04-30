@@ -8,21 +8,20 @@ import {
   AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
   BarChart, Bar, Legend,
 } from "recharts";
-import {
-  generateApiCallData, generateLatencyData, generateEndpointStats, getAnalyticsSummary,
-} from "@/data/analyticsMockData";
 import { useLanguage } from "@/i18n/LanguageContext";
+import { useCallEvents } from "@/hooks/useUserData";
+import { summarize, bucketByTime, endpointStats } from "@/lib/analyticsApi";
 
 const timeRanges = ["24h", "7d", "30d", "90d"] as const;
 
 export default function Analytics() {
   const [range, setRange] = useState<string>("7d");
   const { t } = useLanguage();
+  const { events, loading } = useCallEvents(range);
 
-  const summary = useMemo(() => getAnalyticsSummary(range), [range]);
-  const apiData = useMemo(() => generateApiCallData(range), [range]);
-  const latencyData = useMemo(() => generateLatencyData(range), [range]);
-  const endpoints = useMemo(() => generateEndpointStats(), []);
+  const summary = useMemo(() => summarize(events), [events]);
+  const buckets = useMemo(() => bucketByTime(events, range), [events, range]);
+  const endpoints = useMemo(() => endpointStats(events), [events]);
 
   const statCards = [
     { label: t("analytics.totalCalls"), value: summary.totalCalls.toLocaleString(), icon: BarChart3, change: "+12.3%" },
@@ -50,6 +49,15 @@ export default function Analytics() {
           </div>
         </FadeIn>
 
+        {!loading && events.length === 0 && (
+          <Card>
+            <CardContent className="p-8 text-center">
+              <Activity className="h-10 w-10 mx-auto text-muted-foreground mb-3" />
+              <p className="text-sm text-muted-foreground">No API call events recorded in this range yet.</p>
+            </CardContent>
+          </Card>
+        )}
+
         <FadeIn delay={0.1}>
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
             {statCards.map((s) => (
@@ -75,7 +83,7 @@ export default function Analytics() {
             <CardContent>
               <div className="h-72">
                 <ResponsiveContainer width="100%" height="100%">
-                  <AreaChart data={apiData}>
+                  <AreaChart data={buckets.calls}>
                     <CartesianGrid strokeDasharray="3 3" className="stroke-border" />
                     <XAxis dataKey="time" className="text-xs" tick={{ fill: "hsl(var(--muted-foreground))", fontSize: 11 }} />
                     <YAxis tick={{ fill: "hsl(var(--muted-foreground))", fontSize: 11 }} />
@@ -96,7 +104,7 @@ export default function Analytics() {
               <CardContent>
                 <div className="h-64">
                   <ResponsiveContainer width="100%" height="100%">
-                    <AreaChart data={latencyData}>
+                    <AreaChart data={buckets.latency}>
                       <CartesianGrid strokeDasharray="3 3" className="stroke-border" />
                       <XAxis dataKey="time" tick={{ fill: "hsl(var(--muted-foreground))", fontSize: 11 }} />
                       <YAxis tick={{ fill: "hsl(var(--muted-foreground))", fontSize: 11 }} />
