@@ -60,6 +60,61 @@ function estimateCredits(tpl: ProjectTemplate): number {
   return Math.round(estimateTrainingMinutes(tpl) * 1.5);
 }
 
+// Derive production-grade hyperparameters from template config so users
+// see the complete training recipe before deploying.
+function deriveFullHyperparams(tpl: ProjectTemplate) {
+  const sizeBatch: Record<string, number> = {
+    "smollm2-1.7b": 16,
+    "qwen2.5-1.5b": 16,
+    "llama-3.2-1b": 32,
+    "phi-3-mini": 16,
+    "gemma-2-2b": 8,
+    "qwen2.5-3b": 8,
+  };
+  const batchSize = sizeBatch[tpl.baseModel] ?? 16;
+  const gradAccum = tpl.datasetSize > 3000 ? 4 : 2;
+  return {
+    batchSize,
+    gradAccum,
+    warmupRatio: 0.03,
+    weightDecay: 0.01,
+    scheduler: "cosine",
+    optimizer: "adamw_torch",
+    maxSeqLen: tpl.taskType === "extraction" || tpl.taskType === "qa" ? 2048 : 1024,
+    precision: "bf16",
+  };
+}
+
+// Normalize Thai/Latin text for fuzzy search:
+// - lowercase, strip diacritics, collapse whitespace
+// - remove Thai tone marks & vowel marks for loose matching
+function normalize(s: string): string {
+  return s
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/[\u0e30-\u0e3a\u0e47-\u0e4e]/g, "")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+// Lightweight fuzzy match: token-based subsequence + substring scoring.
+function fuzzyMatch(haystack: string, needle: string): boolean {
+  if (!needle) return true;
+  const h = normalize(haystack);
+  const tokens = normalize(needle).split(" ").filter(Boolean);
+  return tokens.every((tok) => {
+    if (h.includes(tok)) return true;
+    // subsequence fallback for typos/near-spellings
+    let i = 0;
+    for (const ch of h) {
+      if (ch === tok[i]) i++;
+      if (i === tok.length) return true;
+    }
+    return false;
+  });
+}
+
 export default function Templates() {
   const [search, setSearch] = useState("");
   const [category, setCategory] = useState<typeof templateCategories[number]>("All");
