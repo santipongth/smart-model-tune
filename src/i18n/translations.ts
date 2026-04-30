@@ -166,7 +166,7 @@ export const translations: Record<Language, Record<string, string>> = {
     // Project Detail
     "projectDetail.notFound": "Project not found.",
     "projectDetail.backToProjects": "Back to Projects",
-    "projectDetail.trainingMonitor": "Training Monitor",
+    
     "projectDetail.overview": "Overview",
     "projectDetail.training": "Training",
     "projectDetail.evaluation": "Evaluation",
@@ -605,7 +605,7 @@ export const translations: Record<Language, Record<string, string>> = {
     // Project Detail
     "projectDetail.notFound": "ไม่พบโปรเจกต์",
     "projectDetail.backToProjects": "กลับไปยังโปรเจกต์",
-    "projectDetail.trainingMonitor": "ติดตามการฝึก",
+    
     "projectDetail.overview": "ภาพรวม",
     "projectDetail.training": "การฝึก",
     "projectDetail.evaluation": "การประเมินผล",
