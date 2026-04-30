@@ -126,13 +126,18 @@ export default function Templates() {
   const navigate = useNavigate();
 
   const filtered = useMemo(() => {
-    const q = search.toLowerCase();
     const list = projectTemplates.filter((tpl) => {
-      const matchSearch =
-        !q ||
-        tpl.name.toLowerCase().includes(q) ||
-        tpl.description.toLowerCase().includes(q) ||
-        tpl.tags.some((x) => x.includes(q));
+      const haystack = [
+        tpl.name,
+        tpl.description,
+        tpl.longDescription,
+        tpl.category,
+        tpl.taskType,
+        tpl.baseModel,
+        tpl.author,
+        ...tpl.tags,
+      ].join(" ");
+      const matchSearch = fuzzyMatch(haystack, search);
       const matchCat =
         category === "All" ||
         (category === "Featured" ? tpl.featured : tpl.category === category);
