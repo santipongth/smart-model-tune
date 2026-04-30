@@ -520,9 +520,6 @@ export default function Settings() {
               <TabsTrigger value="api-keys" className="text-xs">
                 <Key className="h-3.5 w-3.5 mr-1.5" /> {t("settings.apiKeys")}
               </TabsTrigger>
-              <TabsTrigger value="team" className="text-xs">
-                <Users className="h-3.5 w-3.5 mr-1.5" /> {t("settings.team")}
-              </TabsTrigger>
               <TabsTrigger value="notifications" className="text-xs">
                 <Bell className="h-3.5 w-3.5 mr-1.5" /> {t("settings.notifications")}
               </TabsTrigger>
@@ -532,17 +529,12 @@ export default function Settings() {
               <TabsTrigger value="account" className="text-xs">
                 <User className="h-3.5 w-3.5 mr-1.5" /> {t("settings.account")}
               </TabsTrigger>
-              <TabsTrigger value="billing" className="text-xs">
-                <CreditCard className="h-3.5 w-3.5 mr-1.5" /> {t("settings.billing")}
-              </TabsTrigger>
             </TabsList>
 
             <TabsContent value="api-keys"><ApiKeysTab /></TabsContent>
-            <TabsContent value="team"><TeamTab /></TabsContent>
             <TabsContent value="notifications"><NotificationsTab /></TabsContent>
             <TabsContent value="webhooks"><WebhooksTab /></TabsContent>
             <TabsContent value="account"><AccountTab /></TabsContent>
-            <TabsContent value="billing"><BillingTab /></TabsContent>
           </Tabs>
         </FadeIn>
       </div>
