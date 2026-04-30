@@ -64,13 +64,11 @@ export const translations: Record<Language, Record<string, string>> = {
 
     // Settings
     "settings.title": "Settings",
-    "settings.subtitle": "Manage your account, API keys, and billing",
+    "settings.subtitle": "Manage your account and API keys",
     "settings.apiKeys": "API Keys",
-    "settings.team": "Team",
     "settings.notifications": "Notifications",
     "settings.webhooks": "Webhooks",
     "settings.account": "Account",
-    "settings.billing": "Billing",
 
     // Command Palette
     "command.search": "Search...",
@@ -575,13 +573,11 @@ export const translations: Record<Language, Record<string, string>> = {
 
     // Settings
     "settings.title": "ตั้งค่า",
-    "settings.subtitle": "จัดการบัญชี, API keys และการเรียกเก็บเงิน",
+    "settings.subtitle": "จัดการบัญชีและ API keys",
     "settings.apiKeys": "API Keys",
-    "settings.team": "ทีม",
     "settings.notifications": "การแจ้งเตือน",
     "settings.webhooks": "Webhooks",
     "settings.account": "บัญชี",
-    "settings.billing": "การเรียกเก็บเงิน",
 
     // Command Palette
     "command.search": "ค้นหา...",
