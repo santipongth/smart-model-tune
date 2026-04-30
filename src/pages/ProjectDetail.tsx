@@ -107,6 +107,11 @@ export default function ProjectDetail() {
         </div>
       </div>
 
+      {/* Live training status banner — visible on every tab while job runs */}
+      {(project.status === "queued" || project.status === "training" || project.status === "completed" || project.status === "failed") && (
+        <LiveStatusBanner project={project} />
+      )}
+
       <Tabs defaultValue="overview">
         <TabsList>
           <TabsTrigger value="overview">{t("projectDetail.overview")}</TabsTrigger>
