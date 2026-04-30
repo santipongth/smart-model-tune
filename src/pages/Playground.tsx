@@ -8,6 +8,8 @@ import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import { Columns2, MessageSquare } from "lucide-react";
 import { ChatPanel } from "@/components/playground/ChatPanel";
+import { useModels } from "@/hooks/useUserData";
+import { useLanguage } from "@/i18n/LanguageContext";
 
 export default function Playground() {
   const { models } = useModels();
