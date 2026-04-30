@@ -231,6 +231,32 @@ export const translations: Record<Language, Record<string, string>> = {
     "newProject.launched": "Project Created",
     "newProject.launchFailed": "Could not create project",
 
+    // Pre-flight validation
+    "preflight.failedTitle": "Cannot start training",
+    "preflight.heads_up": "Heads up",
+    "preflight.taskTypeMissing": "Please select a task type.",
+    "preflight.baseModelMissing": "Please select a base model.",
+    "preflight.promptTooShort": "Task description is too short. Please add more detail.",
+    "preflight.promptTooLong": "Task description is too long. Please shorten it.",
+    "preflight.nameTooLong": "Project name is too long.",
+    "preflight.tooManyFiles": "Too many files. Please remove some and try again.",
+    "preflight.badFormat": "Unsupported file type. Use CSV, JSON, or JSONL only.",
+    "preflight.emptyFile": "One of the files is empty. Please remove or replace it.",
+    "preflight.fileTooLarge": "A file exceeds the 50MB per-file limit.",
+    "preflight.totalSizeExceeded": "Total upload size exceeds the 200MB limit.",
+    "preflight.noFilesWarning": "No training files uploaded — synthetic data will be generated automatically.",
+
+    // Live training status
+    "training.queuedTitle": "Queued for training",
+    "training.queuedDesc": "Your job is in line and will start shortly.",
+    "training.runningTitle": "Training in progress",
+    "training.completedTitle": "Training completed",
+    "training.completedDesc": "Your model is ready for evaluation and deployment.",
+    "training.failedTitle": "Training failed",
+    "training.failedDesc": "Check the training logs and try again.",
+    "training.epoch": "Epoch",
+    "training.eta": "ETA",
+
     // Auth
     "auth.signInFailed": "Sign in failed",
     "auth.signUpFailed": "Sign up failed",
@@ -688,6 +714,32 @@ export const translations: Record<Language, Record<string, string>> = {
     "newProject.launchTraining": "เริ่มการฝึก",
     "newProject.launched": "สร้างโปรเจกต์แล้ว",
     "newProject.launchFailed": "สร้างโปรเจกต์ไม่สำเร็จ",
+
+    // Pre-flight validation
+    "preflight.failedTitle": "ไม่สามารถเริ่มการฝึกได้",
+    "preflight.heads_up": "โปรดทราบ",
+    "preflight.taskTypeMissing": "กรุณาเลือกประเภทงาน",
+    "preflight.baseModelMissing": "กรุณาเลือกโมเดลพื้นฐาน",
+    "preflight.promptTooShort": "คำอธิบายงานสั้นเกินไป กรุณาเพิ่มรายละเอียด",
+    "preflight.promptTooLong": "คำอธิบายงานยาวเกินไป กรุณาย่อให้สั้นลง",
+    "preflight.nameTooLong": "ชื่อโปรเจกต์ยาวเกินไป",
+    "preflight.tooManyFiles": "มีไฟล์มากเกินไป กรุณาลบบางไฟล์แล้วลองใหม่",
+    "preflight.badFormat": "ไฟล์รูปแบบไม่รองรับ ใช้ได้เฉพาะ CSV, JSON หรือ JSONL",
+    "preflight.emptyFile": "มีไฟล์ที่ว่างเปล่า กรุณาลบหรือเปลี่ยนไฟล์",
+    "preflight.fileTooLarge": "มีไฟล์เกินขนาดสูงสุด 50MB ต่อไฟล์",
+    "preflight.totalSizeExceeded": "ขนาดรวมของไฟล์เกิน 200MB",
+    "preflight.noFilesWarning": "ไม่มีการอัปโหลดไฟล์ฝึก ระบบจะสร้างข้อมูลสังเคราะห์ให้อัตโนมัติ",
+
+    // Live training status
+    "training.queuedTitle": "อยู่ในคิวการฝึก",
+    "training.queuedDesc": "งานของคุณรออยู่และจะเริ่มในไม่ช้า",
+    "training.runningTitle": "กำลังฝึกโมเดล",
+    "training.completedTitle": "ฝึกเสร็จสมบูรณ์",
+    "training.completedDesc": "โมเดลของคุณพร้อมสำหรับการประเมินและ deploy แล้ว",
+    "training.failedTitle": "การฝึกล้มเหลว",
+    "training.failedDesc": "กรุณาตรวจสอบ log การฝึกแล้วลองใหม่อีกครั้ง",
+    "training.epoch": "Epoch",
+    "training.eta": "เหลือ",
 
     // Auth
     "auth.signInFailed": "เข้าสู่ระบบไม่สำเร็จ",
