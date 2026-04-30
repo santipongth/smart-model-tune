@@ -296,12 +296,6 @@ export const translations: Record<Language, Record<string, string>> = {
     "tuningReport.creditsSaved": "Credits Saved",
     "tuningReport.timeSaved": "Time Saved",
     "tuningReport.baselineVsBest": "Baseline vs Best",
-    "tuningReport.recommendations": "Recommended Hyperparameters",
-    "tuningReport.recommendationsDesc": "Suggestions derived from completed trials with confidence and reasoning.",
-    "tuningReport.confidence": "Confidence",
-    "tuningReport.applyAll": "Apply All Recommendations",
-    "tuningReport.applied": "Recommendations Applied",
-    "tuningReport.appliedDesc": "Hyperparameters updated for the next training run.",
     "tuningReport.trialProgress": "Trial Progress",
     "tuningReport.trialProgressDesc": "Accuracy and F1 across completed trials.",
     "tuningReport.lrAccuracy": "Learning Rate vs Accuracy",
@@ -309,7 +303,7 @@ export const translations: Record<Language, Record<string, string>> = {
     "tuningReport.allTrials": "All Trials",
     "tuningReport.duration": "Duration",
     "tuningReport.status": "Status",
-    "tuningReport.searchSpace": "Search Space",
+    
 
     // Tuning History
     "tuningHistory.title": "Run History",
@@ -796,12 +790,6 @@ export const translations: Record<Language, Record<string, string>> = {
     "tuningReport.creditsSaved": "Credit ที่ประหยัด",
     "tuningReport.timeSaved": "เวลาที่ประหยัด",
     "tuningReport.baselineVsBest": "Baseline vs ดีที่สุด",
-    "tuningReport.recommendations": "ค่าพารามิเตอร์ที่แนะนำ",
-    "tuningReport.recommendationsDesc": "คำแนะนำจากผล Trial ที่เสร็จแล้ว พร้อมความมั่นใจและเหตุผล",
-    "tuningReport.confidence": "ความมั่นใจ",
-    "tuningReport.applyAll": "ใช้ค่าแนะนำทั้งหมด",
-    "tuningReport.applied": "นำค่าแนะนำไปใช้แล้ว",
-    "tuningReport.appliedDesc": "อัปเดตพารามิเตอร์สำหรับการเทรนรอบถัดไปแล้ว",
     "tuningReport.trialProgress": "ความคืบหน้าของ Trial",
     "tuningReport.trialProgressDesc": "Accuracy และ F1 ของ Trial ที่เสร็จแล้ว",
     "tuningReport.lrAccuracy": "Learning Rate vs Accuracy",
@@ -809,7 +797,7 @@ export const translations: Record<Language, Record<string, string>> = {
     "tuningReport.allTrials": "Trial ทั้งหมด",
     "tuningReport.duration": "ระยะเวลา",
     "tuningReport.status": "สถานะ",
-    "tuningReport.searchSpace": "ขอบเขตการค้นหา",
+    
 
     // Tuning History
     "tuningHistory.title": "ประวัติการรัน",
