@@ -678,12 +678,6 @@ export const translations: Record<Language, Record<string, string>> = {
     "auth.signOut": "ออกจากระบบ",
 
     // Export/Import
-    "export.exportJson": "ส่งออก JSON",
-    "export.exported": "ส่งออกโปรเจกต์สำเร็จ",
-    "import.importJson": "นำเข้าโปรเจกต์",
-    "import.success": "นำเข้าโปรเจกต์สำเร็จ",
-    "import.invalidFormat": "รูปแบบโปรเจกต์ไม่ถูกต้อง — ขาดฟิลด์ที่จำเป็น",
-    "import.invalidJson": "ไฟล์ JSON ไม่ถูกต้อง",
 
     // Version History
     "versions.title": "เวอร์ชัน",
