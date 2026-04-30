@@ -60,6 +60,61 @@ function estimateCredits(tpl: ProjectTemplate): number {
   return Math.round(estimateTrainingMinutes(tpl) * 1.5);
 }
 
+// Derive production-grade hyperparameters from template config so users
+// see the complete training recipe before deploying.
+function deriveFullHyperparams(tpl: ProjectTemplate) {
+  const sizeBatch: Record<string, number> = {
+    "smollm2-1.7b": 16,
+    "qwen2.5-1.5b": 16,
+    "llama-3.2-1b": 32,
+    "phi-3-mini": 16,
+    "gemma-2-2b": 8,
+    "qwen2.5-3b": 8,
+  };
+  const batchSize = sizeBatch[tpl.baseModel] ?? 16;
+  const gradAccum = tpl.datasetSize > 3000 ? 4 : 2;
+  return {
+    batchSize,
+    gradAccum,
+    warmupRatio: 0.03,
+    weightDecay: 0.01,
+    scheduler: "cosine",
+    optimizer: "adamw_torch",
+    maxSeqLen: tpl.taskType === "extraction" || tpl.taskType === "qa" ? 2048 : 1024,
+    precision: "bf16",
+  };
+}
+
+// Normalize Thai/Latin text for fuzzy search:
+// - lowercase, strip diacritics, collapse whitespace
+// - remove Thai tone marks & vowel marks for loose matching
+function normalize(s: string): string {
+  return s
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/[\u0e30-\u0e3a\u0e47-\u0e4e]/g, "")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+// Lightweight fuzzy match: token-based subsequence + substring scoring.
+function fuzzyMatch(haystack: string, needle: string): boolean {
+  if (!needle) return true;
+  const h = normalize(haystack);
+  const tokens = normalize(needle).split(" ").filter(Boolean);
+  return tokens.every((tok) => {
+    if (h.includes(tok)) return true;
+    // subsequence fallback for typos/near-spellings
+    let i = 0;
+    for (const ch of h) {
+      if (ch === tok[i]) i++;
+      if (i === tok.length) return true;
+    }
+    return false;
+  });
+}
+
 export default function Templates() {
   const [search, setSearch] = useState("");
   const [category, setCategory] = useState<typeof templateCategories[number]>("All");
@@ -71,13 +126,18 @@ export default function Templates() {
   const navigate = useNavigate();
 
   const filtered = useMemo(() => {
-    const q = search.toLowerCase();
     const list = projectTemplates.filter((tpl) => {
-      const matchSearch =
-        !q ||
-        tpl.name.toLowerCase().includes(q) ||
-        tpl.description.toLowerCase().includes(q) ||
-        tpl.tags.some((x) => x.includes(q));
+      const haystack = [
+        tpl.name,
+        tpl.description,
+        tpl.longDescription,
+        tpl.category,
+        tpl.taskType,
+        tpl.baseModel,
+        tpl.author,
+        ...tpl.tags,
+      ].join(" ");
+      const matchSearch = fuzzyMatch(haystack, search);
       const matchCat =
         category === "All" ||
         (category === "Featured" ? tpl.featured : tpl.category === category);
@@ -394,6 +454,42 @@ export default function Templates() {
                       </p>
                     </div>
                   </div>
+
+                  {(() => {
+                    const hp = deriveFullHyperparams(preview);
+                    const rows: { label: string; value: React.ReactNode }[] = [
+                      { label: t("templates.epochs"), value: preview.epochs },
+                      { label: t("templates.learningRate"), value: preview.learningRate.toExponential(1) },
+                      { label: t("templates.batchSize"), value: hp.batchSize },
+                      { label: t("templates.gradAccum"), value: hp.gradAccum },
+                      { label: t("templates.warmupRatio"), value: hp.warmupRatio },
+                      { label: t("templates.weightDecay"), value: hp.weightDecay },
+                      { label: t("templates.scheduler"), value: hp.scheduler },
+                      { label: t("templates.optimizer"), value: hp.optimizer },
+                      { label: t("templates.maxSeqLen"), value: hp.maxSeqLen },
+                      { label: t("templates.precision"), value: hp.precision },
+                      { label: t("templates.datasetSize"), value: preview.datasetSize.toLocaleString() },
+                      { label: t("templates.estTime"), value: `~${estimateTrainingMinutes(preview)}m` },
+                    ];
+                    return (
+                      <div>
+                        <p className="text-xs font-medium text-muted-foreground mb-1.5">
+                          {t("templates.fullHyperparams")}
+                        </p>
+                        <div className="rounded-md border border-border divide-y divide-border overflow-hidden">
+                          {rows.map((r) => (
+                            <div
+                              key={r.label}
+                              className="flex items-center justify-between px-3 py-1.5 text-xs"
+                            >
+                              <span className="text-muted-foreground">{r.label}</span>
+                              <span className="font-mono font-medium text-foreground">{r.value}</span>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    );
+                  })()}
 
                   <div className="p-3 rounded-md bg-primary/5 border border-primary/20 flex items-start gap-2">
                     <Coins className="h-4 w-4 text-primary mt-0.5 shrink-0" />

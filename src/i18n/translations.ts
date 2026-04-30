@@ -438,6 +438,16 @@ export const translations: Record<Language, Record<string, string>> = {
     "templates.sortRating": "Highest Rated",
     "templates.sortForks": "Most Forked",
     "templates.sortNewest": "Newest",
+    "templates.fullHyperparams": "Full Training Hyperparameters",
+    "templates.batchSize": "Batch Size",
+    "templates.warmupRatio": "Warmup Ratio",
+    "templates.weightDecay": "Weight Decay",
+    "templates.scheduler": "LR Scheduler",
+    "templates.optimizer": "Optimizer",
+    "templates.maxSeqLen": "Max Seq Length",
+    "templates.gradAccum": "Grad Accumulation",
+    "templates.precision": "Precision",
+    "templates.tagsLabel": "Tags",
 
     // Projects extras
     "projects.filterByTag": "Filter by tag",
@@ -944,6 +954,16 @@ export const translations: Record<Language, Record<string, string>> = {
     "templates.sortRating": "คะแนนสูงสุด",
     "templates.sortForks": "ถูก fork มากที่สุด",
     "templates.sortNewest": "ใหม่ล่าสุด",
+    "templates.fullHyperparams": "พารามิเตอร์การเทรนทั้งหมด",
+    "templates.batchSize": "ขนาด Batch",
+    "templates.warmupRatio": "อัตรา Warmup",
+    "templates.weightDecay": "Weight Decay",
+    "templates.scheduler": "ตัวกำหนด LR",
+    "templates.optimizer": "Optimizer",
+    "templates.maxSeqLen": "ความยาว Sequence สูงสุด",
+    "templates.gradAccum": "Gradient Accumulation",
+    "templates.precision": "ความละเอียด",
+    "templates.tagsLabel": "แท็ก",
 
     // Projects extras
     "projects.filterByTag": "กรองตาม tag",
