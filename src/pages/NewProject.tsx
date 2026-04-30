@@ -12,6 +12,7 @@ import type { TaskType, BaseModel } from "@/types";
 import { useLanguage } from "@/i18n/LanguageContext";
 import { useToast } from "@/hooks/use-toast";
 import { createProject } from "@/lib/projectsApi";
+import { validatePreflight } from "@/lib/trainingValidation";
 
 export interface ProjectFormData {
   projectName: string;
@@ -46,7 +47,25 @@ export default function NewProject() {
   const navigate = useNavigate();
 
   const handleLaunch = async () => {
-    if (!formData.taskType || !formData.baseModel || launching) return;
+    if (launching) return;
+
+    // Pre-flight validation — block launch on errors, surface warnings as info toasts
+    const result = validatePreflight(formData, t);
+    if (!result.ok) {
+      // Show up to 3 errors so the toast stays readable; remainder summarized
+      const shown = result.errors.slice(0, 3).map((e) => `• ${e.message}`).join("\n");
+      const extra = result.errors.length > 3 ? `\n+${result.errors.length - 3} more` : "";
+      toast({
+        title: t("preflight.failedTitle"),
+        description: shown + extra,
+        variant: "destructive",
+      });
+      return;
+    }
+    for (const w of result.warnings) {
+      toast({ title: t("preflight.heads_up"), description: w.message });
+    }
+
     setLaunching(true);
     try {
       const datasetRows = Math.max(formData.files.length * 500, 100);
@@ -54,8 +73,8 @@ export default function NewProject() {
       const created = await createProject({
         name: formData.projectName.trim() || formData.taskPrompt.slice(0, 60) || "Untitled Project",
         description: formData.taskPrompt,
-        taskType: formData.taskType,
-        baseModel: formData.baseModel,
+        taskType: formData.taskType!,
+        baseModel: formData.baseModel!,
         epochs: tuned.epochs,
         learningRate: tuned.learningRate,
         datasetSize: datasetRows,
