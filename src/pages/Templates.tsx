@@ -60,6 +60,101 @@ function estimateCredits(tpl: ProjectTemplate): number {
   return Math.round(estimateTrainingMinutes(tpl) * 1.5);
 }
 
+// Curated example input/output pairs per task type so users can see what
+// the fine-tuned model is actually expected to produce.
+function getExamplePrompts(tpl: ProjectTemplate): { input: string; output: string }[] {
+  const isThai = tpl.tags.includes("thai");
+  switch (tpl.taskType) {
+    case "classification":
+      if (tpl.tags.includes("sentiment")) {
+        return [
+          { input: isThai ? "สินค้าดีมาก ส่งเร็วทันใจ คุ้มราคา" : "Great product, fast shipping, worth it!", output: "positive" },
+          { input: isThai ? "ใช้แล้วพังเลย ไม่แนะนำ" : "Broke after one day. Do not buy.", output: "negative" },
+          { input: isThai ? "พอใช้ได้ ราคาตามคุณภาพ" : "It's okay, you get what you pay for.", output: "neutral" },
+        ];
+      }
+      return [
+        { input: isThai ? "บัตรเครดิตถูกหักเงินซ้ำสองรอบ" : "My credit card was charged twice this month.", output: "billing" },
+        { input: isThai ? "แอปเปิดไม่ได้หลังอัปเดต" : "App keeps crashing after the latest update.", output: "technical" },
+        { input: isThai ? "พัสดุยังไม่ถึงเลย รออยู่หนึ่งสัปดาห์" : "Where is my package? It's been a week.", output: "shipping" },
+      ];
+    case "extraction":
+      if (tpl.tags.includes("invoice")) {
+        return [
+          {
+            input: "Invoice #INV-2024-0892\nVendor: Acme Co.\nDate: 2024-03-15\nTotal: $1,240.00\nVAT: $86.80",
+            output: '{\n  "vendor": "Acme Co.",\n  "invoice_number": "INV-2024-0892",\n  "date": "2024-03-15",\n  "total": 1240.00,\n  "tax": 86.80\n}',
+          },
+        ];
+      }
+      return [
+        {
+          input: "Jane Doe — Senior Engineer at TechCorp (2019-2024). MSc CS, MIT 2018. Skills: Python, Go, Kubernetes.",
+          output: '{\n  "name": "Jane Doe",\n  "experience": [{"role": "Senior Engineer", "company": "TechCorp"}],\n  "education": [{"degree": "MSc CS", "school": "MIT"}],\n  "skills": ["Python", "Go", "Kubernetes"]\n}',
+        },
+      ];
+    case "ner":
+      return [
+        {
+          input: isThai ? "นายสมชาย ใจดี ทำงานที่บริษัท ปตท. กรุงเทพ ได้รับเงิน 50,000 บาท" : "John Smith works at Google in San Francisco and earned $120,000.",
+          output: isThai
+            ? '[{"text":"สมชาย ใจดี","type":"PERSON"},{"text":"ปตท.","type":"ORG"},{"text":"กรุงเทพ","type":"LOC"},{"text":"50,000 บาท","type":"MONEY"}]'
+            : '[{"text":"John Smith","type":"PERSON"},{"text":"Google","type":"ORG"},{"text":"San Francisco","type":"LOC"},{"text":"$120,000","type":"MONEY"}]',
+        },
+      ];
+    case "qa":
+      return [
+        {
+          input: isThai ? "Q: คืนสินค้าได้ภายในกี่วัน?\nDocs: นโยบายคืนสินค้า 30 วันนับจากวันรับ" : "Q: How long is the return window?\nDocs: Returns accepted within 30 days of delivery.",
+          output: isThai ? "คืนได้ภายใน 30 วันนับจากวันที่ได้รับสินค้า" : "You have 30 days from delivery to return your item.",
+        },
+      ];
+    case "function-calling":
+      return [
+        {
+          input: "Create a new user named Alice with email alice@example.com",
+          output: '{\n  "function": "users.create",\n  "args": {"name": "Alice", "email": "alice@example.com"}\n}',
+        },
+        {
+          input: "Show me orders from last week over $500",
+          output: '{\n  "function": "orders.list",\n  "args": {"date_from": "last_week", "min_total": 500}\n}',
+        },
+      ];
+    case "ranking":
+      return [
+        {
+          input: 'Query: "wireless noise-cancelling headphones"\nCandidates:\n1. "Bluetooth speaker portable"\n2. "Sony WH-1000XM5 ANC headphones"\n3. "Wired earbuds 3.5mm"',
+          output: "[2, 1, 3]",
+        },
+      ];
+    default:
+      return [{ input: tpl.prompt, output: "..." }];
+  }
+}
+
+// Derive how the dataset will be split & prepared during training.
+function getDatasetConfig(tpl: ProjectTemplate) {
+  const total = tpl.datasetSize;
+  const train = Math.round(total * 0.8);
+  const val = Math.round(total * 0.1);
+  const test = total - train - val;
+  return {
+    total,
+    train,
+    val,
+    test,
+    format:
+      tpl.taskType === "extraction" || tpl.taskType === "function-calling"
+        ? "JSONL (instruction → JSON)"
+        : "JSONL (instruction → response)",
+    augmentation: tpl.tags.includes("thai")
+      ? "Back-translation + synonym swap (TH)"
+      : "Paraphrase + token dropout",
+    minTokens: 32,
+    maxTokens: tpl.taskType === "extraction" || tpl.taskType === "qa" ? 2048 : 1024,
+  };
+}
+
 // Derive production-grade hyperparameters from template config so users
 // see the complete training recipe before deploying.
 function deriveFullHyperparams(tpl: ProjectTemplate) {
