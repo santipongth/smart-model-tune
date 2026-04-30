@@ -508,6 +508,12 @@ export const translations: Record<Language, Record<string, string>> = {
 
     // Deployment extras
     "deploy.endpointsTab": "Endpoints",
+
+    // 404
+    "notFound.title": "Page not found",
+    "notFound.description": "We couldn't find the page",
+    "notFound.back": "Go back",
+    "notFound.home": "Home",
   },
   th: {
     // Nav / Sidebar
@@ -1016,5 +1022,11 @@ export const translations: Record<Language, Record<string, string>> = {
 
     // Deployment extras
     "deploy.endpointsTab": "Endpoints",
+
+    // 404
+    "notFound.title": "ไม่พบหน้านี้",
+    "notFound.description": "เราไม่พบหน้า",
+    "notFound.back": "ย้อนกลับ",
+    "notFound.home": "หน้าหลัก",
   },
 };
