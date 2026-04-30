@@ -11,7 +11,7 @@ export default tseslint.config(
     files: ["**/*.{ts,tsx}"],
     languageOptions: {
       ecmaVersion: 2020,
-      globals: globals.browser,
+      globals: { ...globals.browser, ...globals.node },
     },
     plugins: {
       "react-hooks": reactHooks,
@@ -31,6 +31,21 @@ export default tseslint.config(
       ],
       "no-unused-private-class-members": "warn",
       "no-duplicate-imports": "error",
+    },
+  },
+  // shadcn-generated UI primitives — keep their conventions intact.
+  {
+    files: ["src/components/ui/**/*.{ts,tsx}"],
+    rules: {
+      "@typescript-eslint/no-empty-object-type": "off",
+      "react-refresh/only-export-components": "off",
+    },
+  },
+  // Tailwind config is run by Node, allow CommonJS require().
+  {
+    files: ["tailwind.config.ts", "postcss.config.js", "vite.config.ts", "vitest.config.ts"],
+    rules: {
+      "@typescript-eslint/no-require-imports": "off",
     },
   },
 );
