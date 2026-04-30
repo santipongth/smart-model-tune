@@ -29,7 +29,7 @@ import { LogOut } from "lucide-react";
 import { useLanguage } from "@/i18n/LanguageContext";
 import { useAuth } from "@/contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
-import { useProjects } from "@/hooks/useProjects";
+
 
 const navItems = [
   { titleKey: "nav.dashboard", url: "/dashboard", icon: LayoutDashboard },
@@ -45,12 +45,6 @@ const navItems = [
 ];
 
 export function AppSidebar() {
-  const { projects } = useProjects();
-  const creditsTotal = 1000;
-  const creditsUsed = projects.reduce((s, p) => s + p.creditsCost, 0);
-  const creditsRemaining = Math.max(0, creditsTotal - creditsUsed);
-  const planTier = "Pro";
-  const creditPercent = (creditsRemaining / creditsTotal) * 100;
   const { t } = useLanguage();
   const { user, profile, signOut } = useAuth();
   const navigate = useNavigate();
@@ -95,20 +89,6 @@ export function AppSidebar() {
       </SidebarContent>
 
       <SidebarFooter className="p-3 border-t border-border space-y-3">
-        <div className="space-y-2 group-data-[collapsible=icon]:hidden">
-          <div className="flex items-center justify-between text-xs">
-            <span className="text-muted-foreground">{t("nav.credits")}</span>
-            <span className="font-medium text-foreground">{creditsRemaining} / {creditsTotal}</span>
-          </div>
-          <div className="h-1.5 bg-secondary rounded-full overflow-hidden">
-            <div
-              className="h-full bg-primary rounded-full transition-all"
-              style={{ width: `${creditPercent}%` }}
-            />
-          </div>
-          <p className="text-xs text-muted-foreground">{planTier} {t("nav.plan")}</p>
-        </div>
-
         {user && (
           <div className="flex items-center gap-2 pt-2 border-t border-border group-data-[collapsible=icon]:flex-col group-data-[collapsible=icon]:border-t-0 group-data-[collapsible=icon]:pt-0">
             <Avatar className="h-7 w-7 shrink-0">
