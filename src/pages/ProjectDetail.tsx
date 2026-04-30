@@ -11,7 +11,7 @@ import { taskTypeLabels, baseModelLabels } from "@/data/mockData";
 import { mockVersionHistory } from "@/data/deploymentMockData";
 import { TuningReport } from "@/components/training/TuningReport";
 import { TuningHistory } from "@/components/training/TuningHistory";
-import { getLatestTuningRun, setAppliedRun } from "@/lib/tuningGenerator";
+import { getLatestTuningRun } from "@/lib/tuningGenerator";
 import { useProject } from "@/hooks/useProjects";
 import { Loader2 } from "lucide-react";
 import type { ProjectStatus } from "@/types";
