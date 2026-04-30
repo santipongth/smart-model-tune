@@ -324,3 +324,75 @@ export default function ProjectDetail() {
     </PageTransition>
   );
 }
+
+// ─────────────────────────────────────────────────────────────────────────────
+// LiveStatusBanner — shows queued / training (with progress + eta + epoch) /
+// completed / failed states. Auto-updates as the simulator pushes new state.
+// ─────────────────────────────────────────────────────────────────────────────
+function LiveStatusBanner({ project }: { project: import("@/types").Project }) {
+  const { t } = useLanguage();
+  const status = project.status;
+
+  if (status === "completed") {
+    return (
+      <Card className="border-primary/30 bg-primary/5">
+        <CardContent className="p-4 flex items-center gap-3">
+          <CheckCircle2 className="h-5 w-5 text-primary shrink-0" />
+          <div className="flex-1 min-w-0">
+            <p className="text-sm font-medium text-foreground">{t("training.completedTitle")}</p>
+            <p className="text-xs text-muted-foreground">{t("training.completedDesc")}</p>
+          </div>
+        </CardContent>
+      </Card>
+    );
+  }
+
+  if (status === "failed") {
+    return (
+      <Card className="border-destructive/30 bg-destructive/5">
+        <CardContent className="p-4 flex items-center gap-3">
+          <AlertCircle className="h-5 w-5 text-destructive shrink-0" />
+          <div className="flex-1 min-w-0">
+            <p className="text-sm font-medium text-foreground">{t("training.failedTitle")}</p>
+            <p className="text-xs text-muted-foreground">{t("training.failedDesc")}</p>
+          </div>
+        </CardContent>
+      </Card>
+    );
+  }
+
+  // queued or training
+  const isQueued = status === "queued";
+  const progress = isQueued ? 0 : project.progress;
+  const currentEpoch = Math.max(1, Math.ceil((progress / 100) * project.epochs));
+  const remainingPct = Math.max(0, 100 - progress);
+  // Heuristic ETA: simulator advances ~5%/2s → ~24s/100% baseline scaled by epochs
+  const etaSeconds = Math.round((remainingPct / 5) * 2 * Math.max(1, project.epochs / 5));
+  const etaLabel = etaSeconds > 60 ? `~${Math.ceil(etaSeconds / 60)}m` : `~${etaSeconds}s`;
+
+  return (
+    <Card className="border-primary/30 bg-primary/5">
+      <CardContent className="p-4 space-y-3">
+        <div className="flex items-center gap-3">
+          {isQueued ? (
+            <Loader2 className="h-5 w-5 text-primary animate-spin shrink-0" />
+          ) : (
+            <Activity className="h-5 w-5 text-primary shrink-0 animate-pulse" />
+          )}
+          <div className="flex-1 min-w-0">
+            <p className="text-sm font-medium text-foreground">
+              {isQueued ? t("training.queuedTitle") : t("training.runningTitle")}
+            </p>
+            <p className="text-xs text-muted-foreground">
+              {isQueued
+                ? t("training.queuedDesc")
+                : `${t("training.epoch")} ${currentEpoch}/${project.epochs} · ${t("training.eta")} ${etaLabel}`}
+            </p>
+          </div>
+          <span className="text-sm font-semibold text-foreground tabular-nums shrink-0">{progress}%</span>
+        </div>
+        <Progress value={progress} className="h-2" />
+      </CardContent>
+    </Card>
+  );
+}
