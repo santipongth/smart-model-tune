@@ -134,7 +134,6 @@ export const translations: Record<Language, Record<string, string>> = {
     "dataset.columnStats": "Column Statistics",
 
     "calc.samples": "samples",
-    "calc.credits": "credits",
 
     // Model Comparison
     "compare.title": "Model Comparison",
