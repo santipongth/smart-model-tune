@@ -6,8 +6,10 @@ import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { PageTransition, FadeIn } from "@/components/motion";
 import { Trophy, Medal, ArrowUpDown, Rocket, Eye } from "lucide-react";
-import { mockModels, mockProjects, mockEvalMetrics, taskTypeLabels, baseModelLabels } from "@/data/mockData";
+import { taskTypeLabels, baseModelLabels } from "@/data/mockData";
 import { useLanguage } from "@/i18n/LanguageContext";
+import { useModels } from "@/hooks/useUserData";
+import { useProjects } from "@/hooks/useProjects";
 
 type SortKey = "accuracy" | "f1Score" | "latencyMs" | "fileSize";
 
@@ -16,12 +18,20 @@ export default function Leaderboard() {
   const [sortBy, setSortBy] = useState<SortKey>("accuracy");
   const [sortAsc, setSortAsc] = useState(false);
   const { t } = useLanguage();
+  const { models } = useModels();
+  const { projects } = useProjects();
 
-  const modelsWithMetrics = mockModels.map((m) => {
-    const project = mockProjects.find((p) => p.id === m.projectId);
-    const metrics = mockEvalMetrics[m.projectId];
+  const modelsWithMetrics = models.map((m) => {
+    const project = projects.find((p) => p.id === m.projectId);
+    const metrics = {
+      accuracy: m.accuracy,
+      f1Score: m.f1Score,
+      precision: m.precision,
+      recall: m.recall,
+      latencyMs: m.latencyMs,
+    };
     return { ...m, project, metrics };
-  }).filter((m) => m.metrics);
+  });
 
   const filtered = modelsWithMetrics.filter(
     (m) => filterTask === "all" || m.taskType === filterTask
