@@ -5,8 +5,9 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ArrowLeft, Download, Rocket, MessageSquare, Copy, ExternalLink, CheckCircle2 } from "lucide-react";
-import { mockModels, taskTypeLabels, baseModelLabels, mockEvalMetrics } from "@/data/mockData";
-import { useState } from "react";
+import { taskTypeLabels, baseModelLabels } from "@/data/mockData";
+import { useState, useEffect } from "react";
+import { getModel, type TrainedModelExt } from "@/lib/modelsApi";
 import { useLanguage } from "@/i18n/LanguageContext";
 
 const exportFormats = [
@@ -66,10 +67,20 @@ console.log(data);`,
 
 export default function ModelDetail() {
   const { id } = useParams<{ id: string }>();
-  const model = mockModels.find((m) => m.id === id);
+  const [model, setModel] = useState<TrainedModelExt | null>(null);
+  const [loading, setLoading] = useState(true);
   const [codeTab, setCodeTab] = useState<"python" | "curl" | "javascript">("python");
   const [copied, setCopied] = useState(false);
   const { t } = useLanguage();
+
+  useEffect(() => {
+    if (!id) return;
+    getModel(id).then(setModel).finally(() => setLoading(false));
+  }, [id]);
+
+  if (loading) {
+    return <div className="text-center py-20"><p className="text-muted-foreground">Loading...</p></div>;
+  }
 
   if (!model) {
     return (
@@ -80,7 +91,14 @@ export default function ModelDetail() {
     );
   }
 
-  const metrics = mockEvalMetrics[model.projectId];
+  const metrics = {
+    accuracy: model.accuracy,
+    f1Score: model.f1Score,
+    precision: model.precision,
+    recall: model.recall,
+    rouge1: model.f1Score,
+    latencyMs: model.latencyMs,
+  };
 
   const handleCopy = (text: string) => {
     navigator.clipboard.writeText(text.replace("MODEL_NAME", model.name));
