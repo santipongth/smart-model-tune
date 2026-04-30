@@ -134,7 +134,6 @@ export const translations: Record<Language, Record<string, string>> = {
     "dataset.columnStats": "Column Statistics",
 
     "calc.samples": "samples",
-    "calc.credits": "credits",
 
     // Model Comparison
     "compare.title": "Model Comparison",
@@ -643,7 +642,6 @@ export const translations: Record<Language, Record<string, string>> = {
     "dataset.columnStats": "สถิติคอลัมน์",
 
     "calc.samples": "ตัวอย่าง",
-    "calc.credits": "เครดิต",
 
     // Model Comparison
     "compare.title": "เปรียบเทียบโมเดล",
