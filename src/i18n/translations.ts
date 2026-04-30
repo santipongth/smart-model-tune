@@ -12,7 +12,7 @@ export const translations: Record<Language, Record<string, string>> = {
     "nav.apiKeys": "API Keys",
     "nav.settings": "Settings",
     "nav.credits": "Credits",
-    "nav.plan": "Plan",
+    
     "nav.deployment": "Deployment",
     "nav.leaderboard": "Leaderboard",
 
@@ -526,7 +526,7 @@ export const translations: Record<Language, Record<string, string>> = {
     "nav.apiKeys": "API Keys",
     "nav.settings": "ตั้งค่า",
     "nav.credits": "เครดิต",
-    "nav.plan": "แผน",
+    
     "nav.deployment": "การใช้งาน",
     "nav.leaderboard": "ลีดเดอร์บอร์ด",
 
