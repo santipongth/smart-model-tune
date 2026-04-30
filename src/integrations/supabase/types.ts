@@ -14,6 +14,184 @@ export type Database = {
   }
   public: {
     Tables: {
+      api_call_events: {
+        Row: {
+          created_at: string
+          endpoint: string
+          id: string
+          latency_ms: number
+          status_code: number
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          endpoint: string
+          id?: string
+          latency_ms?: number
+          status_code?: number
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          endpoint?: string
+          id?: string
+          latency_ms?: number
+          status_code?: number
+          user_id?: string
+        }
+        Relationships: []
+      }
+      api_keys: {
+        Row: {
+          created_at: string
+          id: string
+          key_prefix: string
+          key_suffix: string
+          last_used_at: string | null
+          name: string
+          status: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          key_prefix: string
+          key_suffix?: string
+          last_used_at?: string | null
+          name: string
+          status?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          key_prefix?: string
+          key_suffix?: string
+          last_used_at?: string | null
+          name?: string
+          status?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      datasets: {
+        Row: {
+          columns: number
+          created_at: string
+          description: string
+          file_size: string
+          format: string
+          id: string
+          name: string
+          project_id: string | null
+          quality_score: number
+          rows: number
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          columns?: number
+          created_at?: string
+          description?: string
+          file_size?: string
+          format?: string
+          id?: string
+          name: string
+          project_id?: string | null
+          quality_score?: number
+          rows?: number
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          columns?: number
+          created_at?: string
+          description?: string
+          file_size?: string
+          format?: string
+          id?: string
+          name?: string
+          project_id?: string | null
+          quality_score?: number
+          rows?: number
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "datasets_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: false
+            referencedRelation: "projects"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      deployed_endpoints: {
+        Row: {
+          avg_latency_ms: number
+          burst_limit: number
+          created_at: string
+          endpoint_url: string
+          error_rate: number
+          id: string
+          model_id: string | null
+          model_name: string
+          project_name: string
+          rate_limit_per_min: number
+          requests_per_min: number
+          status: string
+          updated_at: string
+          uptime: number
+          user_id: string
+        }
+        Insert: {
+          avg_latency_ms?: number
+          burst_limit?: number
+          created_at?: string
+          endpoint_url: string
+          error_rate?: number
+          id?: string
+          model_id?: string | null
+          model_name: string
+          project_name?: string
+          rate_limit_per_min?: number
+          requests_per_min?: number
+          status?: string
+          updated_at?: string
+          uptime?: number
+          user_id: string
+        }
+        Update: {
+          avg_latency_ms?: number
+          burst_limit?: number
+          created_at?: string
+          endpoint_url?: string
+          error_rate?: number
+          id?: string
+          model_id?: string | null
+          model_name?: string
+          project_name?: string
+          rate_limit_per_min?: number
+          requests_per_min?: number
+          status?: string
+          updated_at?: string
+          uptime?: number
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "deployed_endpoints_model_id_fkey"
+            columns: ["model_id"]
+            isOneToOne: false
+            referencedRelation: "trained_models"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       profiles: {
         Row: {
           avatar_url: string | null
@@ -98,12 +276,77 @@ export type Database = {
         }
         Relationships: []
       }
+      trained_models: {
+        Row: {
+          accuracy: number
+          base_model: string
+          created_at: string
+          f1_score: number
+          file_size: string
+          format: string
+          id: string
+          latency_ms: number
+          name: string
+          precision: number
+          project_id: string | null
+          recall: number
+          status: string
+          task_type: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          accuracy?: number
+          base_model: string
+          created_at?: string
+          f1_score?: number
+          file_size?: string
+          format?: string
+          id?: string
+          latency_ms?: number
+          name: string
+          precision?: number
+          project_id?: string | null
+          recall?: number
+          status?: string
+          task_type: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          accuracy?: number
+          base_model?: string
+          created_at?: string
+          f1_score?: number
+          file_size?: string
+          format?: string
+          id?: string
+          latency_ms?: number
+          name?: string
+          precision?: number
+          project_id?: string | null
+          recall?: number
+          status?: string
+          task_type?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "trained_models_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: false
+            referencedRelation: "projects"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      seed_user_demo_data: { Args: { _user_id: string }; Returns: undefined }
     }
     Enums: {
       [_ in never]: never
