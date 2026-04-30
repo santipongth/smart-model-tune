@@ -586,6 +586,146 @@ export default function Templates() {
                     );
                   })()}
 
+                  {(() => {
+                    const examples = getExamplePrompts(preview);
+                    return (
+                      <div>
+                        <p className="text-xs font-medium text-muted-foreground mb-1">
+                          {t("templates.examplePrompts")}
+                        </p>
+                        <p className="text-[10px] text-muted-foreground mb-2">
+                          {t("templates.examplePromptsHint")}
+                        </p>
+                        <div className="space-y-2">
+                          {examples.map((ex, i) => (
+                            <div
+                              key={i}
+                              className="rounded-md border border-border overflow-hidden"
+                            >
+                              <div className="px-3 py-1.5 bg-muted/50 border-b border-border flex items-center gap-2">
+                                <Badge variant="outline" className="text-[9px] h-4 px-1.5">
+                                  {t("templates.exampleInput")}
+                                </Badge>
+                                <span className="text-[10px] text-muted-foreground">#{i + 1}</span>
+                              </div>
+                              <pre className="px-3 py-2 text-xs font-mono text-foreground whitespace-pre-wrap break-words">
+{ex.input}
+                              </pre>
+                              <div className="px-3 py-1.5 bg-primary/5 border-y border-border">
+                                <Badge
+                                  variant="outline"
+                                  className="text-[9px] h-4 px-1.5 bg-primary/10 text-primary border-primary/30"
+                                >
+                                  {t("templates.exampleOutput")}
+                                </Badge>
+                              </div>
+                              <pre className="px-3 py-2 text-xs font-mono text-foreground whitespace-pre-wrap break-words">
+{ex.output}
+                              </pre>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    );
+                  })()}
+
+                  {(() => {
+                    const dc = getDatasetConfig(preview);
+                    const pct = (n: number) => `${Math.round((n / dc.total) * 100)}%`;
+                    return (
+                      <div>
+                        <p className="text-xs font-medium text-muted-foreground mb-1.5">
+                          {t("templates.datasetConfig")}
+                        </p>
+                        <div className="rounded-md border border-border p-3 space-y-3">
+                          <div className="flex items-center justify-between text-xs">
+                            <span className="text-muted-foreground">
+                              {t("templates.totalSamples")}
+                            </span>
+                            <span className="font-mono font-semibold text-foreground">
+                              {dc.total.toLocaleString()}
+                            </span>
+                          </div>
+                          <div>
+                            <div className="flex h-2 w-full overflow-hidden rounded-full bg-muted">
+                              <div
+                                className="bg-primary"
+                                style={{ width: pct(dc.train) }}
+                              />
+                              <div
+                                className="bg-primary/60"
+                                style={{ width: pct(dc.val) }}
+                              />
+                              <div
+                                className="bg-primary/30"
+                                style={{ width: pct(dc.test) }}
+                              />
+                            </div>
+                            <div className="grid grid-cols-3 gap-2 mt-2 text-[11px]">
+                              <div>
+                                <div className="flex items-center gap-1.5">
+                                  <span className="h-2 w-2 rounded-full bg-primary" />
+                                  <span className="text-muted-foreground">
+                                    {t("templates.trainSplit")}
+                                  </span>
+                                </div>
+                                <p className="font-mono font-medium text-foreground mt-0.5">
+                                  {dc.train.toLocaleString()} ({pct(dc.train)})
+                                </p>
+                              </div>
+                              <div>
+                                <div className="flex items-center gap-1.5">
+                                  <span className="h-2 w-2 rounded-full bg-primary/60" />
+                                  <span className="text-muted-foreground">
+                                    {t("templates.valSplit")}
+                                  </span>
+                                </div>
+                                <p className="font-mono font-medium text-foreground mt-0.5">
+                                  {dc.val.toLocaleString()} ({pct(dc.val)})
+                                </p>
+                              </div>
+                              <div>
+                                <div className="flex items-center gap-1.5">
+                                  <span className="h-2 w-2 rounded-full bg-primary/30" />
+                                  <span className="text-muted-foreground">
+                                    {t("templates.testSplit")}
+                                  </span>
+                                </div>
+                                <p className="font-mono font-medium text-foreground mt-0.5">
+                                  {dc.test.toLocaleString()} ({pct(dc.test)})
+                                </p>
+                              </div>
+                            </div>
+                          </div>
+                          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-2 border-t border-border text-xs">
+                            <div>
+                              <p className="text-[10px] text-muted-foreground uppercase tracking-wide">
+                                {t("templates.dataFormat")}
+                              </p>
+                              <p className="font-mono text-foreground mt-0.5">{dc.format}</p>
+                            </div>
+                            <div>
+                              <p className="text-[10px] text-muted-foreground uppercase tracking-wide">
+                                {t("templates.tokenRange")}
+                              </p>
+                              <p className="font-mono text-foreground mt-0.5">
+                                {dc.minTokens} – {dc.maxTokens}
+                              </p>
+                            </div>
+                            <div className="sm:col-span-2">
+                              <p className="text-[10px] text-muted-foreground uppercase tracking-wide">
+                                {t("templates.augmentation")}
+                              </p>
+                              <p className="font-mono text-foreground mt-0.5">
+                                {dc.augmentation}
+                              </p>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    );
+                  })()}
+
                   <div className="p-3 rounded-md bg-primary/5 border border-primary/20 flex items-start gap-2">
                     <Coins className="h-4 w-4 text-primary mt-0.5 shrink-0" />
                     <div className="text-xs">
