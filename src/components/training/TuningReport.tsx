@@ -1,23 +1,17 @@
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Progress } from "@/components/ui/progress";
-import { Trophy, ArrowRight, TrendingUp, Beaker, CheckCircle2, Clock, Coins } from "lucide-react";
+import { Trophy, ArrowRight, Beaker, Clock, Coins } from "lucide-react";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, ScatterChart, Scatter } from "recharts";
 import type { TuningReport as TuningReportData } from "@/data/tuningReportMockData";
 import { useLanguage } from "@/i18n/LanguageContext";
-import { useToast } from "@/hooks/use-toast";
 
 interface TuningReportProps {
   report: TuningReportData;
-  onApply?: () => void;
-  applyLabel?: string;
 }
 
-export function TuningReport({ report, onApply, applyLabel }: TuningReportProps) {
+export function TuningReport({ report }: TuningReportProps) {
   const r = report;
   const { t } = useLanguage();
-  const { toast } = useToast();
 
   const completedTrials = r.trials.filter((x) => x.status === "completed");
   const sortedByAcc = [...completedTrials].sort((a, b) => a.trial - b.trial).map((x) => ({
@@ -36,14 +30,6 @@ export function TuningReport({ report, onApply, applyLabel }: TuningReportProps)
   const accGain = (r.best.accuracy - r.baseline.accuracy).toFixed(1);
   const f1Gain = (r.best.f1Score - r.baseline.f1Score).toFixed(1);
   const lossDrop = (r.baseline.valLoss - r.best.valLoss).toFixed(3);
-
-  const handleApply = () => {
-    if (onApply) {
-      onApply();
-    } else {
-      toast({ title: t("tuningReport.applied"), description: t("tuningReport.appliedDesc") });
-    }
-  };
 
   return (
     <div className="space-y-4">
