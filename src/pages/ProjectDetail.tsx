@@ -12,6 +12,7 @@ import { taskTypeLabels, baseModelLabels } from "@/data/mockData";
 import { mockVersionHistory } from "@/data/deploymentMockData";
 import { TuningReport } from "@/components/training/TuningReport";
 import { TuningHistory } from "@/components/training/TuningHistory";
+import { TrainingHistory } from "@/components/training/TrainingHistory";
 import { getLatestTuningRun } from "@/lib/tuningGenerator";
 import { useProject } from "@/hooks/useProjects";
 import { useTrainingSimulator } from "@/hooks/useTrainingSimulator";
@@ -117,6 +118,7 @@ export default function ProjectDetail() {
           <TabsTrigger value="overview">{t("projectDetail.overview")}</TabsTrigger>
           <TabsTrigger value="training">{t("projectDetail.training")}</TabsTrigger>
           <TabsTrigger value="evaluation">{t("projectDetail.evaluation")}</TabsTrigger>
+          <TabsTrigger value="history">{t("history.title")}</TabsTrigger>
           <TabsTrigger value="versions">{t("versions.title")}</TabsTrigger>
           <TabsTrigger value="tuning">{t("projectDetail.autoTuning")}</TabsTrigger>
         </TabsList>
@@ -250,6 +252,10 @@ export default function ProjectDetail() {
             </div>
           )}
         </TabsContent>
+        <TabsContent value="history" className="space-y-4 mt-4">
+          <TrainingHistory project={project} />
+        </TabsContent>
+
 
         <TabsContent value="versions" className="space-y-4 mt-4">
           {versions.length > 0 ? (

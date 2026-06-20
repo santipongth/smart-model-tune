@@ -257,6 +257,21 @@ export const translations: Record<Language, Record<string, string>> = {
     "training.epoch": "Epoch",
     "training.eta": "ETA",
 
+    // Training History
+    "history.title": "History",
+    "history.empty": "No training runs yet.",
+    "history.run": "Run",
+    "history.latest": "Latest",
+    "history.startedAt": "Started",
+    "history.finishedAt": "Finished",
+    "history.duration": "Duration",
+    "history.epochs": "Epochs",
+    "history.status.queued": "Queued",
+    "history.status.training": "Training",
+    "history.status.completed": "Completed",
+    "history.status.failed": "Failed",
+    "history.status.paused": "Paused",
+
     // Auth
     "auth.signInFailed": "Sign in failed",
     "auth.signUpFailed": "Sign up failed",
@@ -740,6 +755,21 @@ export const translations: Record<Language, Record<string, string>> = {
     "training.failedDesc": "กรุณาตรวจสอบ log การฝึกแล้วลองใหม่อีกครั้ง",
     "training.epoch": "Epoch",
     "training.eta": "เหลือ",
+
+    // Training History
+    "history.title": "ประวัติการเทรน",
+    "history.empty": "ยังไม่มีรอบการเทรน",
+    "history.run": "รอบที่",
+    "history.latest": "ล่าสุด",
+    "history.startedAt": "เริ่ม",
+    "history.finishedAt": "เสร็จ",
+    "history.duration": "ระยะเวลา",
+    "history.epochs": "Epochs",
+    "history.status.queued": "อยู่ในคิว",
+    "history.status.training": "กำลังเทรน",
+    "history.status.completed": "เสร็จสมบูรณ์",
+    "history.status.failed": "ล้มเหลว",
+    "history.status.paused": "หยุดชั่วคราว",
 
     // Auth
     "auth.signInFailed": "เข้าสู่ระบบไม่สำเร็จ",
