@@ -1,6 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { render, screen, waitFor } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
+import { HelmetProvider } from "react-helmet-async";
 import { LanguageProvider } from "@/i18n/LanguageContext";
 
 // --- Mocks must be set up before importing the component under test ---
@@ -46,11 +47,13 @@ import Projects from "./Projects";
 
 function renderPage() {
   return render(
-    <MemoryRouter>
-      <LanguageProvider>
-        <Projects />
-      </LanguageProvider>
-    </MemoryRouter>,
+    <HelmetProvider>
+      <MemoryRouter>
+        <LanguageProvider>
+          <Projects />
+        </LanguageProvider>
+      </MemoryRouter>
+    </HelmetProvider>,
   );
 }
 
