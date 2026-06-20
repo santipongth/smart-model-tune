@@ -1,0 +1,12 @@
+# TuneLab
+
+> Prompt-driven fine-tuning platform for small language models. Describe your task in natural language and TuneLab generates training data, tunes a compact SLM, and evaluates it automatically.
+
+## Pages
+
+- [Home](/): Overview of the TuneLab platform, features, use cases, and pricing.
+
+## Optional
+
+- [Login](/login): Sign in to your TuneLab workspace.
+- [Sign up](/signup): Create a new TuneLab account.
