@@ -60,7 +60,7 @@ const Login = () => {
             </div>
             <span className="font-semibold text-lg">TuneLab</span>
           </Link>
-          <CardTitle className="text-xl">{t("login.welcome")}</CardTitle>
+          <CardTitle asChild className="text-xl"><h1>{t("login.welcome")}</h1></CardTitle>
           <CardDescription>{t("login.subtitle")}</CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
