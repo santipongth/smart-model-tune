@@ -1,5 +1,5 @@
 import { useParams, Link } from "react-router-dom";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { PageTransition } from "@/components/motion";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -24,7 +24,7 @@ import {
   type ComputeBackendId,
 } from "@/lib/computeBackends";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { useState } from "react";
+
 import { useProject } from "@/hooks/useProjects";
 import { useTrainingSimulator } from "@/hooks/useTrainingSimulator";
 import type { ProjectStatus } from "@/types";
