@@ -13,7 +13,10 @@ import { mockVersionHistory } from "@/data/deploymentMockData";
 import { TuningReport } from "@/components/training/TuningReport";
 import { TuningHistory } from "@/components/training/TuningHistory";
 import { TrainingHistory } from "@/components/training/TrainingHistory";
+import { ExperimentsComparison } from "@/components/training/ExperimentsComparison";
+import { EvaluationSuite } from "@/components/evaluation/EvaluationSuite";
 import { getLatestTuningRun } from "@/lib/tuningGenerator";
+import { getProjectBackend } from "@/lib/computeBackends";
 import { useProject } from "@/hooks/useProjects";
 import { useTrainingSimulator } from "@/hooks/useTrainingSimulator";
 import type { ProjectStatus } from "@/types";
@@ -100,9 +103,12 @@ export default function ProjectDetail() {
           <Link to="/projects"><ArrowLeft className="h-4 w-4" /></Link>
         </Button>
         <div className="flex-1">
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-3 flex-wrap">
             <h1 className="text-xl font-bold text-foreground">{project.name}</h1>
             <Badge variant={statusVariant[project.status]}>{project.status}</Badge>
+            <Badge variant="outline" className="gap-1 text-[10px]">
+              {getProjectBackend(project.id).name}
+            </Badge>
           </div>
           <p className="text-sm text-muted-foreground mt-0.5">{project.description}</p>
         </div>
@@ -254,7 +260,9 @@ export default function ProjectDetail() {
         </TabsContent>
         <TabsContent value="history" className="space-y-4 mt-4">
           <TrainingHistory project={project} />
+          <ExperimentsComparison project={project} />
         </TabsContent>
+
 
 
         <TabsContent value="versions" className="space-y-4 mt-4">
