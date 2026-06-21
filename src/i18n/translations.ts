@@ -519,6 +519,17 @@ export const translations: Record<Language, Record<string, string>> = {
     "traces.rows": "rows",
     "traces.synthetic": "synthetic rows",
     "traces.add": "Add bundle",
+    "traces.regenerate": "Regenerate",
+    "traces.useInTraining": "Use in training",
+    "traces.useInTrainingToast": "Dataset queued — finish the wizard to start training",
+    "traces.quality": "Quality",
+    "traces.preview": "Preview rows",
+    "traces.showDetails": "Show details",
+    "traces.hideDetails": "Hide details",
+    "traces.qDiversity": "Diversity",
+    "traces.qDuplicates": "Duplicate rate",
+    "traces.qAvgPrompt": "Avg prompt",
+    "traces.qAvgResponse": "Avg response",
 
     // Compute Backends
     "backends.metaTitle": "Compute Backends · SLM Studio",
