@@ -1,11 +1,14 @@
 import { useEffect, useRef } from "react";
 import { updateProject } from "@/lib/projectsApi";
+import { getProjectBackend } from "@/lib/computeBackends";
 import type { Project, ProjectStatus } from "@/types";
 
 /**
  * Drives a realistic-looking progress simulation for prototype projects.
  * - When project status is `queued`, transitions to `training` after a short delay.
  * - While `training`, increments progress every `tickMs` until 100%, then marks `completed`.
+ * - Tick speed is modulated by the project's selected compute backend so faster
+ *   GPU clouds visibly advance faster than self-hosted defaults.
  * - All updates persist via projectsApi so they survive refresh and reflect across views.
  *
  * Real backend integration: replace this hook with WebSocket/SSE subscription
@@ -26,23 +29,25 @@ export function useTrainingSimulator(
     if (runningRef.current) return;
     runningRef.current = true;
 
+    const backend = getProjectBackend(project.id);
+    // Faster backend → shorter tick & larger step (capped)
+    const effectiveTick = Math.max(600, Math.round(tickMs / backend.speed));
+    const effectiveStep = Math.min(12, Math.round(stepPercent * backend.speed));
+
     let cancelled = false;
     let timer: ReturnType<typeof setTimeout> | null = null;
 
     const tick = async () => {
       if (cancelled) return;
       try {
-        // Read latest known state from closure-snapshot
         let current = project;
-        // After first iteration we re-read from the latest update via callback chain;
-        // to keep it simple, we mutate locally and persist.
         if (current.status === "queued") {
           const next = await updateProject(current.id, { status: "training", progress: 5 });
           if (cancelled) return;
           current = next;
           onUpdate(next);
         } else {
-          const newProgress = Math.min(100, current.progress + stepPercent + Math.floor(Math.random() * 3));
+          const newProgress = Math.min(100, current.progress + effectiveStep + Math.floor(Math.random() * 3));
           const newStatus: ProjectStatus = newProgress >= 100 ? "completed" : "training";
           const next = await updateProject(current.id, {
             progress: newProgress,
@@ -57,19 +62,18 @@ export function useTrainingSimulator(
           }
         }
       } catch {
-        // swallow transient errors; loop will retry on next tick
+        /* swallow transient errors; loop will retry on next tick */
       }
-      timer = setTimeout(tick, tickMs);
+      timer = setTimeout(tick, effectiveTick);
     };
 
-    timer = setTimeout(tick, tickMs);
+    timer = setTimeout(tick, effectiveTick);
 
     return () => {
       cancelled = true;
       runningRef.current = false;
       if (timer) clearTimeout(timer);
     };
-    // We intentionally depend only on identity + status to avoid restarting on every tick
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [project?.id, project?.status]);
 }

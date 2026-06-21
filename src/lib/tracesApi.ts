@@ -2,6 +2,8 @@
  * Traces → Synthetic Dataset pipeline (frontend prototype, localStorage backed).
  * Inspired by distil labs' "prompt + production traces → SLM" flow.
  */
+import { generateSynthetic, type SyntheticDataset } from "@/lib/syntheticDataset";
+
 const KEY = "slm.traces.v1";
 
 export interface TraceBundle {
@@ -12,6 +14,8 @@ export interface TraceBundle {
   sampleBytes: number;
   createdAt: string;
   systemPrompt?: string;
+  /** Raw uploaded/pasted text — used to seed real synthetic generation. */
+  rawText?: string;
   generatedDatasetId?: string;
   generatedDatasetSize?: number;
   generatedAt?: string;
@@ -46,11 +50,17 @@ export function addTraceBundle(input: {
   rowCount: number;
   sampleBytes: number;
   systemPrompt?: string;
+  rawText?: string;
 }): TraceBundle {
+  // Cap stored raw text to ~64KB so we don't blow out localStorage
+  const cappedRaw = input.rawText && input.rawText.length > 64_000
+    ? input.rawText.slice(0, 64_000)
+    : input.rawText;
   const bundle: TraceBundle = {
     id: `trace_${Date.now().toString(36)}_${Math.random().toString(36).slice(2, 8)}`,
     createdAt: new Date().toISOString(),
     ...input,
+    rawText: cappedRaw,
   };
   const all = read();
   all.push(bundle);
@@ -63,27 +73,32 @@ export function deleteTraceBundle(id: string) {
 }
 
 /**
- * Mock "synthetic data generation": multiplies trace rows ~20x and records the
- * resulting dataset id on the bundle. In production this would call a Teacher LLM.
+ * Generate a real synthetic dataset from the bundle's raw text and persist
+ * the dataset id + size + quality eval back onto the bundle.
  */
 export async function generateSyntheticDataset(
   bundleId: string,
-): Promise<{ datasetId: string; size: number }> {
-  await new Promise((r) => setTimeout(r, 1200));
+): Promise<SyntheticDataset> {
   const all = read();
   const idx = all.findIndex((b) => b.id === bundleId);
   if (idx < 0) throw new Error("Trace bundle not found");
   const bundle = all[idx];
-  const datasetId = `ds_${Date.now().toString(36)}`;
-  const size = Math.max(500, bundle.rowCount * 20);
+
+  const dataset = await generateSynthetic(bundleId, {
+    bundleName: bundle.name,
+    systemPrompt: bundle.systemPrompt,
+    sourceText: bundle.rawText,
+    multiplier: 20,
+  });
+
   all[idx] = {
     ...bundle,
-    generatedDatasetId: datasetId,
-    generatedDatasetSize: size,
+    generatedDatasetId: dataset.id,
+    generatedDatasetSize: dataset.size,
     generatedAt: new Date().toISOString(),
   };
   write(all);
-  return { datasetId, size };
+  return dataset;
 }
 
 /** Heuristic row counter for CSV/JSONL/text content. */
