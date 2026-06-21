@@ -257,6 +257,7 @@ export default function ProjectDetail() {
               {t("projectDetail.evalPending")}
             </div>
           )}
+          <EvaluationSuite project={project} />
         </TabsContent>
         <TabsContent value="history" className="space-y-4 mt-4">
           <TrainingHistory project={project} />
