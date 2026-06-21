@@ -232,6 +232,7 @@ export const translations: Record<Language, Record<string, string>> = {
     "newProject.launchTraining": "Launch Training",
     "newProject.launched": "Project Created",
     "newProject.launchFailed": "Could not create project",
+    "newProject.syntheticPrefilled": "Synthetic dataset attached — it will be used for this training run.",
 
     // Pre-flight validation
     "preflight.failedTitle": "Cannot start training",
@@ -519,6 +520,17 @@ export const translations: Record<Language, Record<string, string>> = {
     "traces.rows": "rows",
     "traces.synthetic": "synthetic rows",
     "traces.add": "Add bundle",
+    "traces.regenerate": "Regenerate",
+    "traces.useInTraining": "Use in training",
+    "traces.useInTrainingToast": "Dataset queued — finish the wizard to start training",
+    "traces.quality": "Quality",
+    "traces.preview": "Preview rows",
+    "traces.showDetails": "Show details",
+    "traces.hideDetails": "Hide details",
+    "traces.qDiversity": "Diversity",
+    "traces.qDuplicates": "Duplicate rate",
+    "traces.qAvgPrompt": "Avg prompt",
+    "traces.qAvgResponse": "Avg response",
 
     // Compute Backends
     "backends.metaTitle": "Compute Backends · SLM Studio",
@@ -534,6 +546,7 @@ export const translations: Record<Language, Record<string, string>> = {
     "backends.notice": "Prototype: selection is stored locally and shown as a badge on each project. Real provisioning will be wired through dstack.",
     "backends.addCustom": "Add custom backend",
     "backends.defaultSet": "Default backend updated",
+    "backends.projectSet": "Project backend updated",
 
     // Experiments comparison
     "experiments.title": "Experiments comparison",
@@ -550,6 +563,16 @@ export const translations: Record<Language, Record<string, string>> = {
     "eval.noFailures": "No failure clusters detected.",
     "eval.addToTraining": "Add to training set",
     "eval.addedToTraining": "Cluster queued for next training set",
+    "eval.runEvaluation": "Run evaluation",
+    "eval.running": "Running…",
+    "eval.runComplete": "Evaluation complete",
+    "eval.runFailed": "Evaluation failed",
+    "eval.latestRun": "Latest evaluation run",
+    "eval.score": "Score",
+    "eval.samples": "Samples",
+    "eval.passed": "Passed",
+    "eval.failed": "Failed",
+    "eval.summary": "Summary",
     "eval.prompt": "Prompt",
     "eval.expected": "Expected",
     "eval.actual": "Actual",
@@ -802,6 +825,7 @@ export const translations: Record<Language, Record<string, string>> = {
     "newProject.launchTraining": "เริ่มการฝึก",
     "newProject.launched": "สร้างโปรเจกต์แล้ว",
     "newProject.launchFailed": "สร้างโปรเจกต์ไม่สำเร็จ",
+    "newProject.syntheticPrefilled": "แนบชุดข้อมูลสังเคราะห์แล้ว ระบบจะใช้ในรอบเทรนนี้",
 
     // Pre-flight validation
     "preflight.failedTitle": "ไม่สามารถเริ่มการฝึกได้",
@@ -1088,6 +1112,17 @@ export const translations: Record<Language, Record<string, string>> = {
     "traces.rows": "แถว",
     "traces.synthetic": "แถวสังเคราะห์",
     "traces.add": "เพิ่ม bundle",
+    "traces.regenerate": "สร้างใหม่",
+    "traces.useInTraining": "ใช้ในการเทรน",
+    "traces.useInTrainingToast": "เตรียมชุดข้อมูลให้แล้ว — ทำขั้นตอนวิซาร์ดให้เสร็จเพื่อเริ่มเทรน",
+    "traces.quality": "คุณภาพ",
+    "traces.preview": "ตัวอย่างแถว",
+    "traces.showDetails": "ดูรายละเอียด",
+    "traces.hideDetails": "ซ่อนรายละเอียด",
+    "traces.qDiversity": "ความหลากหลาย",
+    "traces.qDuplicates": "อัตราซ้ำ",
+    "traces.qAvgPrompt": "Prompt เฉลี่ย",
+    "traces.qAvgResponse": "Response เฉลี่ย",
 
     // Compute Backends
     "backends.metaTitle": "Compute Backends · SLM Studio",
@@ -1103,6 +1138,7 @@ export const translations: Record<Language, Record<string, string>> = {
     "backends.notice": "ต้นแบบ: การเลือกถูกเก็บในเครื่องและแสดงเป็น badge บนโปรเจกต์ ในเวอร์ชันจริงจะเชื่อมผ่าน dstack",
     "backends.addCustom": "เพิ่ม backend เอง",
     "backends.defaultSet": "ตั้ง backend เริ่มต้นแล้ว",
+    "backends.projectSet": "ตั้ง backend ของโปรเจกต์แล้ว",
 
     // Experiments comparison
     "experiments.title": "เปรียบเทียบการทดลอง",
@@ -1119,6 +1155,16 @@ export const translations: Record<Language, Record<string, string>> = {
     "eval.noFailures": "ไม่พบกลุ่มความผิดพลาด",
     "eval.addToTraining": "เพิ่มเข้าชุดฝึก",
     "eval.addedToTraining": "เพิ่มเข้ารอบฝึกถัดไปแล้ว",
+    "eval.runEvaluation": "รันการประเมิน",
+    "eval.running": "กำลังรัน…",
+    "eval.runComplete": "ประเมินเสร็จแล้ว",
+    "eval.runFailed": "ประเมินไม่สำเร็จ",
+    "eval.latestRun": "การประเมินล่าสุด",
+    "eval.score": "คะแนน",
+    "eval.samples": "ตัวอย่าง",
+    "eval.passed": "ผ่าน",
+    "eval.failed": "ไม่ผ่าน",
+    "eval.summary": "สรุป",
     "eval.prompt": "Prompt",
     "eval.expected": "คาดหวัง",
     "eval.actual": "ผลจริง",

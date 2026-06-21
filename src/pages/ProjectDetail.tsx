@@ -1,5 +1,5 @@
 import { useParams, Link } from "react-router-dom";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { PageTransition } from "@/components/motion";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -16,7 +16,15 @@ import { TrainingHistory } from "@/components/training/TrainingHistory";
 import { ExperimentsComparison } from "@/components/training/ExperimentsComparison";
 import { EvaluationSuite } from "@/components/evaluation/EvaluationSuite";
 import { getLatestTuningRun } from "@/lib/tuningGenerator";
-import { getProjectBackend } from "@/lib/computeBackends";
+import {
+  computeBackends,
+  estimateJobCost,
+  getProjectBackend,
+  setProjectBackend,
+  type ComputeBackendId,
+} from "@/lib/computeBackends";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+
 import { useProject } from "@/hooks/useProjects";
 import { useTrainingSimulator } from "@/hooks/useTrainingSimulator";
 import type { ProjectStatus } from "@/types";
@@ -106,9 +114,7 @@ export default function ProjectDetail() {
           <div className="flex items-center gap-3 flex-wrap">
             <h1 className="text-xl font-bold text-foreground">{project.name}</h1>
             <Badge variant={statusVariant[project.status]}>{project.status}</Badge>
-            <Badge variant="outline" className="gap-1 text-[10px]">
-              {getProjectBackend(project.id).name}
-            </Badge>
+            <BackendSwitcher projectId={project.id} disabled={project.status === "training" || project.status === "queued"} />
           </div>
           <p className="text-sm text-muted-foreground mt-0.5">{project.description}</p>
         </div>
@@ -380,10 +386,12 @@ function LiveStatusBanner({ project }: { project: import("@/types").Project }) {
   const isQueued = status === "queued";
   const progress = isQueued ? 0 : project.progress;
   const currentEpoch = Math.max(1, Math.ceil((progress / 100) * project.epochs));
+  const backend = getProjectBackend(project.id);
   const remainingPct = Math.max(0, 100 - progress);
-  // Heuristic ETA: simulator advances ~5%/2s → ~24s/100% baseline scaled by epochs
-  const etaSeconds = Math.round((remainingPct / 5) * 2 * Math.max(1, project.epochs / 5));
+  // ETA scaled by backend speed (faster backends → smaller ETA)
+  const etaSeconds = Math.round(((remainingPct / 5) * 2 * Math.max(1, project.epochs / 5)) / backend.speed);
   const etaLabel = etaSeconds > 60 ? `~${Math.ceil(etaSeconds / 60)}m` : `~${etaSeconds}s`;
+  const cost = estimateJobCost(backend, progress, project.epochs);
 
   return (
     <Card className="border-primary/30 bg-primary/5">
@@ -400,8 +408,8 @@ function LiveStatusBanner({ project }: { project: import("@/types").Project }) {
             </p>
             <p className="text-xs text-muted-foreground">
               {isQueued
-                ? t("training.queuedDesc")
-                : `${t("training.epoch")} ${currentEpoch}/${project.epochs} · ${t("training.eta")} ${etaLabel}`}
+                ? `${t("training.queuedDesc")} · ${backend.name}`
+                : `${t("training.epoch")} ${currentEpoch}/${project.epochs} · ${t("training.eta")} ${etaLabel} · ${backend.name} (${backend.gpuSku})${cost > 0 ? ` · $${cost.toFixed(2)}` : ""}`}
             </p>
           </div>
           <span className="text-sm font-semibold text-foreground tabular-nums shrink-0">{progress}%</span>
@@ -409,5 +417,36 @@ function LiveStatusBanner({ project }: { project: import("@/types").Project }) {
         <Progress value={progress} className="h-2" />
       </CardContent>
     </Card>
+  );
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// BackendSwitcher — change the compute backend for a project. Disabled while
+// a job is in-flight so we don't yank the runtime out from under it.
+// ─────────────────────────────────────────────────────────────────────────────
+function BackendSwitcher({ projectId, disabled }: { projectId: string; disabled?: boolean }) {
+  const { t } = useLanguage();
+  const { toast } = useToast();
+  const [value, setValue] = useState<ComputeBackendId>(getProjectBackend(projectId).id);
+  const handleChange = (v: string) => {
+    const id = v as ComputeBackendId;
+    setValue(id);
+    setProjectBackend(projectId, id);
+    const b = computeBackends.find((x) => x.id === id)!;
+    toast({ title: t("backends.projectSet"), description: b.name });
+  };
+  return (
+    <Select value={value} onValueChange={handleChange} disabled={disabled}>
+      <SelectTrigger className="h-7 text-[11px] w-auto min-w-[140px] gap-1">
+        <SelectValue />
+      </SelectTrigger>
+      <SelectContent>
+        {computeBackends.map((b) => (
+          <SelectItem key={b.id} value={b.id} className="text-xs">
+            {b.name} · {b.gpuSku}
+          </SelectItem>
+        ))}
+      </SelectContent>
+    </Select>
   );
 }

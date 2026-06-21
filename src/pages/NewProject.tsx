@@ -13,6 +13,8 @@ import { useLanguage } from "@/i18n/LanguageContext";
 import { useToast } from "@/hooks/use-toast";
 import { createProject } from "@/lib/projectsApi";
 import { validatePreflight } from "@/lib/trainingValidation";
+import { readSyntheticPrefill, type SyntheticDataset } from "@/lib/syntheticDataset";
+import { X } from "lucide-react";
 
 export interface ProjectFormData {
   projectName: string;
@@ -42,6 +44,7 @@ export default function NewProject() {
   const [formData, setFormData] = useState<ProjectFormData>(initialFormData);
   const [showTemplates, setShowTemplates] = useState(false);
   const [launching, setLaunching] = useState(false);
+  const [syntheticDataset, setSyntheticDatasetState] = useState<SyntheticDataset | null>(null);
   const { t } = useLanguage();
   const { toast } = useToast();
   const navigate = useNavigate();
@@ -68,11 +71,16 @@ export default function NewProject() {
 
     setLaunching(true);
     try {
-      const datasetRows = Math.max(formData.files.length * 500, 100);
+      const datasetRows = syntheticDataset
+        ? syntheticDataset.size
+        : Math.max(formData.files.length * 500, 100);
       const tuned = autoTuneParams(datasetRows);
+      const description = syntheticDataset
+        ? `${formData.taskPrompt}\n\n[dataset] ${syntheticDataset.name} · ${syntheticDataset.size} rows · quality ${syntheticDataset.quality.score}/100`
+        : formData.taskPrompt;
       const created = await createProject({
         name: formData.projectName.trim() || formData.taskPrompt.slice(0, 60) || "Untitled Project",
-        description: formData.taskPrompt,
+        description,
         taskType: formData.taskType!,
         baseModel: formData.baseModel!,
         epochs: tuned.epochs,
@@ -107,6 +115,17 @@ export default function NewProject() {
       } catch {
         // ignore malformed prefill
       }
+    }
+    const ds = readSyntheticPrefill();
+    if (ds) {
+      setSyntheticDatasetState(ds);
+      setFormData((p) => ({
+        ...p,
+        projectName: p.projectName || ds.name,
+        taskPrompt:
+          p.taskPrompt ||
+          `Fine-tune on synthetic dataset generated from production traces: ${ds.name}`,
+      }));
     }
   }, []);
 
@@ -164,6 +183,32 @@ export default function NewProject() {
       </div>
 
       {showTemplates && <TemplateLibrary onSelect={handleTemplateSelect} />}
+
+      {syntheticDataset && (
+        <Card className="border-primary/30 bg-primary/5">
+          <CardContent className="p-4 flex items-start gap-3">
+            <Sparkles className="h-4 w-4 text-primary mt-0.5 shrink-0" />
+            <div className="flex-1 min-w-0">
+              <p className="text-sm font-medium text-foreground">
+                {t("newProject.syntheticPrefilled")}
+              </p>
+              <p className="text-xs text-muted-foreground mt-0.5">
+                {syntheticDataset.name} · {syntheticDataset.size} {t("traces.rows")} ·{" "}
+                {t("traces.quality")} {syntheticDataset.quality.score}/100
+              </p>
+            </div>
+            <Button
+              variant="ghost"
+              size="icon"
+              className="h-7 w-7 shrink-0"
+              onClick={() => setSyntheticDatasetState(null)}
+              aria-label={t("common.close")}
+            >
+              <X className="h-3.5 w-3.5" />
+            </Button>
+          </CardContent>
+        </Card>
+      )}
 
       <div className="flex items-center gap-1">
         {steps.map((step, i) => (
