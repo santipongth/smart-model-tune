@@ -13,6 +13,8 @@ import { useLanguage } from "@/i18n/LanguageContext";
 import { useToast } from "@/hooks/use-toast";
 import { createProject } from "@/lib/projectsApi";
 import { validatePreflight } from "@/lib/trainingValidation";
+import { readSyntheticPrefill, type SyntheticDataset } from "@/lib/syntheticDataset";
+import { Sparkles as SparklesIcon, X } from "lucide-react";
 
 export interface ProjectFormData {
   projectName: string;
