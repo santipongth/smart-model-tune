@@ -16,7 +16,15 @@ import { TrainingHistory } from "@/components/training/TrainingHistory";
 import { ExperimentsComparison } from "@/components/training/ExperimentsComparison";
 import { EvaluationSuite } from "@/components/evaluation/EvaluationSuite";
 import { getLatestTuningRun } from "@/lib/tuningGenerator";
-import { getProjectBackend } from "@/lib/computeBackends";
+import {
+  computeBackends,
+  estimateJobCost,
+  getProjectBackend,
+  setProjectBackend,
+  type ComputeBackendId,
+} from "@/lib/computeBackends";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { useState } from "react";
 import { useProject } from "@/hooks/useProjects";
 import { useTrainingSimulator } from "@/hooks/useTrainingSimulator";
 import type { ProjectStatus } from "@/types";
