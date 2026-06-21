@@ -232,6 +232,7 @@ export const translations: Record<Language, Record<string, string>> = {
     "newProject.launchTraining": "Launch Training",
     "newProject.launched": "Project Created",
     "newProject.launchFailed": "Could not create project",
+    "newProject.syntheticPrefilled": "Synthetic dataset attached — it will be used for this training run.",
 
     // Pre-flight validation
     "preflight.failedTitle": "Cannot start training",
@@ -545,6 +546,7 @@ export const translations: Record<Language, Record<string, string>> = {
     "backends.notice": "Prototype: selection is stored locally and shown as a badge on each project. Real provisioning will be wired through dstack.",
     "backends.addCustom": "Add custom backend",
     "backends.defaultSet": "Default backend updated",
+    "backends.projectSet": "Project backend updated",
 
     // Experiments comparison
     "experiments.title": "Experiments comparison",
@@ -561,6 +563,16 @@ export const translations: Record<Language, Record<string, string>> = {
     "eval.noFailures": "No failure clusters detected.",
     "eval.addToTraining": "Add to training set",
     "eval.addedToTraining": "Cluster queued for next training set",
+    "eval.runEvaluation": "Run evaluation",
+    "eval.running": "Running…",
+    "eval.runComplete": "Evaluation complete",
+    "eval.runFailed": "Evaluation failed",
+    "eval.latestRun": "Latest evaluation run",
+    "eval.score": "Score",
+    "eval.samples": "Samples",
+    "eval.passed": "Passed",
+    "eval.failed": "Failed",
+    "eval.summary": "Summary",
     "eval.prompt": "Prompt",
     "eval.expected": "Expected",
     "eval.actual": "Actual",
