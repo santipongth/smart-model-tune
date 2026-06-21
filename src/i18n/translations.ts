@@ -15,6 +15,8 @@ export const translations: Record<Language, Record<string, string>> = {
     
     "nav.deployment": "Deployment",
     "nav.leaderboard": "Leaderboard",
+    "nav.traces": "Traces",
+    "nav.backends": "Backends",
 
     // Dashboard
     "dashboard.title": "Dashboard",
@@ -494,6 +496,75 @@ export const translations: Record<Language, Record<string, string>> = {
     // Deployment extras
     "deploy.endpointsTab": "Endpoints",
 
+    // Traces
+    "traces.metaTitle": "Traces · SLM Studio",
+    "traces.metaDesc": "Upload production traces to bootstrap a synthetic training dataset.",
+    "traces.title": "Production Traces",
+    "traces.subtitle": "Bring real prompts and responses from your app — we'll synthesize a fine-tuning dataset.",
+    "traces.uploadTitle": "Upload file",
+    "traces.uploadHint": "JSONL, CSV, or plain text. One example per line.",
+    "traces.pasteTitle": "Paste rows",
+    "traces.namePlaceholder": "Bundle name (optional)",
+    "traces.pastePlaceholder": "Paste prompt / response pairs, one per line",
+    "traces.systemPromptTitle": "System prompt (optional)",
+    "traces.systemPromptPlaceholder": "The system prompt your production agent uses.",
+    "traces.bundlesTitle": "Trace bundles",
+    "traces.empty": "No trace bundles yet. Upload or paste examples to begin.",
+    "traces.uploaded": "Traces uploaded",
+    "traces.added": "Traces added",
+    "traces.generated": "Synthetic dataset generated",
+    "traces.generateFailed": "Generation failed",
+    "traces.generate": "Generate dataset",
+    "traces.generatedBadge": "Dataset ready",
+    "traces.rows": "rows",
+    "traces.synthetic": "synthetic rows",
+    "traces.add": "Add bundle",
+
+    // Compute Backends
+    "backends.metaTitle": "Compute Backends · SLM Studio",
+    "backends.metaDesc": "Pick where your training jobs run — managed cloud, on-prem, or Kubernetes.",
+    "backends.title": "Compute Backends",
+    "backends.subtitle": "Route training runs to managed clouds, Kubernetes, or on-prem GPUs.",
+    "backends.vendor": "Vendor",
+    "backends.gpu": "GPU",
+    "backends.price": "Price",
+    "backends.included": "Included",
+    "backends.managed": "Managed",
+    "backends.selfHosted": "Self-hosted",
+    "backends.notice": "Prototype: selection is stored locally and shown as a badge on each project. Real provisioning will be wired through dstack.",
+    "backends.addCustom": "Add custom backend",
+    "backends.defaultSet": "Default backend updated",
+
+    // Experiments comparison
+    "experiments.title": "Experiments comparison",
+    "experiments.status": "Status",
+    "experiments.finalLoss": "Final loss",
+    "experiments.accuracy": "Accuracy",
+    "experiments.actions": "Actions",
+    "experiments.promote": "Promote",
+    "experiments.promoted": "Run promoted to version",
+
+    // Evaluation suite
+    "eval.judgeTitle": "Judge",
+    "eval.failureClusters": "Recurring failure patterns",
+    "eval.noFailures": "No failure clusters detected.",
+    "eval.addToTraining": "Add to training set",
+    "eval.addedToTraining": "Cluster queued for next training set",
+    "eval.prompt": "Prompt",
+    "eval.expected": "Expected",
+    "eval.actual": "Actual",
+
+    // Agent panel
+    "agent.title": "SLM Agent",
+    "agent.open": "Open SLM Agent",
+    "agent.subtitle": "Tell me what you want — I'll suggest the next steps.",
+    "agent.placeholder": "e.g. train an extraction model on Phi-3",
+    "agent.send": "Send",
+
+    // Common
+    "common.close": "Close",
+    "common.delete": "Delete",
+
     // 404
     "notFound.title": "Page not found",
     "notFound.description": "We couldn't find the page",
@@ -514,6 +585,8 @@ export const translations: Record<Language, Record<string, string>> = {
     
     "nav.deployment": "การใช้งาน",
     "nav.leaderboard": "ลีดเดอร์บอร์ด",
+    "nav.traces": "เทรซ",
+    "nav.backends": "คอมพิวต์",
 
     // Dashboard
     "dashboard.title": "แดชบอร์ด",
