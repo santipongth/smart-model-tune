@@ -11,6 +11,8 @@ import {
   Trophy,
   LayoutTemplate,
   LogOut,
+  Database,
+  Cpu,
 } from "lucide-react";
 import { NavLink } from "@/components/NavLink";
 import {
@@ -35,10 +37,12 @@ const navItems = [
   { titleKey: "nav.dashboard", url: "/dashboard", icon: LayoutDashboard },
   { titleKey: "nav.projects", url: "/projects", icon: FolderKanban },
   { titleKey: "nav.templates", url: "/templates", icon: LayoutTemplate },
+  { titleKey: "nav.traces", url: "/traces", icon: Database },
   { titleKey: "nav.models", url: "/models", icon: Box },
   { titleKey: "nav.playground", url: "/playground", icon: MessageSquare },
   { titleKey: "nav.analytics", url: "/analytics", icon: BarChart3 },
   { titleKey: "nav.deployment", url: "/deployment", icon: Rocket },
+  { titleKey: "nav.backends", url: "/backends", icon: Cpu },
   { titleKey: "nav.leaderboard", url: "/leaderboard", icon: Trophy },
   { titleKey: "nav.apiKeys", url: "/api-keys", icon: Key },
   { titleKey: "nav.settings", url: "/settings", icon: Settings },
