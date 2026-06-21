@@ -1065,6 +1065,75 @@ export const translations: Record<Language, Record<string, string>> = {
     // Deployment extras
     "deploy.endpointsTab": "Endpoints",
 
+    // Traces
+    "traces.metaTitle": "เทรซ · SLM Studio",
+    "traces.metaDesc": "อัปโหลดเทรซจากการใช้งานจริงเพื่อสร้างชุดข้อมูลฝึกสังเคราะห์",
+    "traces.title": "เทรซจากการใช้งานจริง",
+    "traces.subtitle": "นำ prompt และคำตอบจริงเข้ามา ระบบจะสังเคราะห์ชุดข้อมูล fine-tune ให้",
+    "traces.uploadTitle": "อัปโหลดไฟล์",
+    "traces.uploadHint": "รองรับ JSONL, CSV หรือข้อความ หนึ่งตัวอย่างต่อหนึ่งบรรทัด",
+    "traces.pasteTitle": "วางข้อมูล",
+    "traces.namePlaceholder": "ชื่อ bundle (ไม่บังคับ)",
+    "traces.pastePlaceholder": "วางคู่ prompt/คำตอบ หนึ่งบรรทัดต่อรายการ",
+    "traces.systemPromptTitle": "System prompt (ไม่บังคับ)",
+    "traces.systemPromptPlaceholder": "System prompt ที่ agent ของคุณใช้งานจริง",
+    "traces.bundlesTitle": "Trace bundles",
+    "traces.empty": "ยังไม่มี bundle อัปโหลดหรือวางตัวอย่างเพื่อเริ่ม",
+    "traces.uploaded": "อัปโหลดเทรซแล้ว",
+    "traces.added": "เพิ่มเทรซแล้ว",
+    "traces.generated": "สร้างชุดข้อมูลสังเคราะห์สำเร็จ",
+    "traces.generateFailed": "สร้างไม่สำเร็จ",
+    "traces.generate": "สร้างชุดข้อมูล",
+    "traces.generatedBadge": "ชุดข้อมูลพร้อมใช้",
+    "traces.rows": "แถว",
+    "traces.synthetic": "แถวสังเคราะห์",
+    "traces.add": "เพิ่ม bundle",
+
+    // Compute Backends
+    "backends.metaTitle": "Compute Backends · SLM Studio",
+    "backends.metaDesc": "เลือกที่รันงานฝึก — คลาวด์, on-prem หรือ Kubernetes",
+    "backends.title": "Compute Backends",
+    "backends.subtitle": "ส่งงานฝึกไปยังคลาวด์ที่จัดการให้, Kubernetes หรือ GPU on-prem",
+    "backends.vendor": "ผู้ให้บริการ",
+    "backends.gpu": "GPU",
+    "backends.price": "ราคา",
+    "backends.included": "รวมในแพ็กเกจ",
+    "backends.managed": "จัดการให้",
+    "backends.selfHosted": "Self-hosted",
+    "backends.notice": "ต้นแบบ: การเลือกถูกเก็บในเครื่องและแสดงเป็น badge บนโปรเจกต์ ในเวอร์ชันจริงจะเชื่อมผ่าน dstack",
+    "backends.addCustom": "เพิ่ม backend เอง",
+    "backends.defaultSet": "ตั้ง backend เริ่มต้นแล้ว",
+
+    // Experiments comparison
+    "experiments.title": "เปรียบเทียบการทดลอง",
+    "experiments.status": "สถานะ",
+    "experiments.finalLoss": "Loss สุดท้าย",
+    "experiments.accuracy": "Accuracy",
+    "experiments.actions": "การกระทำ",
+    "experiments.promote": "เลื่อนขั้น",
+    "experiments.promoted": "เลื่อนรอบนี้เป็นเวอร์ชันแล้ว",
+
+    // Evaluation suite
+    "eval.judgeTitle": "ผู้ตัดสิน",
+    "eval.failureClusters": "รูปแบบความผิดพลาดที่พบบ่อย",
+    "eval.noFailures": "ไม่พบกลุ่มความผิดพลาด",
+    "eval.addToTraining": "เพิ่มเข้าชุดฝึก",
+    "eval.addedToTraining": "เพิ่มเข้ารอบฝึกถัดไปแล้ว",
+    "eval.prompt": "Prompt",
+    "eval.expected": "คาดหวัง",
+    "eval.actual": "ผลจริง",
+
+    // Agent panel
+    "agent.title": "SLM Agent",
+    "agent.open": "เปิด SLM Agent",
+    "agent.subtitle": "บอกสิ่งที่ต้องการ ระบบจะเสนอขั้นตอนถัดไป",
+    "agent.placeholder": "เช่น train โมเดล extraction ด้วย Phi-3",
+    "agent.send": "ส่ง",
+
+    // Common
+    "common.close": "ปิด",
+    "common.delete": "ลบ",
+
     // 404
     "notFound.title": "ไม่พบหน้านี้",
     "notFound.description": "เราไม่พบหน้า",
