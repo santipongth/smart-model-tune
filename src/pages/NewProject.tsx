@@ -44,6 +44,7 @@ export default function NewProject() {
   const [formData, setFormData] = useState<ProjectFormData>(initialFormData);
   const [showTemplates, setShowTemplates] = useState(false);
   const [launching, setLaunching] = useState(false);
+  const [syntheticDataset, setSyntheticDatasetState] = useState<SyntheticDataset | null>(null);
   const { t } = useLanguage();
   const { toast } = useToast();
   const navigate = useNavigate();
@@ -70,11 +71,16 @@ export default function NewProject() {
 
     setLaunching(true);
     try {
-      const datasetRows = Math.max(formData.files.length * 500, 100);
+      const datasetRows = syntheticDataset
+        ? syntheticDataset.size
+        : Math.max(formData.files.length * 500, 100);
       const tuned = autoTuneParams(datasetRows);
+      const description = syntheticDataset
+        ? `${formData.taskPrompt}\n\n[dataset] ${syntheticDataset.name} · ${syntheticDataset.size} rows · quality ${syntheticDataset.quality.score}/100`
+        : formData.taskPrompt;
       const created = await createProject({
         name: formData.projectName.trim() || formData.taskPrompt.slice(0, 60) || "Untitled Project",
-        description: formData.taskPrompt,
+        description,
         taskType: formData.taskType!,
         baseModel: formData.baseModel!,
         epochs: tuned.epochs,
@@ -109,6 +115,17 @@ export default function NewProject() {
       } catch {
         // ignore malformed prefill
       }
+    }
+    const ds = readSyntheticPrefill();
+    if (ds) {
+      setSyntheticDatasetState(ds);
+      setFormData((p) => ({
+        ...p,
+        projectName: p.projectName || ds.name,
+        taskPrompt:
+          p.taskPrompt ||
+          `Fine-tune on synthetic dataset generated from production traces: ${ds.name}`,
+      }));
     }
   }, []);
 
