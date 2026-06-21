@@ -184,6 +184,32 @@ export default function NewProject() {
 
       {showTemplates && <TemplateLibrary onSelect={handleTemplateSelect} />}
 
+      {syntheticDataset && (
+        <Card className="border-primary/30 bg-primary/5">
+          <CardContent className="p-4 flex items-start gap-3">
+            <Sparkles className="h-4 w-4 text-primary mt-0.5 shrink-0" />
+            <div className="flex-1 min-w-0">
+              <p className="text-sm font-medium text-foreground">
+                {t("newProject.syntheticPrefilled")}
+              </p>
+              <p className="text-xs text-muted-foreground mt-0.5">
+                {syntheticDataset.name} · {syntheticDataset.size} {t("traces.rows")} ·{" "}
+                {t("traces.quality")} {syntheticDataset.quality.score}/100
+              </p>
+            </div>
+            <Button
+              variant="ghost"
+              size="icon"
+              className="h-7 w-7 shrink-0"
+              onClick={() => setSyntheticDatasetState(null)}
+              aria-label={t("common.close")}
+            >
+              <X className="h-3.5 w-3.5" />
+            </Button>
+          </CardContent>
+        </Card>
+      )}
+
       <div className="flex items-center gap-1">
         {steps.map((step, i) => (
           <div key={step.id} className="flex items-center flex-1">
