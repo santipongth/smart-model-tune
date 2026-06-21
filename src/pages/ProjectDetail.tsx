@@ -114,9 +114,7 @@ export default function ProjectDetail() {
           <div className="flex items-center gap-3 flex-wrap">
             <h1 className="text-xl font-bold text-foreground">{project.name}</h1>
             <Badge variant={statusVariant[project.status]}>{project.status}</Badge>
-            <Badge variant="outline" className="gap-1 text-[10px]">
-              {getProjectBackend(project.id).name}
-            </Badge>
+            <BackendSwitcher projectId={project.id} disabled={project.status === "training" || project.status === "queued"} />
           </div>
           <p className="text-sm text-muted-foreground mt-0.5">{project.description}</p>
         </div>
