@@ -7,6 +7,7 @@ import { NotificationCenter } from "@/components/NotificationCenter";
 import { CommandPalette } from "@/components/CommandPalette";
 import { LanguageSwitcher } from "@/components/LanguageSwitcher";
 import { OnboardingTour } from "@/components/OnboardingTour";
+import { AgentPanel } from "@/components/agent/AgentPanel";
 
 function AnimatedOutlet() {
   const location = useLocation();
@@ -47,6 +48,7 @@ export default function DashboardLayout() {
           <main className="flex-1 p-6 overflow-auto">
             <AnimatedOutlet />
           </main>
+          <AgentPanel />
         </div>
       </div>
     </SidebarProvider>

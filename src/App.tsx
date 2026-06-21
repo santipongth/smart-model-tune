@@ -27,6 +27,8 @@ import Deployment from "./pages/Deployment";
 import Leaderboard from "./pages/Leaderboard";
 import Templates from "./pages/Templates";
 import DatasetInsights from "./pages/DatasetInsights";
+import Traces from "./pages/Traces";
+import Backends from "./pages/Backends";
 
 const queryClient = new QueryClient();
 
@@ -58,6 +60,8 @@ const App = () => (
                   <Route path="/deployment" element={<Deployment />} />
                   <Route path="/leaderboard" element={<Leaderboard />} />
                   <Route path="/templates" element={<Templates />} />
+                  <Route path="/traces" element={<Traces />} />
+                  <Route path="/backends" element={<Backends />} />
                   <Route path="/settings" element={<Settings />} />
                   <Route path="/api-keys" element={<Settings />} />
                 </Route>
