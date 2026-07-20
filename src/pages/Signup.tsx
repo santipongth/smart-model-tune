@@ -62,7 +62,7 @@ const Signup = () => {
             </div>
             <span className="font-semibold text-lg">TuneLab</span>
           </Link>
-          <h1 className="text-xl font-semibold leading-none tracking-tight">{t("signup.title")}</h1>
+          <CardTitle className="text-xl">{t("signup.title")}</CardTitle>
           <CardDescription>{t("signup.subtitle")}</CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">

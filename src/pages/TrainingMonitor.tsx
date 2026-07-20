@@ -17,12 +17,26 @@ import { TrainingMonitorSkeleton } from "@/components/skeletons/TrainingMonitorS
 import { DiagnosticPanel } from "@/components/training/DiagnosticPanel";
 import { useLanguage } from "@/i18n/LanguageContext";
 import { useProject } from "@/hooks/useProjects";
+import { useTrainingWebSocket } from "@/hooks/useTrainingWebSocket";
+import { getEngineMeta } from "@/lib/engineStore";
 
 export default function TrainingMonitor() {
   const { id } = useParams<{ id: string }>();
   const { project } = useProject(id);
   const [loading, setLoading] = useState(true);
   const { t } = useLanguage();
+
+  const engineMeta = id ? getEngineMeta(id) : null;
+  const { latestProgress } = useTrainingWebSocket(
+    project?.status === "training" ? (engineMeta?.jobId ?? null) : null,
+  );
+
+  // The API does not yet expose historical loss points; only live WebSocket values are real.
+  const lossCurveData = mockLossCurve;
+  const currentTrainLoss = latestProgress?.train_loss
+    ?? 0.485;
+  const currentValLoss = latestProgress?.eval_loss
+    ?? 0.471;
 
   useEffect(() => {
     const timer = setTimeout(() => setLoading(false), 1500);
@@ -64,8 +78,8 @@ export default function TrainingMonitor() {
         {[
           { label: t("training.baseModel"), value: baseModelLabels[project.baseModel], icon: Cpu },
           { label: t("training.taskType"), value: taskTypeLabels[project.taskType], icon: Database },
-          { label: t("training.epochProgress"), value: isTraining ? "5 / 8" : `${project.epochs} / ${project.epochs}`, icon: Gauge },
-          { label: t("training.elapsedTime"), value: isTraining ? "56m 19s" : "4h 52m", icon: Clock },
+          { label: t("training.epochProgress"), value: latestProgress ? `${Math.round(latestProgress.epoch)} / ${latestProgress.epochs_total}` : isTraining ? "… / …" : `${project.epochs} / ${project.epochs}`, icon: Gauge },
+          { label: t("training.elapsedTime"), value: isTraining ? "Live" : "Done", icon: Clock },
         ].map((s) => (
           <StaggerItem key={s.label}>
             <Card>
@@ -123,13 +137,13 @@ export default function TrainingMonitor() {
               <div className="flex items-center justify-between">
                 <CardTitle className="text-sm">{t("training.lossCurve")}</CardTitle>
                 <div className="flex gap-3 text-[10px] text-muted-foreground">
-                  <span>Current train loss: <span className="font-bold text-foreground">0.485</span></span>
-                  <span>Current val loss: <span className="font-bold text-foreground">0.471</span></span>
+                  <span>Current train loss: <span className="font-bold text-foreground">{currentTrainLoss.toFixed(3)}</span></span>
+                  <span>Current val loss: <span className="font-bold text-foreground">{currentValLoss.toFixed(3)}</span></span>
                 </div>
               </div>
             </CardHeader>
             <CardContent>
-              <LossCurveChart data={mockLossCurve} />
+              <LossCurveChart data={lossCurveData} />
             </CardContent>
           </Card>
         </TabsContent>

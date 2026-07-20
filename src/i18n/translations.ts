@@ -15,8 +15,6 @@ export const translations: Record<Language, Record<string, string>> = {
     
     "nav.deployment": "Deployment",
     "nav.leaderboard": "Leaderboard",
-    "nav.traces": "Traces",
-    "nav.backends": "Backends",
 
     // Dashboard
     "dashboard.title": "Dashboard",
@@ -232,7 +230,6 @@ export const translations: Record<Language, Record<string, string>> = {
     "newProject.launchTraining": "Launch Training",
     "newProject.launched": "Project Created",
     "newProject.launchFailed": "Could not create project",
-    "newProject.syntheticPrefilled": "Synthetic dataset attached — it will be used for this training run.",
 
     // Pre-flight validation
     "preflight.failedTitle": "Cannot start training",
@@ -259,21 +256,6 @@ export const translations: Record<Language, Record<string, string>> = {
     "training.failedDesc": "Check the training logs and try again.",
     "training.epoch": "Epoch",
     "training.eta": "ETA",
-
-    // Training History
-    "history.title": "History",
-    "history.empty": "No training runs yet.",
-    "history.run": "Run",
-    "history.latest": "Latest",
-    "history.startedAt": "Started",
-    "history.finishedAt": "Finished",
-    "history.duration": "Duration",
-    "history.epochs": "Epochs",
-    "history.status.queued": "Queued",
-    "history.status.training": "Training",
-    "history.status.completed": "Completed",
-    "history.status.failed": "Failed",
-    "history.status.paused": "Paused",
 
     // Auth
     "auth.signInFailed": "Sign in failed",
@@ -497,97 +479,6 @@ export const translations: Record<Language, Record<string, string>> = {
     // Deployment extras
     "deploy.endpointsTab": "Endpoints",
 
-    // Traces
-    "traces.metaTitle": "Traces · SLM Studio",
-    "traces.metaDesc": "Upload production traces to bootstrap a synthetic training dataset.",
-    "traces.title": "Production Traces",
-    "traces.subtitle": "Bring real prompts and responses from your app — we'll synthesize a fine-tuning dataset.",
-    "traces.uploadTitle": "Upload file",
-    "traces.uploadHint": "JSONL, CSV, or plain text. One example per line.",
-    "traces.pasteTitle": "Paste rows",
-    "traces.namePlaceholder": "Bundle name (optional)",
-    "traces.pastePlaceholder": "Paste prompt / response pairs, one per line",
-    "traces.systemPromptTitle": "System prompt (optional)",
-    "traces.systemPromptPlaceholder": "The system prompt your production agent uses.",
-    "traces.bundlesTitle": "Trace bundles",
-    "traces.empty": "No trace bundles yet. Upload or paste examples to begin.",
-    "traces.uploaded": "Traces uploaded",
-    "traces.added": "Traces added",
-    "traces.generated": "Synthetic dataset generated",
-    "traces.generateFailed": "Generation failed",
-    "traces.generate": "Generate dataset",
-    "traces.generatedBadge": "Dataset ready",
-    "traces.rows": "rows",
-    "traces.synthetic": "synthetic rows",
-    "traces.add": "Add bundle",
-    "traces.regenerate": "Regenerate",
-    "traces.useInTraining": "Use in training",
-    "traces.useInTrainingToast": "Dataset queued — finish the wizard to start training",
-    "traces.quality": "Quality",
-    "traces.preview": "Preview rows",
-    "traces.showDetails": "Show details",
-    "traces.hideDetails": "Hide details",
-    "traces.qDiversity": "Diversity",
-    "traces.qDuplicates": "Duplicate rate",
-    "traces.qAvgPrompt": "Avg prompt",
-    "traces.qAvgResponse": "Avg response",
-
-    // Compute Backends
-    "backends.metaTitle": "Compute Backends · SLM Studio",
-    "backends.metaDesc": "Pick where your training jobs run — managed cloud, on-prem, or Kubernetes.",
-    "backends.title": "Compute Backends",
-    "backends.subtitle": "Route training runs to managed clouds, Kubernetes, or on-prem GPUs.",
-    "backends.vendor": "Vendor",
-    "backends.gpu": "GPU",
-    "backends.price": "Price",
-    "backends.included": "Included",
-    "backends.managed": "Managed",
-    "backends.selfHosted": "Self-hosted",
-    "backends.notice": "Prototype: selection is stored locally and shown as a badge on each project. Real provisioning will be wired through dstack.",
-    "backends.addCustom": "Add custom backend",
-    "backends.defaultSet": "Default backend updated",
-    "backends.projectSet": "Project backend updated",
-
-    // Experiments comparison
-    "experiments.title": "Experiments comparison",
-    "experiments.status": "Status",
-    "experiments.finalLoss": "Final loss",
-    "experiments.accuracy": "Accuracy",
-    "experiments.actions": "Actions",
-    "experiments.promote": "Promote",
-    "experiments.promoted": "Run promoted to version",
-
-    // Evaluation suite
-    "eval.judgeTitle": "Judge",
-    "eval.failureClusters": "Recurring failure patterns",
-    "eval.noFailures": "No failure clusters detected.",
-    "eval.addToTraining": "Add to training set",
-    "eval.addedToTraining": "Cluster queued for next training set",
-    "eval.runEvaluation": "Run evaluation",
-    "eval.running": "Running…",
-    "eval.runComplete": "Evaluation complete",
-    "eval.runFailed": "Evaluation failed",
-    "eval.latestRun": "Latest evaluation run",
-    "eval.score": "Score",
-    "eval.samples": "Samples",
-    "eval.passed": "Passed",
-    "eval.failed": "Failed",
-    "eval.summary": "Summary",
-    "eval.prompt": "Prompt",
-    "eval.expected": "Expected",
-    "eval.actual": "Actual",
-
-    // Agent panel
-    "agent.title": "SLM Agent",
-    "agent.open": "Open SLM Agent",
-    "agent.subtitle": "Tell me what you want — I'll suggest the next steps.",
-    "agent.placeholder": "e.g. train an extraction model on Phi-3",
-    "agent.send": "Send",
-
-    // Common
-    "common.close": "Close",
-    "common.delete": "Delete",
-
     // 404
     "notFound.title": "Page not found",
     "notFound.description": "We couldn't find the page",
@@ -608,8 +499,6 @@ export const translations: Record<Language, Record<string, string>> = {
     
     "nav.deployment": "การใช้งาน",
     "nav.leaderboard": "ลีดเดอร์บอร์ด",
-    "nav.traces": "เทรซ",
-    "nav.backends": "คอมพิวต์",
 
     // Dashboard
     "dashboard.title": "แดชบอร์ด",
@@ -825,7 +714,6 @@ export const translations: Record<Language, Record<string, string>> = {
     "newProject.launchTraining": "เริ่มการฝึก",
     "newProject.launched": "สร้างโปรเจกต์แล้ว",
     "newProject.launchFailed": "สร้างโปรเจกต์ไม่สำเร็จ",
-    "newProject.syntheticPrefilled": "แนบชุดข้อมูลสังเคราะห์แล้ว ระบบจะใช้ในรอบเทรนนี้",
 
     // Pre-flight validation
     "preflight.failedTitle": "ไม่สามารถเริ่มการฝึกได้",
@@ -852,21 +740,6 @@ export const translations: Record<Language, Record<string, string>> = {
     "training.failedDesc": "กรุณาตรวจสอบ log การฝึกแล้วลองใหม่อีกครั้ง",
     "training.epoch": "Epoch",
     "training.eta": "เหลือ",
-
-    // Training History
-    "history.title": "ประวัติการเทรน",
-    "history.empty": "ยังไม่มีรอบการเทรน",
-    "history.run": "รอบที่",
-    "history.latest": "ล่าสุด",
-    "history.startedAt": "เริ่ม",
-    "history.finishedAt": "เสร็จ",
-    "history.duration": "ระยะเวลา",
-    "history.epochs": "Epochs",
-    "history.status.queued": "อยู่ในคิว",
-    "history.status.training": "กำลังเทรน",
-    "history.status.completed": "เสร็จสมบูรณ์",
-    "history.status.failed": "ล้มเหลว",
-    "history.status.paused": "หยุดชั่วคราว",
 
     // Auth
     "auth.signInFailed": "เข้าสู่ระบบไม่สำเร็จ",
@@ -1088,97 +961,6 @@ export const translations: Record<Language, Record<string, string>> = {
 
     // Deployment extras
     "deploy.endpointsTab": "Endpoints",
-
-    // Traces
-    "traces.metaTitle": "เทรซ · SLM Studio",
-    "traces.metaDesc": "อัปโหลดเทรซจากการใช้งานจริงเพื่อสร้างชุดข้อมูลฝึกสังเคราะห์",
-    "traces.title": "เทรซจากการใช้งานจริง",
-    "traces.subtitle": "นำ prompt และคำตอบจริงเข้ามา ระบบจะสังเคราะห์ชุดข้อมูล fine-tune ให้",
-    "traces.uploadTitle": "อัปโหลดไฟล์",
-    "traces.uploadHint": "รองรับ JSONL, CSV หรือข้อความ หนึ่งตัวอย่างต่อหนึ่งบรรทัด",
-    "traces.pasteTitle": "วางข้อมูล",
-    "traces.namePlaceholder": "ชื่อ bundle (ไม่บังคับ)",
-    "traces.pastePlaceholder": "วางคู่ prompt/คำตอบ หนึ่งบรรทัดต่อรายการ",
-    "traces.systemPromptTitle": "System prompt (ไม่บังคับ)",
-    "traces.systemPromptPlaceholder": "System prompt ที่ agent ของคุณใช้งานจริง",
-    "traces.bundlesTitle": "Trace bundles",
-    "traces.empty": "ยังไม่มี bundle อัปโหลดหรือวางตัวอย่างเพื่อเริ่ม",
-    "traces.uploaded": "อัปโหลดเทรซแล้ว",
-    "traces.added": "เพิ่มเทรซแล้ว",
-    "traces.generated": "สร้างชุดข้อมูลสังเคราะห์สำเร็จ",
-    "traces.generateFailed": "สร้างไม่สำเร็จ",
-    "traces.generate": "สร้างชุดข้อมูล",
-    "traces.generatedBadge": "ชุดข้อมูลพร้อมใช้",
-    "traces.rows": "แถว",
-    "traces.synthetic": "แถวสังเคราะห์",
-    "traces.add": "เพิ่ม bundle",
-    "traces.regenerate": "สร้างใหม่",
-    "traces.useInTraining": "ใช้ในการเทรน",
-    "traces.useInTrainingToast": "เตรียมชุดข้อมูลให้แล้ว — ทำขั้นตอนวิซาร์ดให้เสร็จเพื่อเริ่มเทรน",
-    "traces.quality": "คุณภาพ",
-    "traces.preview": "ตัวอย่างแถว",
-    "traces.showDetails": "ดูรายละเอียด",
-    "traces.hideDetails": "ซ่อนรายละเอียด",
-    "traces.qDiversity": "ความหลากหลาย",
-    "traces.qDuplicates": "อัตราซ้ำ",
-    "traces.qAvgPrompt": "Prompt เฉลี่ย",
-    "traces.qAvgResponse": "Response เฉลี่ย",
-
-    // Compute Backends
-    "backends.metaTitle": "Compute Backends · SLM Studio",
-    "backends.metaDesc": "เลือกที่รันงานฝึก — คลาวด์, on-prem หรือ Kubernetes",
-    "backends.title": "Compute Backends",
-    "backends.subtitle": "ส่งงานฝึกไปยังคลาวด์ที่จัดการให้, Kubernetes หรือ GPU on-prem",
-    "backends.vendor": "ผู้ให้บริการ",
-    "backends.gpu": "GPU",
-    "backends.price": "ราคา",
-    "backends.included": "รวมในแพ็กเกจ",
-    "backends.managed": "จัดการให้",
-    "backends.selfHosted": "Self-hosted",
-    "backends.notice": "ต้นแบบ: การเลือกถูกเก็บในเครื่องและแสดงเป็น badge บนโปรเจกต์ ในเวอร์ชันจริงจะเชื่อมผ่าน dstack",
-    "backends.addCustom": "เพิ่ม backend เอง",
-    "backends.defaultSet": "ตั้ง backend เริ่มต้นแล้ว",
-    "backends.projectSet": "ตั้ง backend ของโปรเจกต์แล้ว",
-
-    // Experiments comparison
-    "experiments.title": "เปรียบเทียบการทดลอง",
-    "experiments.status": "สถานะ",
-    "experiments.finalLoss": "Loss สุดท้าย",
-    "experiments.accuracy": "Accuracy",
-    "experiments.actions": "การกระทำ",
-    "experiments.promote": "เลื่อนขั้น",
-    "experiments.promoted": "เลื่อนรอบนี้เป็นเวอร์ชันแล้ว",
-
-    // Evaluation suite
-    "eval.judgeTitle": "ผู้ตัดสิน",
-    "eval.failureClusters": "รูปแบบความผิดพลาดที่พบบ่อย",
-    "eval.noFailures": "ไม่พบกลุ่มความผิดพลาด",
-    "eval.addToTraining": "เพิ่มเข้าชุดฝึก",
-    "eval.addedToTraining": "เพิ่มเข้ารอบฝึกถัดไปแล้ว",
-    "eval.runEvaluation": "รันการประเมิน",
-    "eval.running": "กำลังรัน…",
-    "eval.runComplete": "ประเมินเสร็จแล้ว",
-    "eval.runFailed": "ประเมินไม่สำเร็จ",
-    "eval.latestRun": "การประเมินล่าสุด",
-    "eval.score": "คะแนน",
-    "eval.samples": "ตัวอย่าง",
-    "eval.passed": "ผ่าน",
-    "eval.failed": "ไม่ผ่าน",
-    "eval.summary": "สรุป",
-    "eval.prompt": "Prompt",
-    "eval.expected": "คาดหวัง",
-    "eval.actual": "ผลจริง",
-
-    // Agent panel
-    "agent.title": "SLM Agent",
-    "agent.open": "เปิด SLM Agent",
-    "agent.subtitle": "บอกสิ่งที่ต้องการ ระบบจะเสนอขั้นตอนถัดไป",
-    "agent.placeholder": "เช่น train โมเดล extraction ด้วย Phi-3",
-    "agent.send": "ส่ง",
-
-    // Common
-    "common.close": "ปิด",
-    "common.delete": "ลบ",
 
     // 404
     "notFound.title": "ไม่พบหน้านี้",

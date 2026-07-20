@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-import { Helmet } from "react-helmet-async";
 import { StatsCards } from "@/components/dashboard/StatsCards";
 import { RecentProjects } from "@/components/dashboard/RecentProjects";
 import { ActivityChart } from "@/components/dashboard/ActivityChart";
@@ -21,13 +20,6 @@ export default function Dashboard() {
 
   return (
     <PageTransition>
-      <Helmet>
-        <title>Dashboard · TuneLab</title>
-        <meta name="description" content="Your TuneLab workspace overview: active fine-tuning projects, training activity, and credit usage." />
-        <link rel="canonical" href="https://smart-model-tune.lovable.app/dashboard" />
-        <meta property="og:title" content="Dashboard · TuneLab" />
-        <meta property="og:url" content="https://smart-model-tune.lovable.app/dashboard" />
-      </Helmet>
       <div className="space-y-6 max-w-7xl">
         <FadeIn>
           <div className="flex items-center justify-between">

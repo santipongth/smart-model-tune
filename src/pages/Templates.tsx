@@ -1,5 +1,4 @@
 import { useState, useMemo } from "react";
-import { Helmet } from "react-helmet-async";
 import { useNavigate } from "react-router-dom";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -300,21 +299,6 @@ export default function Templates() {
 
   return (
     <PageTransition>
-      <Helmet>
-        <title>Templates · TuneLab Fine-tuning Marketplace</title>
-        <meta name="description" content="Browse community and official TuneLab templates: ready-to-fork fine-tuning recipes for classification, extraction, function calling, and more." />
-        <link rel="canonical" href="https://smart-model-tune.lovable.app/templates" />
-        <meta property="og:title" content="Templates · TuneLab Marketplace" />
-        <meta property="og:url" content="https://smart-model-tune.lovable.app/templates" />
-        <meta property="og:description" content="Ready-to-fork fine-tuning templates for small language models." />
-        <script type="application/ld+json">{JSON.stringify({
-          "@context": "https://schema.org",
-          "@type": "CollectionPage",
-          "name": "TuneLab Templates",
-          "description": "Catalog of fine-tuning templates for small language models.",
-          "url": "https://smart-model-tune.lovable.app/templates"
-        })}</script>
-      </Helmet>
       <div className="space-y-6 max-w-7xl">
         <FadeIn>
           <div className="flex items-start justify-between gap-4">

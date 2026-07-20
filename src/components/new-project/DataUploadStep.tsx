@@ -1,10 +1,9 @@
 import { useRef } from "react";
 import { Button } from "@/components/ui/button";
-import { Upload, FileText, X, FileSpreadsheet, FileCode } from "lucide-react";
+import { Upload, FileText, X, FileCode } from "lucide-react";
 import type { ProjectFormData } from "@/pages/NewProject";
 
 const fileIcons: Record<string, React.ElementType> = {
-  csv: FileSpreadsheet,
   json: FileCode,
   jsonl: FileCode,
 };
@@ -17,6 +16,11 @@ export function DataUploadStep({
   updateForm: (p: Partial<ProjectFormData>) => void;
 }) {
   const inputRef = useRef<HTMLInputElement>(null);
+  const formatExample = formData.taskType === "classification"
+    ? '{"text": "My bill is wrong", "label": "billing"}'
+    : formData.taskType === "function-calling"
+    ? '{"question": "Set the oven to 250C", "answer": "{\\"name\\":\\"set_oven\\",\\"parameters\\":{\\"celsius\\":250}}"}'
+    : '{"question": "What is the return policy?", "answer": "Items can be returned within 30 days."}';
 
   const handleFiles = (fileList: FileList | null) => {
     if (!fileList) return;
@@ -39,7 +43,7 @@ export function DataUploadStep({
       <div>
         <p className="text-sm font-semibold text-foreground">Upload Training Data</p>
         <p className="text-xs text-muted-foreground mt-0.5">
-          Upload few-shot examples or domain knowledge. Supported: CSV, JSON, JSONL (optional)
+          Upload 5–50 seed examples. Supported: JSON or JSONL.
         </p>
       </div>
 
@@ -52,12 +56,11 @@ export function DataUploadStep({
       >
         <Upload className="h-8 w-8 text-muted-foreground mx-auto mb-3" />
         <p className="text-sm font-medium text-foreground">Click to upload or drag & drop</p>
-        <p className="text-xs text-muted-foreground mt-1">CSV, JSON, JSONL — up to 50MB</p>
+        <p className="text-xs text-muted-foreground mt-1">JSON or JSONL — up to 10MB</p>
         <input
           ref={inputRef}
           type="file"
-          multiple
-          accept=".csv,.json,.jsonl"
+          accept=".json,.jsonl"
           className="hidden"
           onChange={(e) => handleFiles(e.target.files)}
         />
@@ -87,13 +90,8 @@ export function DataUploadStep({
         <p className="text-xs font-semibold text-foreground">Expected Format</p>
         <div className="bg-background rounded-md p-3 font-mono text-[11px] text-muted-foreground overflow-x-auto">
           <pre>{`// JSONL format (one example per line)
-{"input": "My bill is wrong", "output": "billing"}
-{"input": "App keeps crashing", "output": "technical"}
-
-// CSV format
-input,output
-"My bill is wrong","billing"
-"App keeps crashing","technical"`}</pre>
+${formatExample}
+${formatExample}`}</pre>
         </div>
       </div>
     </div>

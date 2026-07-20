@@ -21,13 +21,13 @@ export interface PreflightInput {
 
 // Production-grade limits
 export const TRAINING_LIMITS = {
-  MAX_FILES: 10,
-  MAX_FILE_SIZE_BYTES: 50 * 1024 * 1024, // 50MB per file
-  MAX_TOTAL_SIZE_BYTES: 200 * 1024 * 1024, // 200MB combined
+  MAX_FILES: 1,
+  MAX_FILE_SIZE_BYTES: 10 * 1024 * 1024, // backend seed-upload limit: 10MB
+  MAX_TOTAL_SIZE_BYTES: 10 * 1024 * 1024,
   MIN_PROMPT_LEN: 10,
   MAX_PROMPT_LEN: 2000,
   MAX_NAME_LEN: 100,
-  ALLOWED_EXTENSIONS: ["csv", "json", "jsonl"] as const,
+  ALLOWED_EXTENSIONS: ["json", "jsonl"] as const,
   RECOMMENDED_MIN_FILES: 1,
 } as const;
 
@@ -102,7 +102,7 @@ export function validatePreflight(
     if (!TRAINING_LIMITS.ALLOWED_EXTENSIONS.includes(ext as typeof TRAINING_LIMITS.ALLOWED_EXTENSIONS[number])) {
       errors.push({
         code: "bad_format",
-        message: tr("preflight.badFormat", `Unsupported file type: ${f.name}. Use CSV, JSON, or JSONL.`),
+        message: tr("preflight.badFormat", `Unsupported file type: ${f.name}. Use JSON or JSONL.`),
       });
     }
     if (f.size === 0) {
@@ -131,14 +131,11 @@ export function validatePreflight(
     });
   }
 
-  // Warnings (do not block)
+  // The current engine flow requires seed rows for all supported task types.
   if (input.files.length === 0) {
-    warnings.push({
-      code: "no_files",
-      message: tr(
-        "preflight.noFilesWarning",
-        "No training files uploaded — the system will generate synthetic data automatically.",
-      ),
+    errors.push({
+      code: "seed_file_missing",
+      message: "Upload one JSON or JSONL seed-data file to start training.",
     });
   }
 
