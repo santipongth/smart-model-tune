@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { Helmet } from "react-helmet-async";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { ProjectCard } from "@/components/dashboard/ProjectCard";
@@ -31,13 +30,6 @@ export default function Projects() {
 
   return (
     <PageTransition>
-      <Helmet>
-        <title>Projects · TuneLab</title>
-        <meta name="description" content="Browse and manage your TuneLab fine-tuning projects, datasets, and trained model versions." />
-        <link rel="canonical" href="https://smart-model-tune.lovable.app/projects" />
-        <meta property="og:title" content="Projects · TuneLab" />
-        <meta property="og:url" content="https://smart-model-tune.lovable.app/projects" />
-      </Helmet>
       <div className="space-y-6 max-w-7xl">
         <FadeIn>
           <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">

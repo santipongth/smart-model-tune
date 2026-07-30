@@ -2,6 +2,7 @@ import { useState, useRef, useEffect } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Send, Bot, User, Loader2 } from "lucide-react";
+import { engineChatCompletion } from "@/lib/engineApi";
 
 interface Message {
   role: "user" | "assistant";
@@ -10,18 +11,12 @@ interface Message {
   tokens?: number;
 }
 
-const mockResponses: Record<string, string[]> = {
-  default: [
-    "Based on the input, I've classified this as **Technical Support** with 94.2% confidence.\n\nThe key signals are:\n- Mentions of \"not working\" → technical issue\n- Reference to \"internet\" → connectivity category\n\nWould you like me to elaborate on the classification logic?",
-    "I've extracted the following entities:\n\n| Entity | Type | Confidence |\n|--------|------|------------|\n| สมชาย | PERSON | 96.1% |\n| กรุงเทพ | LOCATION | 98.3% |\n| ธนาคารกสิกร | ORGANIZATION | 91.7% |\n\nProcessed in 42ms with 3 entities detected.",
-    "Here's my analysis of the query:\n\n**Answer:** The return policy allows customers to return products within 30 days of purchase for a full refund, provided the item is in its original packaging.\n\n**Source:** FAQ Section 4.2 — Return & Refund Policy\n**Confidence:** 89.5%",
-  ],
-};
-
-function getResponse(index: number): string {
-  const responses = mockResponses.default;
-  return responses[index % responses.length];
-}
+// Fallback responses used when engine is unavailable
+const mockResponses = [
+  "Based on the input, I've classified this as **Technical Support** with 94.2% confidence.\n\nThe key signals are:\n- Mentions of \"not working\" → technical issue\n- Reference to \"internet\" → connectivity category\n\nWould you like me to elaborate on the classification logic?",
+  "I've extracted the following entities:\n\n| Entity | Type | Confidence |\n|--------|------|------------|\n| สมชาย | PERSON | 96.1% |\n| กรุงเทพ | LOCATION | 98.3% |\n| ธนาคารกสิกร | ORGANIZATION | 91.7% |\n\nProcessed in 42ms with 3 entities detected.",
+  "Here's my analysis of the query:\n\n**Answer:** The return policy allows customers to return products within 30 days of purchase for a full refund, provided the item is in its original packaging.\n\n**Source:** FAQ Section 4.2 — Return & Refund Policy\n**Confidence:** 89.5%",
+];
 
 export function ChatPanel({
   modelName,
@@ -34,13 +29,13 @@ export function ChatPanel({
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
-  const responseIndex = useRef(0);
+  const mockIndexRef = useRef(0);
 
   useEffect(() => {
     scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight, behavior: "smooth" });
   }, [messages]);
 
-  const handleSend = () => {
+  const handleSend = async () => {
     const text = input.trim();
     if (!text || isLoading) return;
 
@@ -49,20 +44,43 @@ export function ChatPanel({
     setInput("");
     setIsLoading(true);
 
-    // Simulate response with delay
-    const delay = 400 + Math.random() * 800;
-    setTimeout(() => {
-      const response = getResponse(responseIndex.current);
-      responseIndex.current++;
-      const assistantMsg: Message = {
-        role: "assistant",
-        content: response,
-        latencyMs: Math.round(delay),
-        tokens: Math.round(response.length / 4),
-      };
-      setMessages((prev) => [...prev, assistantMsg]);
+    const start = Date.now();
+    try {
+      const history = messages.map((m) => ({ role: m.role, content: m.content }));
+      const response = await engineChatCompletion({
+        model: modelName,
+        messages: [...history, { role: "user", content: text }],
+        temperature: 0.7,
+        max_tokens: 512,
+      });
+      const content = response.choices[0]?.message?.content ?? "";
+      setMessages((prev) => [
+        ...prev,
+        {
+          role: "assistant",
+          content,
+          latencyMs: Date.now() - start,
+          tokens: response.usage?.completion_tokens,
+        },
+      ]);
+    } catch {
+      // Engine unavailable — use mock fallback
+      const delay = 400 + Math.random() * 800;
+      await new Promise((r) => setTimeout(r, delay));
+      const mock = mockResponses[mockIndexRef.current % mockResponses.length];
+      mockIndexRef.current++;
+      setMessages((prev) => [
+        ...prev,
+        {
+          role: "assistant",
+          content: mock,
+          latencyMs: Math.round(Date.now() - start),
+          tokens: Math.round(mock.length / 4),
+        },
+      ]);
+    } finally {
       setIsLoading(false);
-    }, delay);
+    }
   };
 
   return (
@@ -77,7 +95,7 @@ export function ChatPanel({
           variant="ghost"
           size="sm"
           className="text-xs h-7 text-muted-foreground"
-          onClick={() => { setMessages([]); responseIndex.current = 0; }}
+          onClick={() => { setMessages([]); mockIndexRef.current = 0; }}
         >
           Clear
         </Button>
@@ -144,11 +162,11 @@ export function ChatPanel({
           placeholder="Type a message..."
           value={input}
           onChange={(e) => setInput(e.target.value)}
-          onKeyDown={(e) => e.key === "Enter" && !e.shiftKey && handleSend()}
+          onKeyDown={(e) => e.key === "Enter" && !e.shiftKey && void handleSend()}
           className="border-0 shadow-none focus-visible:ring-0 bg-transparent"
           disabled={isLoading}
         />
-        <Button size="icon" onClick={handleSend} disabled={!input.trim() || isLoading} className="shrink-0">
+        <Button size="icon" onClick={() => void handleSend()} disabled={!input.trim() || isLoading} className="shrink-0">
           <Send className="h-4 w-4" />
         </Button>
       </div>

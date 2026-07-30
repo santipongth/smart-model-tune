@@ -11,10 +11,17 @@ import { TemplateLibrary } from "@/components/new-project/TemplateLibrary";
 import type { TaskType, BaseModel } from "@/types";
 import { useLanguage } from "@/i18n/LanguageContext";
 import { useToast } from "@/hooks/use-toast";
-import { createProject } from "@/lib/projectsApi";
+import { createProject, updateProject } from "@/lib/projectsApi";
 import { validatePreflight } from "@/lib/trainingValidation";
-import { readSyntheticPrefill, type SyntheticDataset } from "@/lib/syntheticDataset";
-import { X } from "lucide-react";
+import {
+  engineCreateProject,
+  engineUploadSeed,
+  engineGenerateDataset,
+  engineStartTraining,
+  engineGetDataset,
+} from "@/lib/engineApi";
+import { setEngineMeta, patchEngineMeta } from "@/lib/engineStore";
+import { TASK_TYPE_TO_ENGINE, BASE_MODEL_TO_ENGINE, buildManualConfig } from "@/lib/engineMappings";
 
 export interface ProjectFormData {
   projectName: string;
@@ -39,12 +46,94 @@ function autoTuneParams(datasetRows: number) {
   return { epochs: 3, learningRate: 3e-4, batchSize: 32 };
 }
 
+async function readSeedRows(file: File): Promise<Record<string, unknown>[]> {
+  const text = (await file.text()).trim();
+  if (!text) throw new Error("Seed-data file is empty.");
+
+  let rows: unknown[];
+  try {
+    rows = text.startsWith("[")
+      ? JSON.parse(text)
+      : text.split(/\r?\n/).filter(Boolean).map((line) => JSON.parse(line));
+  } catch {
+    throw new Error("Seed-data file must contain valid JSON or JSONL.");
+  }
+
+  if (!Array.isArray(rows) || rows.some((row) => row === null || typeof row !== "object" || Array.isArray(row))) {
+    throw new Error("Seed-data must be an array of JSON objects or one JSON object per line.");
+  }
+  if (rows.length < 5 || rows.length > 50) {
+    throw new Error("Seed-data must contain between 5 and 50 examples.");
+  }
+  return rows as Record<string, unknown>[];
+}
+
+async function pollDatasetReady(datasetId: string, maxAttempts = 60, intervalMs = 5000): Promise<string> {
+  for (let i = 0; i < maxAttempts; i++) {
+    const ds = await engineGetDataset(datasetId);
+    if (ds.storage_uri && ds.num_samples > 0) return datasetId;
+    await new Promise((r) => setTimeout(r, intervalMs));
+  }
+  throw new Error("Dataset generation timed out");
+}
+
+// Runs in background after navigation — calls Engine API chain independently of UI
+async function runEngineFlow(
+  supabaseProjectId: string,
+  engineProjectId: string,
+  taskType: TaskType,
+  taskDescription: string,
+  seedFile: File,
+  seedRows: Record<string, unknown>[],
+  epochs: number,
+  learningRate: number,
+  baseModel: BaseModel,
+  projectName: string,
+) {
+  const engineTaskType = TASK_TYPE_TO_ENGINE[taskType];
+  const engineBaseModel = BASE_MODEL_TO_ENGINE[baseModel];
+  if (!engineTaskType) return; // task type not supported by engine
+
+  // Node 3a — upload seed
+  const seedResult = await engineUploadSeed(seedFile, engineProjectId, engineTaskType, "seed");
+  patchEngineMeta(supabaseProjectId, { seedDatasetId: seedResult.dataset_id });
+
+  // Node 4 — generate synthetic dataset
+  const sdgResult = await engineGenerateDataset(
+    engineProjectId,
+    engineTaskType,
+    taskDescription,
+    seedRows,
+  );
+  patchEngineMeta(supabaseProjectId, { sdgJobId: sdgResult.job_id });
+
+  // The backend marks generated data ready by setting its storage URI and row count.
+  const trainDatasetId = await pollDatasetReady(sdgResult.dataset_id);
+  patchEngineMeta(supabaseProjectId, { trainDatasetId });
+
+  // Node 6 — start training
+  const config = buildManualConfig(epochs, learningRate);
+  const trainingResult = await engineStartTraining(
+    engineProjectId,
+    trainDatasetId,
+    engineBaseModel,
+    projectName,
+    config,
+  );
+  patchEngineMeta(supabaseProjectId, {
+    trainingId: trainingResult.training_id,
+    jobId: trainingResult.job_id,
+  });
+
+  // Sync Supabase project status to training
+  await updateProject(supabaseProjectId, { status: "training", progress: 0 });
+}
+
 export default function NewProject() {
   const [currentStep, setCurrentStep] = useState(0);
   const [formData, setFormData] = useState<ProjectFormData>(initialFormData);
   const [showTemplates, setShowTemplates] = useState(false);
   const [launching, setLaunching] = useState(false);
-  const [syntheticDataset, setSyntheticDatasetState] = useState<SyntheticDataset | null>(null);
   const { t } = useLanguage();
   const { toast } = useToast();
   const navigate = useNavigate();
@@ -69,24 +158,70 @@ export default function NewProject() {
       toast({ title: t("preflight.heads_up"), description: w.message });
     }
 
+    const engineTaskType = TASK_TYPE_TO_ENGINE[formData.taskType!];
+    if (!engineTaskType) {
+      toast({
+        title: t("newProject.launchFailed"),
+        description: "This task type is not supported by the training engine yet.",
+        variant: "destructive",
+      });
+      return;
+    }
+
     setLaunching(true);
     try {
-      const datasetRows = syntheticDataset
-        ? syntheticDataset.size
-        : Math.max(formData.files.length * 500, 100);
+      const seedFile = formData.files[0]!;
+      const seedRows = await readSeedRows(seedFile);
+      const datasetRows = Math.max(formData.files.length * 500, 100);
       const tuned = autoTuneParams(datasetRows);
-      const description = syntheticDataset
-        ? `${formData.taskPrompt}\n\n[dataset] ${syntheticDataset.name} · ${syntheticDataset.size} rows · quality ${syntheticDataset.quality.score}/100`
-        : formData.taskPrompt;
+      const projectName = formData.projectName.trim() || formData.taskPrompt.slice(0, 60) || "Untitled Project";
+
+      // 1. Create Supabase project (source of truth for UI)
       const created = await createProject({
-        name: formData.projectName.trim() || formData.taskPrompt.slice(0, 60) || "Untitled Project",
-        description,
+        name: projectName,
+        description: formData.taskPrompt,
         taskType: formData.taskType!,
         baseModel: formData.baseModel!,
         epochs: tuned.epochs,
         learningRate: tuned.learningRate,
         datasetSize: datasetRows,
       });
+
+      // 2. Create Engine project and store its ID
+      let engineProject;
+      try {
+        engineProject = await engineCreateProject(
+          projectName,
+          formData.taskPrompt,
+          engineTaskType,
+        );
+      } catch (error) {
+        await updateProject(created.id, { status: "failed" });
+        throw error;
+      }
+      setEngineMeta(created.id, { engineProjectId: engineProject.id });
+
+      // 3. Fire background chain: upload seed → SDG → training
+      void runEngineFlow(
+        created.id,
+        engineProject.id,
+        formData.taskType!,
+        formData.taskPrompt,
+        seedFile,
+        seedRows,
+        tuned.epochs,
+        tuned.learningRate,
+        formData.baseModel!,
+        projectName,
+      ).catch((error) => {
+        void updateProject(created.id, { status: "failed" });
+        toast({
+          title: t("newProject.launchFailed"),
+          description: (error as Error).message,
+          variant: "destructive",
+        });
+      });
+
       toast({ title: t("newProject.launched"), description: created.name });
       navigate(`/projects/${created.id}`);
     } catch (e) {
@@ -115,17 +250,6 @@ export default function NewProject() {
       } catch {
         // ignore malformed prefill
       }
-    }
-    const ds = readSyntheticPrefill();
-    if (ds) {
-      setSyntheticDatasetState(ds);
-      setFormData((p) => ({
-        ...p,
-        projectName: p.projectName || ds.name,
-        taskPrompt:
-          p.taskPrompt ||
-          `Fine-tune on synthetic dataset generated from production traces: ${ds.name}`,
-      }));
     }
   }, []);
 
@@ -183,32 +307,6 @@ export default function NewProject() {
       </div>
 
       {showTemplates && <TemplateLibrary onSelect={handleTemplateSelect} />}
-
-      {syntheticDataset && (
-        <Card className="border-primary/30 bg-primary/5">
-          <CardContent className="p-4 flex items-start gap-3">
-            <Sparkles className="h-4 w-4 text-primary mt-0.5 shrink-0" />
-            <div className="flex-1 min-w-0">
-              <p className="text-sm font-medium text-foreground">
-                {t("newProject.syntheticPrefilled")}
-              </p>
-              <p className="text-xs text-muted-foreground mt-0.5">
-                {syntheticDataset.name} · {syntheticDataset.size} {t("traces.rows")} ·{" "}
-                {t("traces.quality")} {syntheticDataset.quality.score}/100
-              </p>
-            </div>
-            <Button
-              variant="ghost"
-              size="icon"
-              className="h-7 w-7 shrink-0"
-              onClick={() => setSyntheticDatasetState(null)}
-              aria-label={t("common.close")}
-            >
-              <X className="h-3.5 w-3.5" />
-            </Button>
-          </CardContent>
-        </Card>
-      )}
 
       <div className="flex items-center gap-1">
         {steps.map((step, i) => (

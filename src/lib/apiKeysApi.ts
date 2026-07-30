@@ -38,23 +38,11 @@ export async function listApiKeys(): Promise<ApiKey[]> {
   return (data as KeyRow[]).map(toKey);
 }
 
-// Generate a cryptographically strong random token using the Web Crypto API.
-// 32 bytes => 256 bits of entropy, encoded as URL-safe base64.
-function generateSecureToken(byteLength = 32): string {
-  const bytes = new Uint8Array(byteLength);
-  crypto.getRandomValues(bytes);
-  let binary = "";
-  for (let i = 0; i < bytes.length; i++) binary += String.fromCharCode(bytes[i]);
-  return btoa(binary).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/g, "");
-}
-
 export async function createApiKey(name: string): Promise<ApiKey> {
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) throw new Error("Not authenticated");
-  const prefix = `sk-slm-${name.toLowerCase().replace(/[^a-z0-9]/g, "").slice(0, 4) || "key"}`;
-  // Strong 256-bit random suffix (display the last 8 chars as a fingerprint).
-  const token = generateSecureToken(32);
-  const suffix = token.slice(-8);
+  const prefix = `sk-slm-${name.toLowerCase().slice(0, 4)}`;
+  const suffix = Math.random().toString(36).slice(2, 6);
   const { data, error } = await supabase.from("api_keys")
     .insert({ user_id: user.id, name, key_prefix: prefix, key_suffix: suffix, status: "active" })
     .select("*").single();
